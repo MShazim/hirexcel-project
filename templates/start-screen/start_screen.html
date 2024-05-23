@@ -1,12 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hirexcel Start Screen</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <H1>Welcome to Hirexcel</H1>
-    <a href="login">To login page</a>
+
+<div class="container text-center my-5">
+  <h1 class="display-4 font-weight-bold">Welcome To HIREXCEL</h1>
+  <h3 class="mt-4 font-weight-semibold">Please select your role</h3>
+</div>
+
+<div class="container d-flex justify-content-center my-4">
+  <div class="row w-75">
+    <div class="col-md-6 mb-4">
+      <a href="jobseeker_login" class="text-decoration-none">
+        <div class="card border-2 h-100">
+          <div class="card-body d-flex flex-column align-items-center">
+            <div class="mb-4">
+              <img src="https://github.com/shadcn.png" class="rounded-circle" alt="Job Seeker Avatar" width="100" height="100">
+            </div>
+            <h5 class="card-title mb-2">Job Seeker</h5>
+            <p class="card-text">Start as Job seeker</p>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-6 mb-4">
+      <a href="recruiter_login" class="text-decoration-none">
+        <div class="card border-2 h-100">
+          <div class="card-body d-flex flex-column align-items-center">
+            <div class="mb-4">
+              <img src="https://github.com/shadcn.png" class="rounded-circle" alt="Recruiter Avatar" width="100" height="100">
+            </div>
+            <h5 class="card-title mb-2">Recruiter</h5>
+            <p class="card-text">Start as Recruiter</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>
