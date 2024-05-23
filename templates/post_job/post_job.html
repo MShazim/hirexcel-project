@@ -1,0 +1,108 @@
+{% extends "components/navbar.html" %} {% block content %}
+<div class="container mb-5">
+    <h2 class="mt-5 mb-4">Post a Job</h2>
+    <form class="justify-content-start">
+      <!-- Job Title -->
+      <div class="form-group">
+        <label for="jobTitle" class="label">Job Title</label>
+        <input type="text" class="form-control" id="jobTitle" placeholder="Enter job title" required>
+      </div>
+      <!-- Company Name -->
+      <div class="form-group">
+        <label for="companyName">Company Name</label>
+        <input type="text" class="form-control" id="companyName" placeholder="Enter company name" required>
+      </div>
+      <!-- Location -->
+      <div class="form-group">
+        <label for="location">Location</label>
+        <input type="text" class="form-control" id="location" placeholder="Enter job location" required>
+      </div>
+      <!-- Job Type -->
+      <div class="form-group">
+        <label for="jobType">Job Type</label>
+        <select class="form-control" id="jobType" required>
+          <option value="">Select job type</option>
+          <option>Full-time</option>
+          <option>Part-time</option>
+          <option>Remote</option>
+          <!-- Add more options as needed -->
+        </select>
+      </div>
+      <!-- Job Description -->
+      <div class="form-group">
+        <label for="jobDescription">Job Description</label>
+        <textarea class="form-control" id="jobDescription" rows="3" required></textarea>
+      </div>
+      <!-- Key Responsibilities -->
+      <div class="form-group">
+        <label for="keyResponsibilities">Key Responsibilities</label>
+        <textarea class="form-control" id="keyResponsibilities" rows="3" required></textarea>
+      </div>
+      <!-- Required Qualifications -->
+      <div class="form-group">
+        <label for="requiredQualifications">Required Qualifications</label>
+        <textarea class="form-control" id="requiredQualifications" rows="3" required></textarea>
+      </div>
+      <!-- Required Skills -->
+      <div class="form-group">
+        <label for="requiredSkills">Required Skills</label>
+        <textarea class="form-control" id="requiredSkills" rows="3" required></textarea>
+      </div>
+      <!-- Experience Requirements -->
+      <div class="form-group">
+        <label for="experienceRequirements">Experience Requirements</label>
+        <textarea class="form-control" id="experienceRequirements" rows="3" required></textarea>
+      </div>
+      <!-- Contact Information (Mobile Number) -->
+      <div class="form-group">
+        <label for="contactInformation">Mobile Number</label>
+        <input type="tel" class="form-control" id="contactInformation" placeholder="Enter mobile number" required>
+      </div>
+      <!-- Psychology Traits -->
+      <div class="form-group">
+        <label for="psychologyTraits">Psychology Traits</label>
+        <select class="form-control" id="psychologyTraits" required>
+          <option>Select a trait</option>
+          <option>Adaptable</option>
+          <option>Team Player</option>
+          <option>Strong Communication</option>
+          <option>Creative</option>
+          <option>Happy</option>
+          <!-- Add more options as needed -->
+        </select>
+      </div>
+      <!-- Display selected Psychology Traits as badges -->
+      <div class="form-group" id="selectedTraits"></div>
+      <!-- Cognitive Assessment -->
+      <div class="form-group">
+        <label>Cognitive Assessment</label>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="nonVerbal" value="Non-Verbal" checked disabled>
+          <label class="form-check-label" for="nonVerbal">Non-Verbal</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="verbal" value="Verbal" checked disabled>
+          <label class="form-check-label" for="verbal">Verbal</label>
+        </div>
+      </div>
+      <!-- Technical Assessment -->
+      <div class="form-group">
+        <label>Technical Assessment (Select any 2)</label>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="beginner" value="Beginner">
+          <label class="form-check-label" for="beginner">Beginner</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="intermediate" value="Intermediate">
+          <label class="form-check-label" for="intermediate">Intermediate</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="professional" value="Professional">
+          <label class="form-check-label" for="professional">Professional</label>
+        </div>
+      </div>
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+{% endblock %}

@@ -21,3 +21,9 @@ def jobseeker_home(request):
 
 def recruiter_home(request):
     return render(request, './home/recruiter_home.html')
+
+def post_job(request):
+    return render(request, './post_job/post_job.html')
+
+def quiz_start_screen(request):
+    return render(request, './quiz/quiz_start_screen.html')
