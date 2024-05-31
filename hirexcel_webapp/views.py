@@ -27,3 +27,12 @@ def post_job(request):
 
 def quiz_start_screen(request):
     return render(request, './quiz/quiz_start_screen.html')
+
+def disc_quiz(request):
+    return render(request, './disc_quiz/disc_quiz.html')
+
+def non_verbal_quiz(request):
+    return render(request, './cognitive_quiz/non_verbal_quiz.html')
+
+def technical_quiz(request):
+    return render(request, './technical_quiz/technical_quiz.html')
