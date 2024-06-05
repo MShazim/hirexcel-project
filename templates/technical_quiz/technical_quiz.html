@@ -107,7 +107,7 @@
     <header>
       <h1>TECHNICAL ASSESSMENT</h1>
     </header>
-    <main class="container my-5">
+    {% comment %} <main class="container my-5">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Question:</h5>
@@ -152,7 +152,55 @@
 
         </div>
       </div>
-    </main>
+    </main> {% endcomment %}
+
+    <main class="container my-5">
+      <div class="card">
+          <div class="card-body">
+              <h5 class="card-title">Question:</h5>
+              <p id="question-line" class="card-text">{{ question.QUESTION }}</p>
+
+              <div>
+                  <div class="row">
+                      <div class="col-md-6">
+                          <div class="card-option">
+                              <div class="card-option-number">A</div>
+                              <div class="card-option-text fw-bold">{{ options.0 }}</div>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="card-option">
+                              <div class="card-option-number">B</div>
+                              <div class="card-option-text fw-bold">{{ options.1 }}</div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-6">
+                          <div class="card-option">
+                              <div class="card-option-number">C</div>
+                              <div class="card-option-text fw-bold">{{ options.2 }}</div>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="card-option">
+                              <div class="card-option-number">D</div>
+                              <div class="card-option-text fw-bold">{{ options.3 }}</div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="w-auto d-flex flex-row-reverse mt-2">
+                  {% if next_question_index is not None %}
+                      <a href="{% url 'technical_quiz' next_question_index %}" class="btn btn-primary">Next Question</a>
+                  {% else %}
+                      <a href="{% url 'phase_three_completed' %}" class="btn btn-primary">Finish</a>
+                  {% endif %}
+              </div>
+          </div>
+      </div>
+  </main>
     <footer>
       <p>&copy; 2024 HIREXCEL. All rights reserved.</p>
     </footer>
