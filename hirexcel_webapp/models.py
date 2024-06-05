@@ -49,3 +49,32 @@ class NVI_Questions_Dataset(models.Model):
     def __str__(self):
         # String representation of the model instance
         return self.IMAGE_ID
+    
+# creating model for technical question dataset
+class Technical_Questions_Dataset(models.Model):
+    TECH_ID = models.CharField(max_length=10, unique=True)
+    JOB_POSITION = models.CharField(max_length=100)
+    TEST_LEVEL = models.CharField(max_length=100)
+    QUESTION = models.TextField()
+    ANSWER = models.TextField()
+    A = models.TextField()
+    B = models.TextField()
+    C = models.TextField()
+    D = models.TextField()
+
+    def __str__(self):
+        # String representation of the model instance
+        return self.TECH_ID
+    
+# creating model for job position criteria dataset
+class Job_Position_Criteria(models.Model):
+    JPC_ID = models.CharField(max_length=10, unique=True)
+    CATEGORY = models.CharField(max_length=100)
+    JOB_POSITION = models.CharField(max_length=100)
+    PERSONALITY_TRAITS = models.CharField(max_length=100)
+    COGNITIVE_SKILLS = models.CharField(max_length=100)
+    EMOTIONAL_INTELLIGENCE = models.CharField(max_length=100)
+
+    def __str__(self):
+        # String representation of the model instance
+        return self.JPC_ID
