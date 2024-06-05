@@ -12,7 +12,13 @@ urlpatterns = [
     path('recruiter_home', views.recruiter_home, name='recruiter_home'),
     path('post_job', views.post_job, name='post_job'),
     path('quiz_start_screen', views.quiz_start_screen, name='quiz_start_screen'),
-    path('disc_quiz', views.disc_quiz, name='disc_quiz'),
-    path('non_verbal_quiz', views.non_verbal_quiz, name='non_verbal_quiz'),
+
+    path('disc_quiz/<int:question_id>/', views.disc_quiz, name='disc_quiz'),
+    path('disc_quiz/', views.disc_quiz, {'question_id': 1}, name='disc_quiz_start'),
+
+    path('non_verbal_quiz/<int:question_index>/', views.non_verbal_quiz, name='non_verbal_quiz'),
+    path('non_verbal_quiz/', views.non_verbal_quiz, {'question_index': 0}, name='non_verbal_quiz_start'),
+
+
     path('technical_quiz', views.technical_quiz, name='technical_quiz'),
 ]

@@ -107,7 +107,7 @@
     <header>
       <h1>DISC ASSESSMENT</h1>
     </header>
-    <main class="container my-5">
+    {% comment %} <main class="container my-5">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Question:</h5>
@@ -152,7 +152,59 @@
 
         </div>
       </div>
-    </main>
+    </main> {% endcomment %}
+
+    <main class="container my-5">
+      <div class="card">
+          <div class="card-body">
+              <h5 class="card-title">Question:</h5>
+              <p id="question-line" class="card-text">
+                  {{ question.QUESTION }}
+              </p>
+
+              <div>
+                  <div class="row">
+                      <div class="col-md-6">
+                          <div class="card-option" onclick="selectOption('A')">
+                              <div class="card-option-number">A</div>
+                              <div class="card-option-text fw-bold">{{ question.A }}</div>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="card-option" onclick="selectOption('B')">
+                              <div class="card-option-number">B</div>
+                              <div class="card-option-text fw-bold">{{ question.B }}</div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-6">
+                          <div class="card-option" onclick="selectOption('C')">
+                              <div class="card-option-number">C</div>
+                              <div class="card-option-text fw-bold">{{ question.C }}</div>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="card-option" onclick="selectOption('D')">
+                              <div class="card-option-number">D</div>
+                              <div class="card-option-text fw-bold">{{ question.D }}</div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              {% if next_question_id %}
+              <div class="w-auto d-flex flex-row-reverse mt-2">
+                  <a href="{% url 'disc_quiz' next_question_id %}" class="btn btn-primary">Next Question</a>
+              </div>
+              {% else %}
+              <div class="w-auto d-flex flex-row-reverse mt-2">
+                  <a href="{% url 'non_verbal_quiz' 0 %}" class="btn btn-primary">Next Quiz</a>
+              </div>
+              {% endif %}
+          </div>
+      </div>
+  </main>
     <footer>
       <p>&copy; 2024 HIREXCEL. All rights reserved.</p>
     </footer>
