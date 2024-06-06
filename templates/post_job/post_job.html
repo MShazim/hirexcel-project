@@ -1,108 +1,233 @@
 {% extends "components/navbar.html" %} {% block content %}
 <div class="container mb-5">
-    <h2 class="mt-5 mb-4">Post a Job</h2>
-    <form class="justify-content-start">
-      <!-- Job Title -->
-      <div class="form-group">
-        <label for="jobTitle" class="label">Job Title</label>
-        <input type="text" class="form-control" id="jobTitle" placeholder="Enter job title" required>
+  <h2 class="mt-5 mb-4">Post a Job</h2>
+  <form class="justify-content-start">
+    <!-- Job Title -->
+    <div class="form-group">
+      <label for="jobTitle" class="label">Job Title</label>
+      <input
+        type="text"
+        class="form-control"
+        id="jobTitle"
+        placeholder="Enter job title"
+        required
+      />
+    </div>
+    <!-- Company Name -->
+    <div class="form-group">
+      <label for="companyName">Company Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="companyName"
+        placeholder="Enter company name"
+        required
+      />
+    </div>
+    <!-- Location -->
+    <div class="form-group">
+      <label for="location">Location</label>
+      <input
+        type="text"
+        class="form-control"
+        id="location"
+        placeholder="Enter job location"
+        required
+      />
+    </div>
+    <!-- Job Type -->
+    <div class="form-group">
+      <label for="jobType">Job Type</label>
+      <select class="form-control" id="jobType" required>
+        <option value="">Select job type</option>
+        <option>Full-time</option>
+        <option>Part-time</option>
+        <option>Remote</option>
+        <!-- Add more options as needed -->
+      </select>
+    </div>
+    <!-- Job Position -->
+    <div class="form-group">
+      <label for="jobPosition">Job Position</label>
+      <select class="form-control" id="jobPosition" name="jobPosition" required>
+        <option value="">Select Job Position</option>
+        {% for position in job_positions %}
+        <option value="{{ position }}">{{ position }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <!-- Job Description -->
+    <div class="form-group">
+      <label for="jobDescription">Job Description</label>
+      <textarea
+        class="form-control"
+        id="jobDescription"
+        rows="3"
+        required
+      ></textarea>
+    </div>
+    <!-- Key Responsibilities -->
+    <div class="form-group">
+      <label for="keyResponsibilities">Key Responsibilities</label>
+      <textarea
+        class="form-control"
+        id="keyResponsibilities"
+        rows="3"
+        required
+      ></textarea>
+    </div>
+    <!-- Required Qualifications -->
+    <div class="form-group">
+      <label for="requiredQualifications">Required Qualifications</label>
+      <textarea
+        class="form-control"
+        id="requiredQualifications"
+        rows="3"
+        required
+      ></textarea>
+    </div>
+    <!-- Required Skills -->
+    <div class="form-group">
+      <label for="requiredSkills">Required Skills</label>
+      <textarea
+        class="form-control"
+        id="requiredSkills"
+        rows="3"
+        required
+      ></textarea>
+    </div>
+    <!-- Experience Requirements -->
+    <div class="form-group">
+      <label for="experienceRequirements">Experience Requirements</label>
+      <textarea
+        class="form-control"
+        id="experienceRequirements"
+        rows="3"
+        required
+      ></textarea>
+    </div>
+    <!-- Contact Information (Mobile Number) -->
+    <div class="form-group">
+      <label for="contactInformation">Mobile Number</label>
+      <input
+        type="tel"
+        class="form-control"
+        id="contactInformation"
+        placeholder="Enter mobile number"
+        required
+      />
+    </div>
+    <!-- Personality Traits -->
+    <div class="form-group">
+      <h4>Personality Traits</h4>
+      <p>
+        Following are the personality traits for the selected Job positions:
+      </p>
+      <div id="personalityTraitsContainer"></div>
+    </div>
+
+    <!-- Cognitive Assessment -->
+    <div class="form-group">
+      <label>Cognitive Assessment</label>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="nonVerbal"
+          value="Non-Verbal"
+          checked
+          disabled
+        />
+        <label class="form-check-label" for="nonVerbal">Non-Verbal</label>
       </div>
-      <!-- Company Name -->
-      <div class="form-group">
-        <label for="companyName">Company Name</label>
-        <input type="text" class="form-control" id="companyName" placeholder="Enter company name" required>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="verbal"
+          value="Verbal"
+          checked
+          disabled
+        />
+        <label class="form-check-label" for="verbal">Verbal</label>
       </div>
-      <!-- Location -->
-      <div class="form-group">
-        <label for="location">Location</label>
-        <input type="text" class="form-control" id="location" placeholder="Enter job location" required>
+    </div>
+    <!-- Technical Assessment -->
+    <div class="form-group">
+      <label>Technical Assessment (Select any 2)</label>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="beginner"
+          value="Beginner"
+        />
+        <label class="form-check-label" for="beginner">Beginner</label>
       </div>
-      <!-- Job Type -->
-      <div class="form-group">
-        <label for="jobType">Job Type</label>
-        <select class="form-control" id="jobType" required>
-          <option value="">Select job type</option>
-          <option>Full-time</option>
-          <option>Part-time</option>
-          <option>Remote</option>
-          <!-- Add more options as needed -->
-        </select>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="intermediate"
+          value="Intermediate"
+        />
+        <label class="form-check-label" for="intermediate">Intermediate</label>
       </div>
-      <!-- Job Description -->
-      <div class="form-group">
-        <label for="jobDescription">Job Description</label>
-        <textarea class="form-control" id="jobDescription" rows="3" required></textarea>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="professional"
+          value="Professional"
+        />
+        <label class="form-check-label" for="professional">Professional</label>
       </div>
-      <!-- Key Responsibilities -->
-      <div class="form-group">
-        <label for="keyResponsibilities">Key Responsibilities</label>
-        <textarea class="form-control" id="keyResponsibilities" rows="3" required></textarea>
-      </div>
-      <!-- Required Qualifications -->
-      <div class="form-group">
-        <label for="requiredQualifications">Required Qualifications</label>
-        <textarea class="form-control" id="requiredQualifications" rows="3" required></textarea>
-      </div>
-      <!-- Required Skills -->
-      <div class="form-group">
-        <label for="requiredSkills">Required Skills</label>
-        <textarea class="form-control" id="requiredSkills" rows="3" required></textarea>
-      </div>
-      <!-- Experience Requirements -->
-      <div class="form-group">
-        <label for="experienceRequirements">Experience Requirements</label>
-        <textarea class="form-control" id="experienceRequirements" rows="3" required></textarea>
-      </div>
-      <!-- Contact Information (Mobile Number) -->
-      <div class="form-group">
-        <label for="contactInformation">Mobile Number</label>
-        <input type="tel" class="form-control" id="contactInformation" placeholder="Enter mobile number" required>
-      </div>
-      <!-- Psychology Traits -->
-      <div class="form-group">
-        <label for="psychologyTraits">Psychology Traits</label>
-        <select class="form-control" id="psychologyTraits" required>
-          <option>Select a trait</option>
-          <option>Adaptable</option>
-          <option>Team Player</option>
-          <option>Strong Communication</option>
-          <option>Creative</option>
-          <option>Happy</option>
-          <!-- Add more options as needed -->
-        </select>
-      </div>
-      <!-- Display selected Psychology Traits as badges -->
-      <div class="form-group" id="selectedTraits"></div>
-      <!-- Cognitive Assessment -->
-      <div class="form-group">
-        <label>Cognitive Assessment</label>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="nonVerbal" value="Non-Verbal" checked disabled>
-          <label class="form-check-label" for="nonVerbal">Non-Verbal</label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="verbal" value="Verbal" checked disabled>
-          <label class="form-check-label" for="verbal">Verbal</label>
-        </div>
-      </div>
-      <!-- Technical Assessment -->
-      <div class="form-group">
-        <label>Technical Assessment (Select any 2)</label>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="beginner" value="Beginner">
-          <label class="form-check-label" for="beginner">Beginner</label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="intermediate" value="Intermediate">
-          <label class="form-check-label" for="intermediate">Intermediate</label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="professional" value="Professional">
-          <label class="form-check-label" for="professional">Professional</label>
-        </div>
-      </div>
-      <!-- Submit Button -->
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-  </div>
+    </div>
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document
+      .getElementById("jobPosition")
+      .addEventListener("change", function () {
+        const jobPosition = this.value;
+
+        if (jobPosition) {
+          fetch(`/get_personality_traits/?job_position=${jobPosition}`)
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Received personality traits:", data.personality_traits);
+              const personalityTraitsContainer = document.getElementById(
+                "personalityTraitsContainer"
+              );
+              personalityTraitsContainer.innerHTML = "";
+
+              data.personality_traits.forEach((trait) => {
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.name = "personalityTraits";
+                checkbox.value = trait;
+                checkbox.id = `trait_${trait}`;
+
+                const label = document.createElement("label");
+                label.htmlFor = `trait_${trait}`;
+                label.textContent = trait;
+
+                const div = document.createElement("div");
+                div.appendChild(checkbox);
+                div.appendChild(label);
+
+                personalityTraitsContainer.appendChild(div);
+              });
+            })
+            .catch((error) =>
+              console.error("Error fetching personality traits:", error)
+            );
+        }
+      });
+  });
+</script>
 {% endblock %}
