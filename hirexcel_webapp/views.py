@@ -1,7 +1,7 @@
 from django.shortcuts import render , get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from .models import Disc_Questions_Dataset, NVI_Questions_Dataset, Technical_Questions_Dataset
+from .models import Disc_Questions_Dataset, NVI_Questions_Dataset, Technical_Questions_Dataset , Job_Position_Criteria
 import random
 
 # Create your views here.
@@ -26,8 +26,74 @@ def jobseeker_home(request):
 def recruiter_home(request):
     return render(request, './home/recruiter_home.html')
 
+# def post_job(request):
+#     return render(request, './post_job/post_job.html')
+
 def post_job(request):
-    return render(request, './post_job/post_job.html')
+    if request.method == 'POST':
+        # Handle form submission
+        job_title = request.POST['jobTitle']
+        company_name = request.POST['companyName']
+        location = request.POST['location']
+        job_type = request.POST['jobType']
+        job_position = request.POST['jobPosition']
+        job_description = request.POST['jobDescription']
+        key_responsibilities = request.POST['keyResponsibilities']
+        required_qualifications = request.POST['requiredQualifications']
+        required_skills = request.POST['requiredSkills']
+        experience_requirements = request.POST['experienceRequirements']
+        contact_information = request.POST['contactInformation']
+        personality_traits = request.POST.getlist('personalityTraits')
+        # Save to database or perform other actions
+
+        # Redirect to a success page or another page
+        return redirect('success_page')
+
+    job_positions = Job_Position_Criteria.objects.values_list('JOB_POSITION', flat=True).distinct()
+    return render(request, './post_job/post_job.html', {'job_positions': job_positions})
+
+# def get_personality_traits(request):
+#     job_position = request.GET.get('job_position')
+#     if job_position:
+#         criteria = Job_Position_Criteria.objects.filter(JOB_POSITION=job_position)
+#         if criteria.exists():
+#             personality_traits = set()
+#             for criterion in criteria:
+#                 if criterion.PERSONALITY_TRAITS and criterion.PERSONALITY_TRAITS.lower() != 'nan':
+#                     personality_traits.add(criterion.PERSONALITY_TRAITS)
+#                 if criterion.COGNITIVE_SKILLS and criterion.COGNITIVE_SKILLS.lower() != 'nan':
+#                     personality_traits.add(criterion.COGNITIVE_SKILLS)
+#                 if criterion.EMOTIONAL_INTELLIGENCE and criterion.EMOTIONAL_INTELLIGENCE.lower() != 'nan':
+#                     personality_traits.add(criterion.EMOTIONAL_INTELLIGENCE)
+#             return JsonResponse({'personality_traits': list(personality_traits)})
+#     return JsonResponse({'personality_traits': []})
+
+def get_personality_traits(request):
+    job_position = request.GET.get('job_position')
+    print("Received job position:", job_position)
+    for criteria in Job_Position_Criteria.objects.all():
+        print('Checking the data of Job Positions: ',criteria.JOB_POSITION)
+    if job_position:
+        job_position = job_position + " "
+        criteria = Job_Position_Criteria.objects.filter(JOB_POSITION=job_position)
+        print("Matching criteria:", criteria)
+        print("Matching criteria count:", criteria.count())
+        if criteria.exists():
+            personality_traits = set()
+            for criterion in criteria:
+                if criterion.PERSONALITY_TRAITS and criterion.PERSONALITY_TRAITS.lower() != 'nan':
+                    personality_traits.add(criterion.PERSONALITY_TRAITS)
+                if criterion.COGNITIVE_SKILLS and criterion.COGNITIVE_SKILLS.lower() != 'nan':
+                    personality_traits.add(criterion.COGNITIVE_SKILLS)
+                if criterion.EMOTIONAL_INTELLIGENCE and criterion.EMOTIONAL_INTELLIGENCE.lower() != 'nan':
+                    personality_traits.add(criterion.EMOTIONAL_INTELLIGENCE)
+            print("Extracted personality traits:", personality_traits)
+            return JsonResponse({'personality_traits': list(personality_traits)})
+        else:
+            print("No matching criteria found")
+    else:
+        print("No job position provided")
+    return JsonResponse({'personality_traits': []})
 
 def quiz_start_screen(request):
     return render(request, './quiz/quiz_start_screen.html')

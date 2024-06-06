@@ -10,7 +10,11 @@ urlpatterns = [
     path('recruiter_create_account', views.recruiter_create_account, name='recruiter_create_account'),
     path('jobseeker_home', views.jobseeker_home, name='jobseeker_home'),
     path('recruiter_home', views.recruiter_home, name='recruiter_home'),
+
     path('post_job', views.post_job, name='post_job'),
+    path('get_personality_traits/', views.get_personality_traits, name='get_personality_traits'),
+
+
     path('quiz_start_screen', views.quiz_start_screen, name='quiz_start_screen'),
 
     path('disc_quiz/<int:question_id>/', views.disc_quiz, name='disc_quiz'),
