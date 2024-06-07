@@ -1,8 +1,8 @@
 from django.shortcuts import render , get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .models import Disc_Questions_Dataset
-from .models import NVI_Questions_Dataset
+from .models import DISC_Questions_Dataset
+from .models import Cognitive_NVI_Questions_Dataset
 import random
 
 # Create your views here.
@@ -37,11 +37,11 @@ def quiz_start_screen(request):
 #     return render(request, './disc_quiz/disc_quiz.html')
 def disc_quiz(request, question_id=1):
     # Get the question based on the current question ID
-    question = get_object_or_404(Disc_Questions_Dataset, id=question_id)
+    question = get_object_or_404(DISC_Questions_Dataset, id=question_id)
     context = {
         'question': question,
-        'next_question_id': question_id + 1 if question_id < Disc_Questions_Dataset.objects.count() else None,
-        'total_questions': Disc_Questions_Dataset.objects.count()
+        'next_question_id': question_id + 1 if question_id < DISC_Questions_Dataset.objects.count() else None,
+        'total_questions': DISC_Questions_Dataset.objects.count()
     }
     return render(request, 'disc_quiz/disc_quiz.html', context)
 
@@ -74,7 +74,7 @@ def disc_quiz(request, question_id=1):
 
 def non_verbal_quiz(request, question_index=0):
     if 'selected_questions' not in request.session:
-        question_ids = list(NVI_Questions_Dataset.objects.values_list('id', flat=True))
+        question_ids = list(Cognitive_NVI_Questions_Dataset.objects.values_list('id', flat=True))
         selected_questions = random.sample(question_ids, 30)
         request.session['selected_questions'] = selected_questions
         print(selected_questions)
@@ -82,7 +82,7 @@ def non_verbal_quiz(request, question_index=0):
         selected_questions = request.session['selected_questions']
 
     question_id = selected_questions[question_index]
-    question = get_object_or_404(NVI_Questions_Dataset, id=question_id)
+    question = get_object_or_404(Cognitive_NVI_Questions_Dataset, id=question_id)
     next_question_index = question_index + 1 if question_index < 29 else None
 
     options = [
