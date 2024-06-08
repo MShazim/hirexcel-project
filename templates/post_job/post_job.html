@@ -1,192 +1,319 @@
-{% extends "components/navbar.html" %} {% block content %}
-<div class="container mb-5">
-  <h2 class="mt-5 mb-4">Post a Job</h2>
-  <form class="justify-content-start">
-    <!-- Job Title -->
-    <div class="form-group">
-      <label for="jobTitle" class="label">Job Title</label>
-      <input
-        type="text"
-        class="form-control"
-        id="jobTitle"
-        placeholder="Enter job title"
-        required
-      />
-    </div>
-    <!-- Company Name -->
-    <div class="form-group">
-      <label for="companyName">Company Name</label>
-      <input
-        type="text"
-        class="form-control"
-        id="companyName"
-        placeholder="Enter company name"
-        required
-      />
-    </div>
-    <!-- Location -->
-    <div class="form-group">
-      <label for="location">Location</label>
-      <input
-        type="text"
-        class="form-control"
-        id="location"
-        placeholder="Enter job location"
-        required
-      />
-    </div>
-    <!-- Job Type -->
-    <div class="form-group">
-      <label for="jobType">Job Type</label>
-      <select class="form-control" id="jobType" required>
-        <option value="">Select job type</option>
-        <option>Full-time</option>
-        <option>Part-time</option>
-        <option>Remote</option>
-        <!-- Add more options as needed -->
-      </select>
-    </div>
-    <!-- Job Position -->
-    <div class="form-group">
-      <label for="jobPosition">Job Position</label>
-      <select class="form-control" id="jobPosition" name="jobPosition" required>
-        <option value="">Select Job Position</option>
-        {% for position in job_positions %}
-        <option value="{{ position }}">{{ position }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <!-- Job Description -->
-    <div class="form-group">
-      <label for="jobDescription">Job Description</label>
-      <textarea
-        class="form-control"
-        id="jobDescription"
-        rows="3"
-        required
-      ></textarea>
-    </div>
-    <!-- Key Responsibilities -->
-    <div class="form-group">
-      <label for="keyResponsibilities">Key Responsibilities</label>
-      <textarea
-        class="form-control"
-        id="keyResponsibilities"
-        rows="3"
-        required
-      ></textarea>
-    </div>
-    <!-- Required Qualifications -->
-    <div class="form-group">
-      <label for="requiredQualifications">Required Qualifications</label>
-      <textarea
-        class="form-control"
-        id="requiredQualifications"
-        rows="3"
-        required
-      ></textarea>
-    </div>
-    <!-- Required Skills -->
-    <div class="form-group">
-      <label for="requiredSkills">Required Skills</label>
-      <textarea
-        class="form-control"
-        id="requiredSkills"
-        rows="3"
-        required
-      ></textarea>
-    </div>
-    <!-- Experience Requirements -->
-    <div class="form-group">
-      <label for="experienceRequirements">Experience Requirements</label>
-      <textarea
-        class="form-control"
-        id="experienceRequirements"
-        rows="3"
-        required
-      ></textarea>
-    </div>
-    <!-- Contact Information (Mobile Number) -->
-    <div class="form-group">
-      <label for="contactInformation">Mobile Number</label>
-      <input
-        type="tel"
-        class="form-control"
-        id="contactInformation"
-        placeholder="Enter mobile number"
-        required
-      />
-    </div>
-    <!-- Personality Traits -->
-    <div class="form-group">
-      <h4>Personality Traits</h4>
-      <p>
-        Following are the personality traits for the selected Job positions:
-      </p>
-      <div id="personalityTraitsContainer"></div>
-    </div>
+{% extends "components/recruiter_navbar.html" %}
+{% block content %}
+{% comment %} <div class="container mb-5">
+  <h2 class="mt-5 mb-4 text-center">Post a Job</h2>
+  <form method="post">
+      {% csrf_token %}
+      <!-- Job Details Section -->
+      <div class="section">
+          <div class="section-heading text-left">
+              <h4>Job Details</h4>
+          </div>
+          <div class="row">
+              <div class="col-md-6 form-group">
+                  <label for="jobTitle">Job Title</label>
+                  <input type="text" class="form-control" id="jobTitle" name="TITLE" placeholder="Enter job title" required />
+              </div>
+              <div class="col-md-6 form-group">
+                  <label for="companyName">Company Name</label>
+                  <input type="text" class="form-control" id="companyName" placeholder="Enter company name" required />
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-6 form-group">
+                  <label for="city">City</label>
+                  <input type="text" class="form-control" id="city" name="CITY" placeholder="Enter city" required />
+              </div>
+              <div class="col-md-6 form-group">
+                  <label for="country">Country</label>
+                  <input type="text" class="form-control" id="country" name="COUNTRY" placeholder="Enter country" required />
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-6 form-group">
+                  <label for="contactInformation">Contact Number</label>
+                  <input type="tel" class="form-control" id="contactInformation" placeholder="Enter contact number" required />
+              </div>
+              <div class="col-md-6 form-group">
+                  <label for="jobType">Job Type</label>
+                  <select class="form-control" id="jobType" name="JOB_TYPE" required>
+                      <option value="">Select job type</option>
+                      <option>Full-time</option>
+                      <option>Part-time</option>
+                      <option>Remote</option>
+                  </select>
+              </div>
+          </div>
+          <div class="form-group">
+              <label for="jobPosition">Job Position</label>
+              <select class="form-control" id="jobPosition" name="JOB_POSITION" required>
+                  <option value="">Select Job Position</option>
+                  {% for position in job_positions %}
+                  <option value="{{ position }}">{{ position }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+          <div class="form-group">
+              <label for="jobDescription">Job Description</label>
+              <textarea class="form-control" id="jobDescription" name="DESCRIPTION" rows="3" required></textarea>
+          </div>
+      </div>
 
-    <!-- Cognitive Assessment -->
-    <div class="form-group">
-      <label>Cognitive Assessment</label>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          id="nonVerbal"
-          value="Non-Verbal"
-          checked
-          disabled
-        />
-        <label class="form-check-label" for="nonVerbal">Non-Verbal</label>
+      <!-- Dynamic Fields Section -->
+      <div class="section">
+        <div class="section-heading text-left">
+          <h4>Requirements</h4>
+        </div>
+
+        <!-- Required Qualifications -->
+        <div class="form-group" id="qualificationsGroup">
+          <label for="requiredQualifications">Required Qualifications</label>
+          <div class="input-group mb-2">
+            <input type="text" class="form-control" name="requiredQualifications[]" placeholder="Enter qualification" required />
+            <div class="input-group-append">
+              <button class="btn btn-secondary add-more" type="button">Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Required Skills -->
+        <div class="form-group" id="skillsGroup">
+          <label for="requiredSkills">Required Skills</label>
+          <div class="input-group mb-2">
+            <input type="text" class="form-control" name="requiredSkills[]" placeholder="Enter skill" required />
+            <div class="input-group-append">
+              <button class="btn btn-secondary add-more" type="button">Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Experience Requirements -->
+        <div class="form-group" id="experienceGroup">
+          <label for="experienceRequirements">Experience Requirements</label>
+          <div class="input-group mb-2">
+            <input type="text" class="form-control" name="experienceRequirements[]" placeholder="Enter experience requirement" required />
+            <div class="input-group-append">
+              <button class="btn btn-secondary add-more" type="button">Add</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          id="verbal"
-          value="Verbal"
-          checked
-          disabled
-        />
-        <label class="form-check-label" for="verbal">Verbal</label>
+
+      <!-- Assessments Section -->
+      <div class="section">
+          <div class="section-heading text-left">
+              <h4>Assessments</h4>
+          </div>
+          <div class="form-group">
+              <h5>Personality Traits</h5>
+              <p>Following are the personality traits for the selected Job positions:</p>
+              <div id="personalityTraitsContainer"></div>
+          </div>
+          <div class="form-group">
+              <h5>Personality Assessment</h5>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="DISC" name="DISC" value="DISC" checked disabled>
+                  <label class="form-check-label" for="DISC">DISC</label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="BigFive" name="BigFive" value="Big Five" unchecked>
+                  <label class="form-check-label" for="BigFive">BIG Five</label>
+              </div>
+          </div>
+          <div class="form-group">
+              <h5>Cognitive Assessment</h5>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="nonVerbal" name="nonVerbal" value="Non-Verbal" checked>
+                  <label class="form-check-label" for="nonVerbal">Non-Verbal</label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="verbal" name="verbal" value="Verbal">
+                  <label class="form-check-label" for="verbal">Verbal</label>
+              </div>
+          </div>
+          <div class="form-group">
+              <h5>Technical Assessment (Select any 2)</h5>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="beginner" name="beginner" value="Beginner">
+                  <label class="form-check-label" for="beginner">Beginner</label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="intermediate" name="intermediate" value="Intermediate">
+                  <label class="form-check-label" for="intermediate">Intermediate</label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="professional" name="professional" value="Professional">
+                  <label class="form-check-label" for="professional">Professional</label>
+              </div>
+          </div>
       </div>
-    </div>
-    <!-- Technical Assessment -->
-    <div class="form-group">
-      <label>Technical Assessment (Select any 2)</label>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          id="beginner"
-          value="Beginner"
-        />
-        <label class="form-check-label" for="beginner">Beginner</label>
+
+      <!-- Submit Button -->
+      <div class="text-center">
+          <button type="submit" class="btn btn-primary btn-block">Submit</button>
       </div>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          id="intermediate"
-          value="Intermediate"
-        />
-        <label class="form-check-label" for="intermediate">Intermediate</label>
+  </form>
+</div> {% endcomment %}
+
+<div class="container mb-5">
+  <h2 class="mt-5 mb-4 text-center">Post a Job</h2>
+  <form method="post">
+      {% csrf_token %}
+      <!-- Job Details Section -->
+      <div class="section">
+          <div class="section-heading text-left">
+              <h4>Job Details</h4>
+          </div>
+          <div class="row">
+              <div class="col-md-6 form-group">
+                  <label for="jobTitle">Job Title</label>
+                  <input type="text" class="form-control" id="jobTitle" name="jobTitle" placeholder="Enter job title" required />
+              </div>
+              <div class="col-md-6 form-group">
+                  <label for="companyName">Company Name</label>
+                  <input type="text" class="form-control" id="companyName" name="companyName" placeholder="Enter company name" required />
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-6 form-group">
+                  <label for="city">City</label>
+                  <input type="text" class="form-control" id="city" name="city" placeholder="Enter city" required />
+              </div>
+              <div class="col-md-6 form-group">
+                  <label for="country">Country</label>
+                  <input type="text" class="form-control" id="country" name="country" placeholder="Enter country" required />
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-6 form-group">
+                  <label for="contactInformation">Contact Number</label>
+                  <input type="tel" class="form-control" id="contactInformation" name="contactInformation" placeholder="Enter contact number" required />
+              </div>
+              <div class="col-md-6 form-group">
+                  <label for="jobType">Job Type</label>
+                  <select class="form-control" id="jobType" name="jobType" required>
+                      <option value="">Select job type</option>
+                      <option>Full-time</option>
+                      <option>Part-time</option>
+                      <option>Remote</option>
+                  </select>
+              </div>
+          </div>
+          <div class="form-group">
+              <label for="jobPosition">Job Position</label>
+              <select class="form-control" id="jobPosition" name="jobPosition" required>
+                  <option value="">Select Job Position</option>
+                  {% for position in job_positions %}
+                  <option value="{{ position }}">{{ position }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+          <div class="form-group">
+              <label for="jobDescription">Job Description</label>
+              <textarea class="form-control" id="jobDescription" name="jobDescription" rows="3" required></textarea>
+          </div>
       </div>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          id="professional"
-          value="Professional"
-        />
-        <label class="form-check-label" for="professional">Professional</label>
+
+      <!-- Dynamic Fields Section -->
+      <div class="section">
+        <div class="section-heading text-left">
+          <h4>Requirements</h4>
+        </div>
+
+        <!-- Required Qualifications -->
+        <div class="form-group" id="qualificationsGroup">
+          <label for="requiredQualifications">Required Qualifications</label>
+          <div class="input-group mb-2">
+            <input type="text" class="form-control" name="requiredQualifications[]" placeholder="Enter qualification" required />
+            <div class="input-group-append">
+              <button class="btn btn-secondary add-more" type="button">Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Required Skills -->
+        <div class="form-group" id="skillsGroup">
+          <label for="requiredSkills">Required Skills</label>
+          <div class="input-group mb-2">
+            <input type="text" class="form-control" name="requiredSkills[]" placeholder="Enter skill" required />
+            <div class="input-group-append">
+              <button class="btn btn-secondary add-more" type="button">Add</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Experience Requirements -->
+        <div class="form-group" id="experienceGroup">
+          <label for="experienceRequirements">Experience Requirements</label>
+          <div class="input-group mb-2">
+            <input type="text" class="form-control" name="experienceRequirements[]" placeholder="Enter experience requirement" required />
+            <div class="input-group-append">
+              <button class="btn btn-secondary add-more" type="button">Add</button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <!-- Submit Button -->
-    <button type="submit" class="btn btn-primary">Submit</button>
+
+      <!-- Assessments Section -->
+      <div class="section">
+          <div class="section-heading text-left">
+              <h4>Assessments</h4>
+          </div>
+          <div class="form-group">
+              <h5>Personality Traits</h5>
+              <p>Following are the personality traits for the selected Job positions:</p>
+              <div id="personalityTraitsContainer"></div>
+          </div>
+          <div class="form-group">
+              <h5>Personality Assessment</h5>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="DISC" name="DISC" value="DISC" checked disabled>
+                  <label class="form-check-label" for="DISC">DISC</label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="BigFive" name="BigFive" value="Big Five" unchecked>
+                  <label class="form-check-label" for="BigFive">BIG Five</label>
+              </div>
+          </div>
+          <div class="form-group">
+              <h5>Cognitive Assessment</h5>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="nonVerbal" name="nonVerbal" value="Non-Verbal" checked>
+                  <label class="form-check-label" for="nonVerbal">Non-Verbal</label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="verbal" name="verbal" value="Verbal">
+                  <label class="form-check-label" for="verbal">Verbal</label>
+              </div>
+          </div>
+          <div class="form-group">
+              <h5>Technical Assessment (Select any 2)</h5>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="beginner" name="beginner" value="Beginner">
+                  <label class="form-check-label" for="beginner">Beginner</label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="intermediate" name="intermediate" value="Intermediate">
+                  <label class="form-check-label" for="intermediate">Intermediate</label>
+              </div>
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="professional" name="professional" value="Professional">
+                  <label class="form-check-label" for="professional">Professional</label>
+              </div>
+          </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="text-center">
+          <button type="submit" class="btn btn-primary btn-block">Submit</button>
+      </div>
   </form>
 </div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -228,6 +355,19 @@
             );
         }
       });
+  });
+
+  $(document).ready(function() {
+    $("body").on("click", ".add-more", function() {
+      var inputGroup = $(this).closest(".input-group").clone();
+      inputGroup.find("input").val("");
+      inputGroup.find(".input-group-append").html('<button class="btn btn-secondary add-more" type="button">Add</button><button class="btn btn-danger remove" type="button">Delete</button>');
+      $(this).closest(".input-group").after(inputGroup);
+    });
+
+    $("body").on("click", ".remove", function() {
+      $(this).closest(".input-group").remove();
+    });
   });
 </script>
 {% endblock %}

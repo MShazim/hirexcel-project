@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Step 4</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5 mb-5">
+  <div class="mx-auto max-w-2xl">
+    <div class="text-center mb-4">
+      <h1 class="h3 font-weight-bold">Sign Up - Step 4</h1>
+      <p class="text-muted">Enter your job seeker information.</p>
+    </div>
+    <form method="POST" enctype="multipart/form-data" action="{% url 'job_seeker_create_account_step4' %}">
+      {% csrf_token %}
+      <div class="form-group mb-3">
+        <label for="linkedinUrl">LinkedIn Profile</label>
+        <input type="url" class="form-control" name="LINKEDIN_PROFILE_URL" id="linkedinUrl" placeholder="Enter your LinkedIn profile URL">
+      </div>
+      <div class="form-group mb-3">
+        <label for="githubUrl">GitHub Profile</label>
+        <input type="url" class="form-control" name="GITHUB_PROFILE_URL" id="githubUrl" placeholder="Enter your GitHub profile URL">
+      </div>
+      <div class="form-group mb-3">
+        <label for="cv">Upload CV</label>
+        <input type="file" class="form-control-file" name="RESUME_UPLOAD" id="cv">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Finish</button>
+    </form>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrap.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
