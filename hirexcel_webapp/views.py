@@ -115,8 +115,10 @@ def post_job(request):
         # Debug: Print request.POST
         print(json.dumps(request.POST, indent=4))
 
-        # Extract form data
         try:
+            user_id = request.session.get('user_id')
+            recruiter = Recruiter.objects.get(USER_ID__USER_ID=user_id)  # Get recruiter by user ID
+
             job_title = request.POST['jobTitle']
             company_name = request.POST['companyName']
             city = request.POST['city']
@@ -149,14 +151,17 @@ def post_job(request):
                 assessments.append('Professional')
             required_assessments = ', '.join(assessments)
             
-            recruiter_id = Recruiter.objects.get(user=request.user)  # Assuming the recruiter is linked to the user
-            jpc_id = Job_Position_Criteria.objects.get(JOB_POSITION=job_position)  # Get the related job position criteria
+            # JPC_ID is optional
+            jpc_id = ''
+
+            # Static Test Criteria defined
+            test_criteria = "Selected the 50% weight for the Cognitive Assessment (Non-Verbal only) , Selected the 50% weight for the Technical Assessment (from the two chosen difficulty levels)"
 
             # Save to database
             job_posting = Job_Posting(
                 TITLE=job_title,
                 DESCRIPTION=job_description,
-                RECRUITER_ID=recruiter_id,
+                RECRUITER_ID=recruiter,
                 JPC_ID=jpc_id,
                 CITY=city,
                 COUNTRY=country,
@@ -167,12 +172,17 @@ def post_job(request):
                 REQUIRED_QUALIFICATIONS=required_qualifications,
                 EXPERIENCE_REQUIREMENTS=experience_requirements,
                 REQUIRED_ASSESSMENTS=required_assessments,
+                TEST_CRITERIA=test_criteria
             )
             job_posting.save()
 
-            return redirect('success_page')
+            return redirect('recruiter_home')
         except KeyError as e:
             return HttpResponse(f"Missing key in POST data: {e}", status=400)
+        except Recruiter.DoesNotExist:
+            return HttpResponse("Recruiter not found", status=404)
+        except Job_Position_Criteria.DoesNotExist:
+            return HttpResponse("Job Position Criteria not found", status=404)
 
     job_positions = Job_Position_Criteria.objects.values_list('JOB_POSITION', flat=True).distinct()
     return render(request, './post_job/post_job.html', {'job_positions': job_positions})

@@ -117,7 +117,7 @@ class Job_Posting(models.Model):
     TITLE = models.CharField(max_length=100)
     DESCRIPTION = models.TextField()
     RECRUITER_ID = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
-    JPC_ID = models.ForeignKey(Job_Position_Criteria, on_delete=models.CASCADE)
+    JPC_ID = models.CharField(max_length=100,blank=True, null=True)
     CITY = models.CharField(max_length=100)
     COUNTRY = models.CharField(max_length=100)
     JOB_TYPE = models.CharField(max_length=100)
