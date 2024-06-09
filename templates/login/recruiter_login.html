@@ -115,13 +115,13 @@
                 <p class="text-left py-2">Please login to your account as recruiter.</p>
                 <form method="POST" action="{% url 'recruiter_login' %}">
                   {% csrf_token %}
-                  <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input type="email" class="form-control  py-4" name="email" id="email" placeholder="Enter email" required />
+                  <div class="form-group py-2">
+                    <label for="email" class="pb-2">Email address</label>
+                    <input type="email" class="form-control " name="email" id="email" placeholder="Enter email" required />
                   </div>
-                  <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control  py-4" name="password" id="password" placeholder="Password" required />
+                  <div class="form-group py-2">
+                    <label for="password" class="pb-2">Password</label>
+                    <input type="password" class="form-control  " name="password" id="password" placeholder="Password" required />
                   </div>
                   {% if messages %}
                   <div class="alert alert-danger" role="alert">
@@ -130,7 +130,7 @@
                       {% endfor %}
                   </div>
                   {% endif %}
-                  <div class="d-flex justify-content-between align-items-center mb-4">
+                  <div class="d-flex justify-content-between align-items-center mb-4 pt-2">
                     <!-- Checkbox -->
                     <div class="form-check ">
                       <input class="form-check-input" type="checkbox" value="" id="form1Example3" checked />
@@ -140,7 +140,7 @@
                   </div>
                   <div class="d-grid">
 
-                    <button type="submit" class="btn background-radial-gradient  text-white">login</button>
+                    <button type="submit" class="btn background-radial-gradient py-3 text-white">Login</button>
                   </div>
                   <div class="pt-4  text-center">
                     <p>Dont have an account?

@@ -28,7 +28,7 @@
             hsl(218, 41%, 19%) 80%,
             transparent 100%);
       }
-  
+
       #radius-shape-1 {
         height: 220px;
         width: 220px;
@@ -37,7 +37,7 @@
         background: radial-gradient(#44006b, #ad1fff);
         overflow: hidden;
       }
-  
+
       #radius-shape-2 {
         border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
         bottom: -60px;
@@ -47,7 +47,7 @@
         background: radial-gradient(#44006b, #ad1fff);
         overflow: hidden;
       }
-  
+
       .bg-glass {
         background-color: hsla(0, 0%, 100%, 0.9) !important;
         backdrop-filter: saturate(200%) blur(25px);
@@ -122,11 +122,11 @@
               Stand out and get discovered today!
             </p>
           </div>
-    
+
           <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
             <div id="radius-shape-1" class="position-absolute rounded-circle shadow-5-strong"></div>
             <div id="radius-shape-2" class="position-absolute shadow-5-strong"></div>
-    
+
             <div class="card mask-custom ">
               <div class="card-body px-4 py-5 px-md-5">
 
@@ -134,22 +134,22 @@
                 <p class="text-left py-2">Please login to your account as job seeker.</p>
                 <form method="POST" action="{% url 'jobseeker_login' %}">
                   {% csrf_token %}
-                  <div class="form-group">
-                    <label for="email" class="text-black ">Email address</label>
+                  <div class="form-group py-2">
+                    <label for="email" class="pb-2">Email address</label>
                     <input
                       type="email"
-                      class="form-control py-4"
+                      class="form-control"
                       name="email"
                       id="email"
                       placeholder="Enter email"
                       required
                     />
                   </div>
-                  <div class="form-group">
-                    <label for="password">Password</label>
+                  <div class="form-group py-2">
+                    <label for="password" class="pb-2">Password</label>
                     <input
                       type="password"
-                      class="form-control py-4"
+                      class="form-control"
                       name="password"
                       id="password"
                       placeholder="Password"
@@ -161,7 +161,7 @@
                     {% for message in messages %} {{ message }} {% endfor %}
                   </div>
                   {% endif %}
-                  <div class="d-flex justify-content-between align-items-center mb-4">
+                  <div class="d-flex justify-content-between align-items-center mb-4 pt-2">
                     <!-- Checkbox -->
                     <div class="form-check ">
                       <input class="form-check-input" type="checkbox" value="" id="form1Example3" checked />
@@ -171,7 +171,7 @@
                   </div>
                   <div class="d-grid">
 
-                    <button type="submit" class="btn background-radial-gradient  text-white">
+                    <button type="submit" class="btn background-radial-gradient py-3 text-white">
                       login
                     </button>
                   </div>
@@ -190,7 +190,7 @@
           </div>
         </div>
       </div>
-    
+
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

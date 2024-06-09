@@ -63,17 +63,56 @@ def jobseeker_home(request):
     user_id = request.session.get('user_id')
     if user_id:
         user_info = User_Information.objects.get(USER_ID=user_id)
-        # Use the user_info as needed
-        return render(request, 'home/jobseeker_home.html', {'user_info': user_info})
+        job_postings = Job_Posting.objects.all()  # Get all job postings
+        formatted_job_postings = [format_job_posting_data(job) for job in job_postings]
+
+        return render(request, 'home/jobseeker_home.html', {
+            'user_info': user_info,
+            'job_postings': formatted_job_postings
+        })
     else:
         return redirect('jobseeker_login')  # Redirect to login if not logged in
+
+# def recruiter_home(request):
+#     user_id = request.session.get('user_id')
+#     if user_id:
+#         user_info = User_Information.objects.get(USER_ID=user_id)
+#         # Use the user_info as needed
+#         return render(request, 'home/recruiter_home.html', {'user_info': user_info})
+#     else:
+#         return redirect('recruiter_login')  # Redirect to login if not logged in
+
+def format_job_posting_data(job_posting):
+    """Format job posting data for template rendering."""
+    formatted_data = {
+        'job_title': job_posting.TITLE,
+        'company_name': job_posting.RECRUITER_ID.COMPANY_NAME,
+        'job_position': job_posting.JOB_POSITION,
+        'job_type': job_posting.JOB_TYPE,
+        'city': job_posting.CITY,
+        'country': job_posting.COUNTRY,
+        'job_description': job_posting.DESCRIPTION,
+        'required_qualifications': job_posting.REQUIRED_QUALIFICATIONS.split(', '),
+        'required_skills': job_posting.REQUIRED_SKILLS.split(', '),
+        'experience_requirements': job_posting.EXPERIENCE_REQUIREMENTS.split(', '),
+        'personality_traits': job_posting.PERSONALITY_TRAITS.split(', '),
+        'required_assessments': job_posting.REQUIRED_ASSESSMENTS.split(', '),
+        'test_criteria': job_posting.TEST_CRITERIA.split(', '),
+    }
+    return formatted_data
 
 def recruiter_home(request):
     user_id = request.session.get('user_id')
     if user_id:
         user_info = User_Information.objects.get(USER_ID=user_id)
-        # Use the user_info as needed
-        return render(request, 'home/recruiter_home.html', {'user_info': user_info})
+        recruiter = Recruiter.objects.get(USER_ID=user_info)
+        job_postings = Job_Posting.objects.filter(RECRUITER_ID=recruiter)
+        formatted_job_postings = [format_job_posting_data(job) for job in job_postings]
+
+        return render(request, 'home/recruiter_home.html', {
+            'user_info': user_info,
+            'job_postings': formatted_job_postings
+        })
     else:
         return redirect('recruiter_login')  # Redirect to login if not logged in
 
@@ -155,7 +194,7 @@ def post_job(request):
             jpc_id = ''
 
             # Static Test Criteria defined
-            test_criteria = "Selected the 50% weight for the Cognitive Assessment (Non-Verbal only) , Selected the 50% weight for the Technical Assessment (from the two chosen difficulty levels)"
+            test_criteria = "of the assessment weight is allocated to the Cognitive Assessment (Non-Verbal only). , of the assessment weight is allocated to the Technical Assessment (from the two chosen difficulty levels)"
 
             # Save to database
             job_posting = Job_Posting(
