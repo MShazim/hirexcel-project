@@ -20,10 +20,25 @@
         box-sizing: border-box;
       }
       header {
-        background-color: #333;
+        {% comment %} background-color: #333; {% endcomment %}
         color: #fff;
         padding: 20px;
         text-align: center;
+      }
+      .background-radial-gradient {
+        background-color: hsl(218, 41%, 15%);
+        background-image: radial-gradient(650px circle at 0% 0%,
+            hsl(218, 41%, 35%) 15%,
+            hsl(218, 41%, 30%) 35%,
+            hsl(218, 41%, 20%) 75%,
+            hsl(218, 41%, 19%) 80%,
+            transparent 100%),
+          radial-gradient(1250px circle at 100% 100%,
+            hsl(218, 41%, 45%) 15%,
+            hsl(218, 41%, 30%) 35%,
+            hsl(218, 41%, 20%) 75%,
+            hsl(218, 41%, 19%) 80%,
+            transparent 100%);
       }
       main {
         padding: 20px;
@@ -32,36 +47,6 @@
         background-color: #fff;
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-      section {
-        margin-bottom: 20px;
-      }
-      h2 {
-        color: #333;
-        margin-bottom: 5px;
-      }
-      p {
-        color: #666;
-        margin-bottom: 15px;
-        line-height: 1.5;
-      }
-      button[type="submit"] {
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s ease;
-      }
-      button[type="submit"]:hover {
-        background-color: #0056b3;
-      }
-      footer {
-        text-align: center;
-        margin-top: 20px;
-        color: #666;
       }
       .card-option {
         display: flex;
@@ -74,128 +59,113 @@
         transition: background-color 0.3s;
       }
       .card-option:hover {
-        background-color: #f8f9fa;
+        background-color: #8ABFF5;
+      }
+      .card-option.selected {
+        background-color: #8ABFF5;
       }
       .card-option-number {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 30px;
-        height: 30px;
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
-        background-color: #6c757d;
+        background-color: #0C0C0C;
         color: white;
         margin-right: 1rem;
+        flex-shrink: 0;
       }
-      .next-button {
+      .radio-label {
         display: flex;
         align-items: center;
-        justify-content: center;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background-color: #343a40;
-        color: white;
-        position: absolute;
-        right: 2rem;
-        bottom: 2rem;
-        font-size: 1.5rem;
+        width: 100%;
+      }
+      footer {
+        text-align: center;
+        margin-top: 20px;
+        color: #666;
+      }
+      input[type="radio"] {
+        display: none;
       }
     </style>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const options = document.querySelectorAll('.card-option');
+          const nextButton = document.querySelector('.btn-primary');
+
+          options.forEach(option => {
+              option.addEventListener('click', function () {
+                  options.forEach(opt => opt.classList.remove('selected'));
+                  this.classList.add('selected');
+                  this.querySelector('input[type="radio"]').checked = true;
+                  nextButton.classList.remove('disabled');
+              });
+          });
+
+          nextButton.classList.add('disabled'); // Initially disable the button
+      });
+    </script>
   </head>
   <body>
-    <header>
+    <header class="background-radial-gradient">
       <h1>TECHNICAL ASSESSMENT</h1>
     </header>
-    {% comment %} <main class="container my-5">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Question:</h5>
-          <p id="question-line" class="card-text">
-            Here the question will appear.
-          </p>
-
-          <div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="card-option" onclick="selectOption('A')">
-                  <div class="card-option-number">A</div>
-                  <div class="card-option-text">Option A description</div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="card-option" onclick="selectOption('B')">
-                  <div class="card-option-number">B</div>
-                  <div class="card-option-text">Option B description</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6">
-                <div class="card-option" onclick="selectOption('C')">
-                  <div class="card-option-number">C</div>
-                  <div class="card-option-text">Option C description</div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="card-option" onclick="selectOption('D')">
-                  <div class="card-option-number">D</div>
-                  <div class="card-option-text">Option D description</div>
-                </div>
-              </div>
-            </div>
-        </div>
-        <div class="w-auto d-flex flex-row-reverse mt-2">
-          <a href="#" class="btn btn-primary">Next Question</a>
-        </div>
-
-        </div>
-      </div>
-    </main> {% endcomment %}
-
     <main class="container my-5">
       <div class="card">
           <div class="card-body">
-              <h5 class="card-title">Question:</h5>
-              <p id="question-line" class="card-text">{{ question.QUESTION }}</p>
+              <h4 class="card-title h4">Question:</h4>
+              <p id="question-line" class="card-text fw-bold">{{ question.QUESTION }}</p>
 
               <div>
-                  <div class="row">
-                      <div class="col-md-6">
-                          <div class="card-option">
-                              <div class="card-option-number">A</div>
-                              <div class="card-option-text fw-bold">{{ options.0 }}</div>
-                          </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="card-option">
-                              <div class="card-option-number">B</div>
-                              <div class="card-option-text fw-bold">{{ options.1 }}</div>
-                          </div>
+                <div class="row">
+                  <div class="col-md-6">
+                      <div class="card-option">
+                          <input class="form-check-input" type="radio" name="option" id="option1" value="{{ options.0 }}">
+                          <label class="form-check-label radio-label " for="option1">
+                              <div class="card-option-number fw-bold">a</div>
+                              <div>{{ options.0 }}</div>
+                          </label>
                       </div>
                   </div>
-
-                  <div class="row">
-                      <div class="col-md-6">
-                          <div class="card-option">
-                              <div class="card-option-number">C</div>
-                              <div class="card-option-text fw-bold">{{ options.2 }}</div>
-                          </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="card-option">
-                              <div class="card-option-number">D</div>
-                              <div class="card-option-text fw-bold">{{ options.3 }}</div>
-                          </div>
+                  <div class="col-md-6">
+                      <div class="card-option">
+                          <input class="form-check-input" type="radio" name="option" id="option2" value="{{ options.1 }}">
+                          <label class="form-check-label radio-label " for="option2">
+                              <div class="card-option-number fw-bold">b</div>
+                              <div>{{ options.1 }}</div>
+                          </label>
                       </div>
                   </div>
               </div>
+
+              <div class="row">
+                  <div class="col-md-6">
+                      <div class="card-option">
+                          <input class="form-check-input" type="radio" name="option" id="option3" value="{{ options.2 }}">
+                          <label class="form-check-label radio-label " for="option3">
+                              <div class="card-option-number fw-bold">c</div>
+                              <div>{{ options.2 }}</div>
+                          </label>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="card-option">
+                          <input class="form-check-input" type="radio" name="option" id="option4" value="{{ options.3 }}">
+                          <label class="form-check-label radio-label " for="option4">
+                              <div class="card-option-number fw-bold">d</div>
+                              <div>{{ options.3 }}</div>
+                          </label>
+                      </div>
+                  </div>
+              </div>
+              </div>
               <div class="w-auto d-flex flex-row-reverse mt-2">
                   {% if next_question_index is not None %}
-                      <a href="{% url 'technical_quiz' next_question_index %}" class="btn btn-primary">Next Question</a>
+                      <a href="{% url 'technical_quiz' next_question_index %}" class="btn btn-primary disabled">Next Question</a>
                   {% else %}
-                      <a href="{% url 'phase_three_completed' %}" class="btn btn-primary">Finish</a>
+                      <a href="{% url 'phase_three_completed' %}" class="btn btn-primary disabled">Finish</a>
                   {% endif %}
               </div>
           </div>
@@ -204,7 +174,5 @@
     <footer>
       <p>&copy; 2024 HIREXCEL. All rights reserved.</p>
     </footer>
-
-    
   </body>
 </html>

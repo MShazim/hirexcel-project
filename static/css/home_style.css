@@ -45,7 +45,7 @@
 /* ------------------------------ */
 
 /* POST JOB  */
-.container {
+/* .container {
     background-color: #ffffff;
     padding: 30px;
     border-radius: 10px;
@@ -55,6 +55,22 @@
 
 .label {
     font-weight: bold;
+} */
+
+.container {
+    margin-top: 50px;
+}
+.section {
+    margin-bottom: 30px;
+}
+.section-heading {
+    margin-bottom: 20px;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-check-label {
+    margin-left: 10px;
 }
 
 /* ---------------------------- */

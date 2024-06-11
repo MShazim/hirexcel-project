@@ -117,7 +117,7 @@ class Job_Posting(models.Model):
     TITLE = models.CharField(max_length=100)
     DESCRIPTION = models.TextField()
     RECRUITER_ID = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
-    JPC_ID = models.ForeignKey(Job_Position_Criteria, on_delete=models.CASCADE)
+    JPC_ID = models.CharField(max_length=100,blank=True, null=True)
     CITY = models.CharField(max_length=100)
     COUNTRY = models.CharField(max_length=100)
     JOB_TYPE = models.CharField(max_length=100)
@@ -141,9 +141,9 @@ class Job_Posting(models.Model):
 class Assessment(models.Model):
     ASSESSMENT_ID = models.CharField(primary_key=True, editable=False, max_length=9)
     ASSESSMENT_CATEGORY = models.CharField(max_length=200)
-    ASSESSMENT_SUB_TYPE = models.URLField( blank=True, null=True)
+    ASSESSMENT_SUB_TYPE = models.CharField(max_length=100, blank=True, null=True)
     PASSING_SCORE = models.CharField(max_length=100, blank=True, null=True)
-    REQUIRED_COMPLETION_TIME = models.DateTimeField()
+    REQUIRED_COMPLETION_TIME = models.DateTimeField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.ASSESSMENT_ID:
@@ -159,10 +159,10 @@ class Job_Seeker_Assessment(models.Model):
     JOB_SEEKER_ID = models.ForeignKey(Job_Seeker, on_delete=models.CASCADE)
     JOB_POST_ID = models.ForeignKey(Job_Posting, on_delete=models.CASCADE)
     ASSESSMENT_ID = models.ForeignKey(Assessment, on_delete=models.CASCADE)
-    NAME = models.CharField(max_length=100)
+    NAME = models.CharField(max_length=100,blank=True, null=True)
     ASSESSMENT_TYPE = models.CharField(max_length=100)
-    ASSESSMENT_ONGOING_STATUS = models.CharField(max_length=100)
-    COMPLETION_TIME = models.DateTimeField()
+    ASSESSMENT_ONGOING_STATUS = models.CharField(max_length=100,blank=True, null=True)
+    COMPLETION_TIME = models.DateTimeField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.JOB_SEEKER_ASSESSMENT_ID:

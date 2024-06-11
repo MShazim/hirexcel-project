@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Step 3</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5 mb-5">
+  <div class="mx-auto max-w-2xl">
+    <div class="text-center mb-4">
+      <h1 class="h3 font-weight-bold">Sign Up - Step 3</h1>
+      <p class="text-muted">Enter your work experience details.</p>
+    </div>
+    <form method="POST" action="{% url 'job_seeker_create_account_step3' %}">
+      {% csrf_token %}
+      <div class="form-group mb-3">
+        <label for="workPlace">Workplace</label>
+        <input type="text" class="form-control" name="COMPANY_NAME" id="workPlace" placeholder="Enter your workplace" required>
+      </div>
+      <div class="form-group mb-3">
+        <label for="workDesignation">Designation</label>
+        <input type="text" class="form-control" name="DESIGNATION" id="workDesignation" placeholder="Enter your designation" required>
+      </div>
+      <div class="form-row mb-3">
+        <div class="col">
+          <label for="workStartDate">Start Date</label>
+          <input type="date" class="form-control" name="START_DATE" id="workStartDate" required>
+        </div>
+        <div class="col">
+          <label for="workEndDate">End Date</label>
+          <input type="date" class="form-control" name="END_DATE" id="workEndDate" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Next</button>
+    </form>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrap.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

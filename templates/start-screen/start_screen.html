@@ -1,3 +1,107 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hirexcel Start Screen</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <style>
+    .background-radial-gradient {
+      background-color: hsl(218, 41%, 15%);
+      background-image: radial-gradient(650px circle at 0% 0%,
+          hsl(218, 41%, 35%) 15%,
+          hsl(218, 41%, 30%) 35%,
+          hsl(218, 41%, 20%) 75%,
+          hsl(218, 41%, 19%) 80%,
+          transparent 100%),
+        radial-gradient(1250px circle at 100% 100%,
+          hsl(218, 41%, 45%) 15%,
+          hsl(218, 41%, 30%) 35%,
+          hsl(218, 41%, 20%) 75%,
+          hsl(218, 41%, 19%) 80%,
+          transparent 100%);
+    }
+
+    #radius-shape-1 {
+      height: 220px;
+      width: 220px;
+      top: -60px;
+      left: -130px;
+      background: radial-gradient(#44006b, #ad1fff);
+      overflow: hidden;
+    }
+
+    #radius-shape-2 {
+      border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
+      bottom: -60px;
+      right: -110px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(#44006b, #ad1fff);
+      overflow: hidden;
+    }
+
+    .bg-glass {
+      background-color: hsla(0, 0%, 100%, 0.9) !important;
+      backdrop-filter: saturate(200%) blur(25px);
+    }
+    .mask-custom {
+      backdrop-filter: blur(0px);
+      background-color: rgba(255,255,255,0.95);
+    }
+  </style>
+</head>
+<body class="background-radial-gradient">
+
+<main class="justify-content-center">
+
+  <div class="container text-center my-5">
+    <h1 class="display-4 font-weight-bold">Welcome To HIREXCEL</h1>
+    <h3 class="mt-4 font-weight-semibold">Please select your role</h3>
+  </div>
+  
+  <div class="container d-flex justify-content-center my-4">
+    <div class="row w-75">
+      <div class="col-md-6 mb-4">
+        <a href="jobseeker_login" class="text-decoration-none">
+          <div class="card border-2 h-100">
+            <div class="card-body d-flex flex-column align-items-center">
+              <div class="mb-4">
+                <img src="/static/images/job-seeker.png" class="" alt="Job Seeker Avatar" width="100" height="100">
+              </div>
+              <h5 class="card-title mb-2 fw-bold">Job Seeker</h5>
+              <p class="card-text">Start as Job seeker</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="recruiter_login" class="text-decoration-none">
+          <div class="card border-2 h-100">
+            <div class="card-body d-flex flex-column align-items-center">
+              <div class="mb-4">
+                <img src="/static/images/recruiter.png" class="" alt="Recruiter Avatar" width="100" height="100">
+              </div>
+              <h5 class="card-title mb-2 fw-bold">Recruiter</h5>
+              <p class="card-text">Start as Recruiter</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</main>
+
+</body>
+</html> {% endcomment %}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,50 +109,111 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hirexcel Start Screen</title>
   <!-- Bootstrap CSS -->
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <style>
+    .background-radial-gradient {
+      background-color: hsl(218, 41%, 15%);
+      background-image: radial-gradient(650px circle at 0% 0%,
+          hsl(218, 41%, 35%) 15%,
+          hsl(218, 41%, 30%) 35%,
+          hsl(218, 41%, 20%) 75%,
+          hsl(218, 41%, 19%) 80%,
+          transparent 100%),
+        radial-gradient(1250px circle at 100% 100%,
+          hsl(218, 41%, 45%) 15%,
+          hsl(218, 41%, 30%) 35%,
+          hsl(218, 41%, 20%) 75%,
+          hsl(218, 41%, 19%) 80%,
+          transparent 100%);
+      position: relative;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    #radius-shape-1,
+    #radius-shape-2 {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(#44006b, #ad1fff);
+    }
+
+    #radius-shape-1 {
+      height: 220px;
+      width: 220px;
+      top: -60px;
+      left: -130px;
+    }
+
+    #radius-shape-2 {
+      border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
+      bottom: -60px;
+      right: -110px;
+      width: 300px;
+      height: 300px;
+    }
+
+    .bg-glass {
+      background-color: hsla(0, 0%, 100%, 0.9) !important;
+      backdrop-filter: saturate(200%) blur(25px);
+    }
+    .mask-custom {
+      backdrop-filter: blur(0px);
+      background-color: rgba(255,255,255,0.95);
+    }
+
+    .text-white-custom {
+      color: white !important;
+    }
+  </style>
 </head>
-<body>
+<body class="background-radial-gradient">
 
-<div class="container text-center my-5">
-  <h1 class="display-4 font-weight-bold">Welcome To HIREXCEL</h1>
-  <h3 class="mt-4 font-weight-semibold">Please select your role</h3>
-</div>
+<main class=" align-content-center h-100">
 
-<div class="container d-flex justify-content-center my-4">
-  <div class="row w-75">
-    <div class="col-md-6 mb-4">
-      <a href="jobseeker_login" class="text-decoration-none">
-        <div class="card border-2 h-100">
-          <div class="card-body d-flex flex-column align-items-center">
-            <div class="mb-4">
-              <img src="https://github.com/shadcn.png" class="rounded-circle" alt="Job Seeker Avatar" width="100" height="100">
+  <div id="radius-shape-1"></div>
+  <div id="radius-shape-2"></div>
+
+  <div class="container text-center my-5 text-white-custom">
+    <h1 class="display-4 fw-bold">Welcome to HIREXCEL</h1>
+    <h3 class="mt-4 font-weight-semibold">Please select your role.</h3>
+  </div>
+  
+  <div class="container d-flex justify-content-center my-4">
+    <div class="row w-75">
+      <div class="col-md-6 mb-4 ">
+        <a href="jobseeker_login" class="text-decoration-none">
+          <div class="card mask-custom h-100 py-4">
+            <div class="card-body d-flex flex-column align-items-center">
+              <div class="mb-4">
+                <img src="/static/images/job-seeker.png" class="" alt="Job Seeker Avatar" width="100" height="100">
+              </div>
+              <h3 class="card-title mb-2 fw-bold">Job Seeker</h3>
+              <p class="card-text">Start as Job seeker</p>
             </div>
-            <h5 class="card-title mb-2">Job Seeker</h5>
-            <p class="card-text">Start as Job seeker</p>
           </div>
-        </div>
-      </a>
-    </div>
-    <div class="col-md-6 mb-4">
-      <a href="recruiter_login" class="text-decoration-none">
-        <div class="card border-2 h-100">
-          <div class="card-body d-flex flex-column align-items-center">
-            <div class="mb-4">
-              <img src="https://github.com/shadcn.png" class="rounded-circle" alt="Recruiter Avatar" width="100" height="100">
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="recruiter_login" class="text-decoration-none">
+          <div class="card mask-custom h-100 py-4">
+            <div class="card-body d-flex flex-column align-items-center">
+              <div class="mb-4">
+                <img src="/static/images/recruiter.png" class="" alt="Recruiter Avatar" width="100" height="100">
+              </div>
+              <h3 class="card-title mb-2 fw-bold">Recruiter</h3>
+              <p class="card-text">Start as Recruiter</p>
             </div>
-            <h5 class="card-title mb-2">Recruiter</h5>
-            <p class="card-text">Start as Recruiter</p>
           </div>
-        </div>
-      </a>
+        </a>
+      </div>
     </div>
   </div>
-</div>
-
-<!-- Bootstrap JS and dependencies -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</main>
 
 </body>
 </html>
