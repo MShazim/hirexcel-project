@@ -17,7 +17,7 @@ urlpatterns = [
     path('post_job', views.post_job, name='post_job'),
     path('get_personality_traits/', views.get_personality_traits, name='get_personality_traits'),
 
-
+    path('apply_for_job/<str:job_post_id>/', views.apply_for_job, name='apply_for_job'),
     path('quiz_start_screen', views.quiz_start_screen, name='quiz_start_screen'),
 
     path('create-account/job_seeker_create_account_step1/', views.job_seeker_create_account_step1, name='job_seeker_create_account_step1'),
