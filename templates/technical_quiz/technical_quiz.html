@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% comment %} <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -20,7 +20,6 @@
         box-sizing: border-box;
       }
       header {
-        {% comment %} background-color: #333; {% endcomment %}
         color: #fff;
         padding: 20px;
         text-align: center;
@@ -175,4 +174,357 @@
       <p>&copy; 2024 HIREXCEL. All rights reserved.</p>
     </footer>
   </body>
+</html>  {% endcomment %}
+
+{% comment %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASSESSMENT</title>
+    <!-- Add your CSS link or style here -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        header {
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        .background-radial-gradient {
+            background-color: hsl(218, 41%, 15%);
+            background-image: radial-gradient(650px circle at 0% 0%,
+                hsl(218, 41%, 35%) 15%,
+                hsl(218, 41%, 30%) 35%,
+                hsl(218, 41%, 20%) 75%,
+                hsl(218, 41%, 19%) 80%,
+                transparent 100%),
+              radial-gradient(1250px circle at 100% 100%,
+                hsl(218, 41%, 45%) 15%,
+                hsl(218, 41%, 30%) 35%,
+                hsl(218, 41%, 20%) 75%,
+                hsl(218, 41%, 19%) 80%,
+                transparent 100%);
+        }
+        main {
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .card-option {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .card-option:hover {
+            background-color: #8ABFF5;
+        }
+        .card-option.selected {
+            background-color: #8ABFF5;
+        }
+        .card-option-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #0C0C0C;
+            color: white;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        .radio-label {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+        input[type="radio"] {
+            display: none;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const options = document.querySelectorAll('.card-option');
+            const nextButton = document.querySelector('.btn-primary');
+
+            options.forEach(option => {
+                option.addEventListener('click', function () {
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    this.querySelector('input[type="radio"]').checked = true;
+                    nextButton.classList.remove('disabled');
+                });
+            });
+
+            nextButton.classList.add('disabled'); // Initially disable the button
+        });
+    </script>
+</head>
+<body>
+    <header class="background-radial-gradient">
+        <h1>TECHNICAL ASSESSMENT</h1>
+    </header>
+    <main class="container my-5">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title h4">Question:</h4>
+                <p id="question-line" class="card-text fw-bold">{{ question.QUESTION }}</p>
+
+                <form method="post" action="{% if next_question_index is not None %}{% url 'technical_quiz' next_question_index %}{% else %}{% url 'phase_three_completed' %}{% endif %}">
+                    {% csrf_token %}
+                    <div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card-option">
+                                    <input class="form-check-input" type="radio" name="option" id="option1" value="A">
+                                    <label class="form-check-label radio-label " for="option1">
+                                        <div class="card-option-number fw-bold">a</div>
+                                        <div>{{ options.0 }}</div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-option">
+                                    <input class="form-check-input" type="radio" name="option" id="option2" value="B">
+                                    <label class="form-check-label radio-label " for="option2">
+                                        <div class="card-option-number fw-bold">b</div>
+                                        <div>{{ options.1 }}</div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card-option">
+                                    <input class="form-check-input" type="radio" name="option" id="option3" value="C">
+                                    <label class="form-check-label radio-label " for="option3">
+                                        <div class="card-option-number fw-bold">c</div>
+                                        <div>{{ options.2 }}</div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-option">
+                                    <input class="form-check-input" type="radio" name="option" id="option4" value="D">
+                                    <label class="form-check-label radio-label " for="option4">
+                                        <div class="card-option-number fw-bold">d</div>
+                                        <div>{{ options.3 }}</div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-auto d-flex flex-row-reverse mt-2">
+                        <button type="submit" class="btn btn-primary disabled">Next Question</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 HIREXCEL. All rights reserved.</p>
+    </footer>
+</body>
+</html> {% endcomment %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASSESSMENT</title>
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous"
+    />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        header {
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        .background-radial-gradient {
+            background-color: hsl(218, 41%, 15%);
+            background-image: radial-gradient(650px circle at 0% 0%,
+                hsl(218, 41%, 35%) 15%,
+                hsl(218, 41%, 30%) 35%,
+                hsl(218, 41%, 20%) 75%,
+                hsl(218, 41%, 19%) 80%,
+                transparent 100%),
+              radial-gradient(1250px circle at 100% 100%,
+                hsl(218, 41%, 45%) 15%,
+                hsl(218, 41%, 30%) 35%,
+                hsl(218, 41%, 20%) 75%,
+                hsl(218, 41%, 19%) 80%,
+                transparent 100%);
+        }
+        main {
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .card-option {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .card-option:hover {
+            background-color: #8ABFF5;
+        }
+        .card-option.selected {
+            background-color: #8ABFF5;
+        }
+        .card-option-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #0C0C0C;
+            color: white;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        .radio-label {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+        input[type="radio"] {
+            display: none;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const options = document.querySelectorAll('.card-option');
+            const nextButton = document.querySelector('.btn-primary');
+
+            options.forEach(option => {
+                option.addEventListener('click', function () {
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    this.querySelector('input[type="radio"]').checked = true;
+                    nextButton.classList.remove('disabled');
+                });
+            });
+
+            nextButton.classList.add('disabled'); // Initially disable the button
+        });
+    </script>
+</head>
+<body>
+    <header class="background-radial-gradient">
+        <h1>TECHNICAL ASSESSMENT</h1>
+    </header>
+    <main class="container my-5">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title h4">Question:</h4>
+                <p id="question-line" class="card-text fw-bold">{{ question.QUESTION }}</p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card-option">
+                                <input class="form-check-input" type="radio" name="option" id="option1" value="A">
+                                <label class="form-check-label radio-label " for="option1">
+                                    <div class="card-option-number fw-bold">A</div>
+                                    <div>{{ options.0 }}</div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-option">
+                                <input class="form-check-input" type="radio" name="option" id="option2" value="B">
+                                <label class="form-check-label radio-label " for="option2">
+                                    <div class="card-option-number fw-bold">B</div>
+                                    <div>{{ options.1 }}</div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card-option">
+                                <input class="form-check-input" type="radio" name="option" id="option3" value="C">
+                                <label class="form-check-label radio-label " for="option3">
+                                    <div class="card-option-number fw-bold">C</div>
+                                    <div>{{ options.2 }}</div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-option">
+                                <input class="form-check-input" type="radio" name="option" id="option4" value="D">
+                                <label class="form-check-label radio-label " for="option4">
+                                    <div class="card-option-number fw-bold">D</div>
+                                    <div>{{ options.3 }}</div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="w-auto d-flex flex-row-reverse mt-2">
+                        {% if next_question_index is not None %}
+                            <button type="submit" class="btn btn-primary">Next Question</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-primary">Finish</button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 HIREXCEL. All rights reserved.</p>
+    </footer>
+</body>
 </html>

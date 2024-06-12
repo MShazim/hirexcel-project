@@ -6,13 +6,15 @@ urlpatterns = [
     path('', views.start_screen, name='start_screen'),
     path('jobseeker_login', views.jobseeker_login, name='jobseeker_login'),
     path('recruiter_login', views.recruiter_login, name='recruiter_login'),
+    # path('logout/', views.jobseeker_logout_view, name='jobseeker_logout'),
+    # path('logout/', views.recruiter_logout_view, name='recruiter_logout'),
+    path('jobseeker_logout', views.jobseeker_logout_view, name='jobseeker_logout'),
+    path('recruiter_logout', views.recruiter_logout_view, name='recruiter_logout'),
     path('jobseeker_create_account', views.jobseeker_create_account, name='jobseeker_create_account'),
     path('recruiter_create_account', views.recruiter_create_account, name='recruiter_create_account'),
     path('jobseeker_home', views.jobseeker_home, name='jobseeker_home'),
     path('recruiter_home', views.recruiter_home, name='recruiter_home'),
 
-    path('logout/', views.jobseeker_logout_view, name='jobseeker_logout'),
-    path('logout/', views.recruiter_logout_view, name='recruiter_logout'),
 
     path('post_job', views.post_job, name='post_job'),
     path('get_personality_traits/', views.get_personality_traits, name='get_personality_traits'),
