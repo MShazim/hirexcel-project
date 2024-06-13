@@ -2,18 +2,19 @@ from django.shortcuts import render , get_object_or_404 , redirect
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.urls import reverse
 from django.contrib import messages
-from .models import DISC_Questions_Dataset, Cognitive_NVI_Questions_Dataset, Technical_Questions_Dataset , Job_Position_Criteria ,User_Information, Job_Seeker, Job_Seeker_Education, Job_Seeker_Work_Experience , Recruiter, Job_Posting , Assessment , Job_Seeker_Assessment, Cognitive_Assessment , Cognitive_NVI_Answers_Dataset, Technical_Assessment
+from .models import DISC_Questions_Dataset, Cognitive_NVI_Questions_Dataset, Technical_Questions_Dataset , Job_Position_Criteria ,User_Information, Job_Seeker, Job_Seeker_Education, Job_Seeker_Work_Experience , Recruiter, Job_Posting , Assessment , Job_Seeker_Assessment, Cognitive_Assessment , Cognitive_NVI_Answers_Dataset, Technical_Assessment, Technical_Answers_Dataset
 from .forms import UserInformationForm, JobSeekerForm, JobSeekerEducationForm, JobSeekerWorkExperienceForm , RecruiterForm , JobPostingForm
 import random
 from datetime import datetime
 import json
 
-# Create your views here.
+# ---------------------------------[ START SCREEN ]-----------------------------------------
 def start_screen(request):
     return render(request, './start-screen/start_screen.html')
+# -------------------------------------[ ENDS ]---------------------------------------------
 
 
-
+# ---------------------------------[ LOGIN/LOGOUT ]------------------------------------------
 def jobseeker_login(request):
     if request.method == 'POST':
         email = request.POST['email']
@@ -25,22 +26,19 @@ def jobseeker_login(request):
             user_info = None
 
         if user_info is not None and user_info.PASSWORD == password:
-            # Log in the user
-            request.session['user_id'] = str(user_info.USER_ID)
-
-            # Fetch the Job Seeker ID
+            # Check if the user is a job seeker
             try:
                 job_seeker = Job_Seeker.objects.get(USER_ID=user_info)
+                # Log in the user
+                request.session['user_id'] = str(user_info.USER_ID)
                 request.session['job_seeker_id'] = str(job_seeker.JOB_SEEKER_ID)
+                return redirect('jobseeker_home')  # Redirect to jobseeker home page or dashboard
             except Job_Seeker.DoesNotExist:
-                messages.error(request, 'Job Seeker ID not found for the user')
-
-            return redirect('jobseeker_home')  # Redirect to jobseeker home page or dashboard
+                messages.error(request, "Couldn't find email, Please Sign Up")
         else:
             messages.error(request, 'Invalid email or password')
 
     return render(request, './login/jobseeker_login.html')
-
 
 def recruiter_login(request):
     if request.method == 'POST':
@@ -53,20 +51,33 @@ def recruiter_login(request):
             user_info = None
 
         if user_info is not None and user_info.PASSWORD == password:
-            # Log in the user
-            request.session['user_id'] = str(user_info.USER_ID)
-            return redirect('recruiter_home')  # Redirect to recruiter home page or dashboard
+            # Check if the user is a recruiter
+            try:
+                recruiter = Recruiter.objects.get(USER_ID=user_info)
+                # Log in the user
+                request.session['user_id'] = str(user_info.USER_ID)
+                request.session['recruiter_id'] = str(recruiter.RECRUITER_ID)
+                return redirect('recruiter_home')  # Redirect to recruiter home page or dashboard
+            except Recruiter.DoesNotExist:
+                messages.error(request, "Couldn't find email, Please Sign Up")
         else:
             messages.error(request, 'Invalid email or password')
 
     return render(request, './login/recruiter_login.html')
 
-def jobseeker_create_account(request):
-    return render(request, './create_account/jobseeker_create_account.html')
 
-def recruiter_create_account(request):
-    return render(request, './create_account/recruiter_create_account.html')
+def jobseeker_logout_view(request):
+    if 'user_id' in request.session:
+        del request.session['user_id']
+    return redirect('jobseeker_login')  # Redirect to the login page or home page after logout
 
+def recruiter_logout_view(request):
+    if 'user_id' in request.session:
+        del request.session['user_id']
+    return redirect('recruiter_login')  # Redirect to the login page or home page after logout
+# --------------------------------------[ ENDS ]---------------------------------------------
+
+# ---------------------------------[ JOB SEEKER HOME ]---------------------------------------
 def jobseeker_home(request):
     user_id = request.session.get('user_id')
     if user_id:
@@ -80,8 +91,27 @@ def jobseeker_home(request):
         })
     else:
         return redirect('jobseeker_login')  # Redirect to login if not logged in
+# --------------------------------------[ ENDS ]---------------------------------------------
 
 
+# ---------------------------------[ RECRUITER HOME ]----------------------------------------
+def recruiter_home(request):
+    user_id = request.session.get('user_id')
+    if user_id:
+        user_info = User_Information.objects.get(USER_ID=user_id)
+        recruiter = Recruiter.objects.get(USER_ID=user_info)
+        job_postings = Job_Posting.objects.filter(RECRUITER_ID=recruiter)
+        formatted_job_postings = [format_job_posting_data(job) for job in job_postings]
+
+        return render(request, 'home/recruiter_home.html', {
+            'user_info': user_info,
+            'job_postings': formatted_job_postings
+        })
+    else:
+        return redirect('recruiter_login')  # Redirect to login if not logged in
+# --------------------------------------[ ENDS ]---------------------------------------------
+
+# ---------------------------------[ JOB POSTINGs RELATED ]----------------------------------
 def format_job_posting_data(job_posting):
     """Format job posting data for template rendering."""
     formatted_data = {
@@ -101,33 +131,6 @@ def format_job_posting_data(job_posting):
         'test_criteria': job_posting.TEST_CRITERIA.split(', '),
     }
     return formatted_data
-
-
-def recruiter_home(request):
-    user_id = request.session.get('user_id')
-    if user_id:
-        user_info = User_Information.objects.get(USER_ID=user_id)
-        recruiter = Recruiter.objects.get(USER_ID=user_info)
-        job_postings = Job_Posting.objects.filter(RECRUITER_ID=recruiter)
-        formatted_job_postings = [format_job_posting_data(job) for job in job_postings]
-
-        return render(request, 'home/recruiter_home.html', {
-            'user_info': user_info,
-            'job_postings': formatted_job_postings
-        })
-    else:
-        return redirect('recruiter_login')  # Redirect to login if not logged in
-
-
-def jobseeker_logout_view(request):
-    if 'user_id' in request.session:
-        del request.session['user_id']
-    return redirect('jobseeker_login')  # Redirect to the login page or home page after logout
-def recruiter_logout_view(request):
-    if 'user_id' in request.session:
-        del request.session['user_id']
-    return redirect('recruiter_login')  # Redirect to the login page or home page after logout
-
 
 def post_job(request):
     if request.method == 'POST':
@@ -233,10 +236,28 @@ def get_personality_traits(request):
         print("No job position provided")
     return JsonResponse({'personality_traits': []})
 
-def quiz_start_screen(request):
-    return render(request, './quiz/quiz_start_screen.html')
+def apply_for_job(request, job_post_id):
+    if request.method == 'POST':
+        # Hardcoded assessment categories
+        assessment_categories = ["Cognitive_nvi", "Technical"]
+        assessment_category_str = ', '.join(assessment_categories)
 
+        # Create a single assessment record with combined categories
+        assessment = Assessment.objects.create(
+            ASSESSMENT_CATEGORY=assessment_category_str
+        )
 
+        # Store assessment_id and job_post_id in the session
+        request.session['assessment_id'] = str(assessment.ASSESSMENT_ID)
+        request.session['job_post_id'] = job_post_id
+
+        # Redirect to the quiz start screen
+        return redirect('quiz_start_screen')
+    else:
+        # If not a POST request, redirect back to jobseeker home
+        return redirect('jobseeker_home')
+
+# ----------------------------[ CREATE ACCOUNT JS ]------------------------------------------
 def job_seeker_create_account_step1(request):
     if request.method == 'POST':
         form = UserInformationForm(request.POST)
@@ -319,8 +340,9 @@ def job_seeker_create_account_step4(request):
 
 def success_page(request):
     return render(request, 'create_account/success.html')
+# ------------------------------------[ ENDS ]-----------------------------------------------
 
-
+# ----------------------------[ CREATE ACCOUNT R ]--------------------------------------------
 def recruiter_create_account_step1(request):
     if request.method == 'POST':
         form = UserInformationForm(request.POST)
@@ -352,7 +374,11 @@ def recruiter_create_account_step2(request):
 
 def recruiter_success_page(request):
     return render(request, 'create_account/recruiter_success.html')
+# ------------------------------------[ ENDS ]-----------------------------------------------
 
+# ----------------------------[ QUIZ START ]-------------------------------------------------
+def quiz_start_screen(request):
+    return render(request, './quiz/quiz_start_screen.html')
 # ----------------------------[ DISC QUIZ ]--------------------------------------------------
 def disc_quiz_start(request):
     # Redirect to the first question
@@ -382,10 +408,10 @@ def disc_quiz(request, question_id):
 
 def disc_quiz_start_redirect(request):
     return redirect('disc_quiz_start')
-# ---------------------------------[ END ]----------------------------------------------------
+# ------------------------------[ ENDS ]----------------------------------------------------
 
 
-# ----------------------------[ NON VERBAL QUIZ ]--------------------------------------------------
+# ----------------------------[ NON VERBAL QUIZ ]--------------------------------------------
 def non_verbal_quiz_start(request):
     if 'selected_questions' not in request.session:
         question_ids = list(Cognitive_NVI_Questions_Dataset.objects.values_list('NVI_IMAGE_QUESTION_ID', flat=True))
@@ -394,34 +420,6 @@ def non_verbal_quiz_start(request):
         print(selected_questions)
     return redirect('non_verbal_quiz', question_index=0)
 
-# def non_verbal_quiz(request, question_index=0):
-#     selected_questions = request.session.get('selected_questions', [])
-    
-#     if not selected_questions:
-#         return redirect('non_verbal_quiz_start')
-
-#     question_id = selected_questions[question_index]
-#     question = get_object_or_404(Cognitive_NVI_Questions_Dataset, NVI_IMAGE_QUESTION_ID=question_id)
-#     next_question_index = question_index + 1 if question_index < len(selected_questions) - 1 else None
-
-#     options = [
-#         question.OPTION1.strip(), question.OPTION2.strip(),
-#         question.OPTION3.strip(), question.OPTION4.strip(),
-#         question.OPTION5.strip(), question.OPTION6.strip(),
-#         question.OPTION7.strip(), question.OPTION8.strip()
-#     ]
-
-#     # Filter out options that are "NONE"
-#     options = [option for option in options if option and option != "nan"]
-
-#     context = {
-#         'question': question,
-#         'next_question_index': next_question_index,
-#         'total_questions': len(selected_questions),
-#         'options': options,
-#     }
-
-#     return render(request, 'non_verbal_quiz/non_verbal_quiz.html', context)
 
 def non_verbal_quiz(request, question_index=0):
     selected_questions = request.session.get('selected_questions', [])
@@ -475,11 +473,10 @@ def non_verbal_quiz(request, question_index=0):
 
 def non_verbal_quiz_start_redirect(request):
     return redirect('non_verbal_quiz_start')
-# ----------------------------------[ END ]---------------------------------------------------------
+# --------------------------------[ ENDS ]---------------------------------------------------
 
 
-
-# ----------------------------[ TECHNICAL QUIZ ]--------------------------------------------------
+# ----------------------------[ TECHNICAL QUIZ ]---------------------------------------------
 def technical_quiz_start(request):
     if 'selected_technical_questions' not in request.session:
         question_ids = list(Technical_Questions_Dataset.objects.values_list('TECH_ID', flat=True))
@@ -497,6 +494,26 @@ def technical_quiz(request, question_index=0):
     question = get_object_or_404(Technical_Questions_Dataset, TECH_ID=question_id)
     next_question_index = question_index + 1 if question_index < len(selected_questions) - 1 else None
 
+    if request.method == 'POST':
+        selected_option = request.POST.get('option')
+        technical_assessment_id = request.session.get('technical_assessment_id')
+
+        if technical_assessment_id and selected_option:
+            technical_assessment = Technical_Assessment.objects.get(TECHNICAL_ASSESSMENT_ID=technical_assessment_id)
+            is_correct = selected_option == question.ANSWER
+
+            Technical_Answers_Dataset.objects.create(
+                TECHNICAL_ASSESSMENT_ID=technical_assessment,
+                TECH_ID=question,
+                JOB_SEEKER_ANS=selected_option,
+                IS_CORRECT=is_correct
+            )
+
+        if next_question_index is not None:
+            return redirect('technical_quiz', question_index=next_question_index)
+        else:
+            return redirect('phase_three_completed')
+
     options = [
         question.A.strip(), question.B.strip(),
         question.C.strip(), question.D.strip()
@@ -511,13 +528,13 @@ def technical_quiz(request, question_index=0):
 
     return render(request, 'technical_quiz/technical_quiz.html', context)
 
+
 def technical_quiz_start_redirect(request):
     return redirect('technical_quiz_start')
-# ----------------------------------[ END ]-------------------------------------------------------
+# -------------------------------[ ENDS ]-----------------------------------------------------
 
-# def phase_one_completed(request):
-#     return render(request, './test_complete/phase_one_completed.html')
 
+# ----------------------------[ PHASE COMPLETETIONS ]-----------------------------------------
 def phase_one_completed(request):
     # Assuming job_seeker_id is stored in session when the user logs in
     job_seeker_id = request.session.get('job_seeker_id')
@@ -558,9 +575,6 @@ def phase_one_completed(request):
     return render(request, './test_complete/phase_one_completed.html')
 
 
-# def phase_two_completed(request):
-#     return render(request, './test_complete/phase_two_completed.html')
-
 def phase_two_completed(request):
     # Fetch job_seeker_assessment_id from the session
     job_seeker_assessment_id = request.session.get('job_seeker_assessment_id')
@@ -583,37 +597,39 @@ def phase_two_completed(request):
     total_questions = 30  # Total number of questions
     score_display = f"{score} / {total_questions}"
 
+    # # Create the Technical_Assessment record using the Job_Seeker_Assessment record
+    # Technical_Assessment.objects.create(
+    #     JOB_SEEKER_ASSESSMENT_ID=job_seeker_assessment,
+    #     TECHNICAL_ASSESSMENT_LEVEL="Technical"
+    # )
+
     # Create the Technical_Assessment record using the Job_Seeker_Assessment record
-    Technical_Assessment.objects.create(
+    technical_assessment = Technical_Assessment.objects.create(
         JOB_SEEKER_ASSESSMENT_ID=job_seeker_assessment,
         TECHNICAL_ASSESSMENT_LEVEL="Technical"
     )
+
+    # Store technical_assessment_id in the session
+    request.session['technical_assessment_id'] = str(technical_assessment.TECHNICAL_ASSESSMENT_ID)
+
 
     return render(request, './test_complete/phase_two_completed.html', {'score_display': score_display})
 
 
 def phase_three_completed(request):
-    return render(request, './test_complete/phase_three_completed.html')
+    # Fetch technical_assessment_id from the session
+    technical_assessment_id = request.session.get('technical_assessment_id')
+    if not technical_assessment_id:
+        return redirect('jobseeker_home')  # Redirect to home if technical_assessment_id is not found
 
+    # Calculate the score
+    score = Technical_Answers_Dataset.objects.filter(
+        TECHNICAL_ASSESSMENT_ID=technical_assessment_id,
+        IS_CORRECT=True
+    ).count()
 
+    total_questions = 30  # Total number of questions
+    score_display = f"{score} / {total_questions}"
 
-def apply_for_job(request, job_post_id):
-    if request.method == 'POST':
-        # Hardcoded assessment categories
-        assessment_categories = ["Cognitive_nvi", "Technical"]
-        assessment_category_str = ', '.join(assessment_categories)
-
-        # Create a single assessment record with combined categories
-        assessment = Assessment.objects.create(
-            ASSESSMENT_CATEGORY=assessment_category_str
-        )
-
-        # Store assessment_id and job_post_id in the session
-        request.session['assessment_id'] = str(assessment.ASSESSMENT_ID)
-        request.session['job_post_id'] = job_post_id
-
-        # Redirect to the quiz start screen
-        return redirect('quiz_start_screen')
-    else:
-        # If not a POST request, redirect back to jobseeker home
-        return redirect('jobseeker_home')
+    return render(request, './test_complete/phase_three_completed.html', {'score_display': score_display})
+# ------------------------------------[ ENDS ]-----------------------------------------------
