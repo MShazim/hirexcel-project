@@ -7,6 +7,13 @@ from .forms import UserInformationForm, JobSeekerForm, JobSeekerEducationForm, J
 import random
 from datetime import datetime
 import json
+# ---------------------------------[ for generating the evaluation summary using ChatGPT ]-----------------------------------------
+from django.shortcuts import get_object_or_404
+from .models import Personality_Assessment_Report, Evaluation_Summary, Job_Seeker, Job_Seeker_Assessment, Job_Posting, Technical_Assessment, Technical_Assessment_Result, Cognitive_Assessment, Cognitive_Assessment_Results
+from .utils.chatgpt_integration import ChatGPTIntegration
+from django.conf import settings
+# ---------------------------------[ end ]-----------------------------------------
+
 
 # ---------------------------------[ START SCREEN ]-----------------------------------------
 def start_screen(request):
@@ -633,3 +640,87 @@ def phase_three_completed(request):
 
     return render(request, './test_complete/phase_three_completed.html', {'score_display': score_display})
 # ------------------------------------[ ENDS ]-----------------------------------------------
+
+
+# ---------------------------------[ for generating the evaluation summary using ChatGPT ]-----------------------------------------
+def process_assessment_and_generate_summary(report_id):
+    # Step 1: Retrieve the Personality Assessment Report
+    report = get_object_or_404(Personality_Assessment_Report, PERSONALITY_ASSESSMENT_REPORT_ID=report_id)
+    
+    # Step 2: Extract Job Position from Job_Seeker_Assessment and Job_Posting
+    job_seeker_assessment = report.JOB_SEEKER_ASSESSMENT_ID
+    job_post_id = job_seeker_assessment.JOB_POST_ID
+    job_position = Job_Posting.objects.get(JOB_POST_ID=job_post_id).JOB_POSITION
+
+    # Step 3: Extract USER_ID from Job_Seeker
+    job_seeker_id = job_seeker_assessment.JOB_SEEKER_ID
+    user_id = Job_Seeker.objects.get(JOB_SEEKER_ID=job_seeker_id).USER_ID
+
+    # Step 4: Extract TECHNICAL_ASSESSMENT_RESULT_ID from Technical_Assessment_Result
+    technical_assessment_id = Technical_Assessment.objects.get(JOB_SEEKER_ASSESSMENT_ID=job_seeker_assessment).TECHNICAL_ASSESSMENT_ID
+    technical_assessment_result_id = Technical_Assessment_Result.objects.get(TECHNICAL_ASSESSMENT_ID=technical_assessment_id).TECHNICAL_ASSESSMENT_RESULT_ID
+
+    # Step 5: Extract COGNITIVE_ASSESSMENT_RESULT_ID from Cognitive_Assessment_Results
+    cognitive_assessment_id = Cognitive_Assessment.objects.get(JOB_SEEKER_ASSESSMENT_ID=job_seeker_assessment).COGNITIVE_ASSESSMENT_ID
+    cognitive_assessment_result_id = Cognitive_Assessment_Results.objects.get(COGNITIVE_ASSESSMENT_ID=cognitive_assessment_id).COGNITIVE_ASSESSMENT_RESULT_ID
+
+    # Step 6: Prepare the data to send to ChatGPT (excluding IDs and Scores)
+    personality_report_fields = {
+        "DISC_CATEGORY": report.DISC_CATEGORY,
+        "DISC_PERSONALITY_TRAIT": report.DISC_PERSONALITY_TRAIT,
+        "DISC_COGNITIVE_ABILITY": report.DISC_COGNITIVE_ABILITY,
+        "DISC_EMOTIONAL_REGULATION": report.DISC_EMOTIONAL_REGULATION,
+        "DISC_TENDENCIES": report.DISC_TENDENCIES,
+        "DISC_WEAKNESSES": report.DISC_WEAKNESSES,
+        "DISC_BEHAVIOUR": report.DISC_BEHAVIOUR,
+        "DISC_MOTIVATED_BY": report.DISC_MOTIVATED_BY,
+        "BIGFIVE_OPENNESS_CATEGORY": report.BIGFIVE_OPENNESS_CATEGORY,
+        "BIGFIVE_OPENNESS_PERSONALITY": report.BIGFIVE_OPENNESS_PERSONALITY,
+        "BIGFIVE_OPENNESS_DESCRIPTION": report.BIGFIVE_OPENNESS_DESCRIPTION,
+        "BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR": report.BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR,
+        "BIGFIVE_CONCIENTIOUSNESS_CATEGORY": report.BIGFIVE_CONCIENTIOUSNESS_CATEGORY,
+        "BIGFIVE_CONCIENTIOUSNESS_PERSONALITY": report.BIGFIVE_CONCIENTIOUSNESS_PERSONALITY,
+        "BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION": report.BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION,
+        "BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR": report.BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR,
+        "BIGFIVE_EXTRAVERSION_CATEGORY": report.BIGFIVE_EXTRAVERSION_CATEGORY,
+        "BIGFIVE_EXTRAVERSION_PERSONALITY": report.BIGFIVE_EXTRAVERSION_PERSONALITY,
+        "BIGFIVE_EXTRAVERSION_DESCRIPTION": report.BIGFIVE_EXTRAVERSION_DESCRIPTION,
+        "BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR": report.BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR,
+        "BIGFIVE_AGREEABLENESS_CATEGORY": report.BIGFIVE_AGREEABLENESS_CATEGORY,
+        "BIGFIVE_AGREEABLENESS_PERSONALITY": report.BIGFIVE_AGREEABLENESS_PERSONALITY,
+        "BIGFIVE_AGREEABLENESS_DESCRIPTION": report.BIGFIVE_AGREEABLENESS_DESCRIPTION,
+        "BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR": report.BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR,
+        "BIGFIVE_NEUROTICISM_CATEGORY": report.BIGFIVE_NEUROTICISM_CATEGORY,
+        "BIGFIVE_NEUROTICISM_PERSONALITY": report.BIGFIVE_NEUROTICISM_PERSONALITY,
+        "BIGFIVE_NEUROTICISM_DESCRIPTION": report.BIGFIVE_NEUROTICISM_DESCRIPTION,
+        "BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR": report.BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR
+    }
+
+    # Step 7: Initialize ChatGPT Integration with GPT-4-turbo
+    chatgpt = ChatGPTIntegration(api_key=settings.OPENAI_API_KEY)
+
+    # Step 8: Generate candidate status, profile synopsis, and optimal job matches using ChatGPT
+    candidate_status = chatgpt.generate_candidate_status(personality_report_fields, job_position)
+    profile_synopsis = chatgpt.generate_profile_synopsis(personality_report_fields)
+    optimal_job_matches = chatgpt.generate_optimal_job_matches(personality_report_fields)
+
+    # Step 9: Save to Evaluation_Summary table
+    evaluation_summary = Evaluation_Summary.objects.create(
+        USER_ID=user_id,
+        JOB_SEEKER_ID=job_seeker_id,
+        JOB_POST_ID=job_post_id,
+        ASSESSMENT_ID=report.PERSONALITY_ASSESSMENT_ID,
+        PERSONALITY_ASSESSMENT_REPORT_ID=report.PERSONALITY_ASSESSMENT_REPORT_ID,
+        COGNITIVE_ASSESSMENT_RESULT_ID=cognitive_assessment_result_id,
+        TECHNICAL_ASSESSMENT_RESULT_ID=technical_assessment_result_id,
+        CANDIDATE_STATUS=candidate_status,
+        PROFILE_SYNOPSIS=profile_synopsis,
+        PROFILE_SYNOPSIS=profile_synopsis,
+        OPTIMAL_JOB_MATCHES=optimal_job_matches
+    )
+
+    # Save the evaluation summary
+    evaluation_summary.save()
+
+    return "Evaluation summary generated and saved successfully."
+# ---------------------------------[ END ]-----------------------------------------
