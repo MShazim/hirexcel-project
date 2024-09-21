@@ -583,7 +583,7 @@ class Evaluation_Summary(models.Model):
     CANDIDATE_STATUS = models.CharField(max_length=100)
     PROFILE_SYNOPSIS = models.TextField()
     OPTIMAL_JOB_MATCHES = models.TextField()
-    EVALUATION_SUMMARY = models.FileField(upload_to='hirexcel_webapp/JobSeekerEvaluationSummary/')
+    EVALUATION_SUMMARY = models.FileField(upload_to='hirexcel_webapp/JobSeekerEvaluationSummary/', blank=True, null=True)
     
     def save(self, *args, **kwargs):
         if not self.EVALUATION_SUMMARY_ID:
