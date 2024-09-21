@@ -1,8 +1,10 @@
+from django.conf import settings
 import openai
 
 class ChatGPTIntegration:
-    def __init__(self, api_key):
-        openai.api_key = api_key
+    def __init__(self):
+        # Load the API key from the settings
+        openai.api_key = settings.OPENAI_API_KEY
 
     def generate_candidate_status(self, personality_report_fields, job_position):
         prompt = f"Based on the following personality assessment data: {personality_report_fields} and the job position '{job_position}', is the candidate recommended or not recommended for the job?"
