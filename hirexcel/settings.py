@@ -132,3 +132,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Managing Media
 MEDIA_ROOT = os.path.join(BASE_DIR, ' media')
 MEDIA_URL = '/media/'
+
+# OpenAI API Key for GPT-4-turbo Model
+OPENAI_API_KEY = "your-gpt4-turbo-api-key-here"
