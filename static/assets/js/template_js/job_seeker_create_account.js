@@ -425,3 +425,101 @@ document.addEventListener('DOMContentLoaded', function(e) {
         }
     })();
 });
+
+ // Handle the form submission with AJAX
+//  document.getElementById("multiStepsForm").onsubmit = function(event) {
+//     event.preventDefault(); // Prevent default form submission
+
+//     // Send form data via AJAX
+//     var formData = new FormData(this);
+//     fetch("{% url 'create_account' %}?step={{ step }}", {
+//         method: "POST",
+//         body: formData,
+//         headers: {
+//             'X-CSRFToken': '{{ csrf_token }}',
+//         }
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.status === 'success') {
+//             // Show a success message in a dialog
+//             alert(data.message);
+
+//             // Redirect to the login page after user clicks "OK"
+//             window.location.href = "{% url 'jobseeker_login' %}";
+//         } else {
+//             // Handle validation errors if needed
+//             console.error('Form submission failed');
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//     });
+// };
+
+// document.getElementById("multiStepsForm").onsubmit = function(event) {
+//     event.preventDefault(); // Prevent default form submission
+
+//     // Debugging: Log form data to ensure it's being gathered correctly
+//     var formData = new FormData(this);
+//     console.log("Form data:", [...formData.entries()]); // Log form data to the console
+
+//     fetch(window.location.href, {
+//         method: "POST",
+//         body: formData,
+//         headers: {
+//             'X-CSRFToken': '{{ csrf_token }}',
+//         }
+//     })
+//     .then(response => {
+//         console.log("Response:", response); // Log response for debugging
+//         return response.json();
+//     })
+//     .then(data => {
+//         if (data.status === 'success') {
+//             // Show a success message in a dialog
+//             alert(data.message);
+
+//             // Redirect to the login page after user clicks "OK"
+//             window.location.href = "{% url 'jobseeker_login' %}";
+//         } else {
+//             // Handle validation errors if needed
+//             console.error('Form submission failed', data);
+//             alert("Form submission failed. Check your data and try again.");
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error:', error); // Log any errors that occur during the fetch
+//     });
+// };
+
+
+document.getElementById("multiStepsForm").onsubmit = function(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    // Send form data via AJAX
+    var formData = new FormData(this);
+    var currentStep = new URLSearchParams(window.location.search).get('step') || '1';
+
+    fetch(`?step=${currentStep}`, {
+        method: "POST",
+        body: formData,
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Redirect to the next step based on response
+            window.location.href = `?step=${data.next_step}`;
+        } else {
+            // Display form errors
+            console.error('Form submission failed', data.errors);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+};
+

@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path , include
 from hirexcel_webapp import views
+from django.shortcuts import redirect
 
 urlpatterns = [
     # -------------------------------------------------- [ START SCREEN ] ---------------------------------------------------------------
@@ -35,16 +36,26 @@ urlpatterns = [
     # -----------------------------------------------------------------------------------------------------------------------------------
 
     # -------------------------------------------------- [ CREATE ACCOUNT JS] ------------------------------------------------------------
-    # path('create-account/job_seeker_create_account_step1/', views.job_seeker_create_account_step1, name='job_seeker_create_account_step1'),
-    # path('create-account/job_seeker_create_account_step2/', views.job_seeker_create_account_step2, name='job_seeker_create_account_step2'),
-    # path('create-account/job_seeker_create_account_step3/', views.job_seeker_create_account_step3, name='job_seeker_create_account_step3'),
-    # path('create-account/job_seeker_create_account_step4/', views.job_seeker_create_account_step4, name='job_seeker_create_account_step4'),
-    # path('create-account/success/', views.success_page, name='success_page'),
-    path('create-account/job_seeker_create_account_step1/', views.job_seeker_create_account_step1, name='job_seeker_create_account_step1'),
-    path('create-account/job_seeker_create_account_step2/', views.job_seeker_create_account_step2, name='job_seeker_create_account_step2'),
-    path('create-account/job_seeker_create_account_step3/', views.job_seeker_create_account_step3, name='job_seeker_create_account_step3'),
-    path('create-account/job_seeker_create_account_step4/', views.job_seeker_create_account_step4, name='job_seeker_create_account_step4'),
-    path('create-account/success/', views.success_page, name='success_page'),
+    # path('create_account/job_seeker/create_account_step1/', views.job_seeker_create_account_step1, name='job_seeker_create_account_step1'),
+    # path('create_account/job_seeker/create_account_step2/', views.job_seeker_create_account_step2, name='job_seeker_create_account_step2'),
+    # path('create_account/job_seeker/create_account_step3/', views.job_seeker_create_account_step3, name='job_seeker_create_account_step3'),
+    # path('create_account/job_seeker/create_account_step4/', views.job_seeker_create_account_step4, name='job_seeker_create_account_step4'),
+    # path('create_account/success/', views.success_page, name='success_page'),
+    # path('create_account/job_seeker/', views.job_seeker_create_account, name='job_seeker_create_account'),
+    # path('success/', views.success_page, name='success_page'),
+
+
+     # Create account with specific steps
+    path('create_account/job_seeker/<int:step>/', views.job_seeker_create_account, name='create_account_step'),
+    
+    # Success page
+    path('success/', views.success_page, name='success_page'),
+
+    # Login view
+    # path('jobseeker_login/', views.jobseeker_login, name='jobseeker_login'),
+
+    # Redirect to step 1 by default
+    path('create_account/job_seeker/', lambda request: redirect('create_account_step', step=1), name='job_seeker_create_account'),
     # -----------------------------------------------------------------------------------------------------------------------------------
 
     # -------------------------------------------------- [ CREATE ACCOUNT R] ------------------------------------------------------------

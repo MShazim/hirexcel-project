@@ -119,11 +119,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     BASE_DIR, "static"
 ]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -134,4 +135,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, ' media')
 MEDIA_URL = '/media/'
 
 # OpenAI API Key for GPT-4-turbo Model
-OPENAI_API_KEY = "your-gpt4-turbo-api-key-here"
+OPENAI_API_KEY = "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"

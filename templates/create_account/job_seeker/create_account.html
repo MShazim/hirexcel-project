@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Multi Steps Sign-up - Pages | Vuexy - Bootstrap Admin Template</title>
+    <title>Create Account | Job Seeker</title>
 
     <meta name="description" content="" />
 
@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="../../../static/assets/vendor/css/rtl/theme-default.css" class="template-customizer-theme-css" />
 
     <link rel="stylesheet" href="../../../static/assets/css/demo.css" />
-    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../../../static/assets/css/style.css" />
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="../../../static/assets/vendor/libs/node-waves/node-waves.css" />
@@ -141,10 +141,13 @@
                                 </button>
                             </div>
                         </div>
+                        <p>Current step: {{ step }}</p>
                         <div class="bs-stepper-content px-0">
-                            <form id="multiStepsForm" onSubmit="return false">
+                            <form id="multiStepsForm" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
                                 <!-- Personal Info -->
-                                <div id="personalInfoValidation" class="content">
+                                {% if step == '1' %}
+                                <div id="personalInfoValidation" class="content" style="display: block;">
                                     <div class="content-header mb-6">
                                         <h4 class="mb-0">Personal Info</h4>
                                         <p class="mb-0">Enter Your Personal Information</p>
@@ -152,20 +155,20 @@
                                     <div class="row g-6">
                                         <div class="col-sm-6">
                                             <label class="form-label" for="multiStepsFirstName">First Name</label>
-                                            <input type="text" id="multiStepsFirstName" name="multiStepsFirstName" class="form-control" placeholder="John" />
+                                            <input type="text" id="multiStepsFirstName" name="FIRST_NAME" class="form-control" placeholder="John" />
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="form-label" for="multiStepsLastName">Last Name</label>
-                                            <input type="text" id="multiStepsLastName" name="multiStepsLastName" class="form-control" placeholder="Doe" />
+                                            <input type="text" id="multiStepsLastName" name="LAST_NAME" class="form-control" placeholder="Doe" />
                                         </div>
                                         <div class="col-sm-12">
                                             <label class="form-label" for="multiStepsEmail">Email</label>
-                                            <input type="email" name="multiStepsEmail" id="multiStepsEmail" class="form-control" placeholder="john.doe@email.com" aria-label="john.doe" />
+                                            <input type="email" name="EMAIL" id="multiStepsEmail" class="form-control" placeholder="john.doe@email.com" aria-label="john.doe" />
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="form-label" for="multiStepsPass">Password</label>
                                             <div class="input-group input-group-merge">
-                                                <input type="password" id="multiStepsPass" name="multiStepsPass" class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="multiStepsPass2" />
+                                                <input type="password" id="multiStepsPass" name="PASSWORD" class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="multiStepsPass2" />
                                                 <span class="input-group-text cursor-pointer" id="multiStepsPass2"><i
                                                         class="ti ti-eye-off"></i></span>
                                             </div>
@@ -174,17 +177,17 @@
                                             <label class="form-label" for="multiStepsConfirmPass">Confirm
                                                 Password</label>
                                             <div class="input-group input-group-merge">
-                                                <input type="password" id="multiStepsConfirmPass" name="multiStepsConfirmPass" class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="multiStepsConfirmPass2" />
+                                                <input type="password" id="multiStepsConfirmPass" name="PASSWORD" class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="multiStepsConfirmPass2" />
                                                 <span class="input-group-text cursor-pointer" id="multiStepsConfirmPass2"><i class="ti ti-eye-off"></i></span>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="form-label" for="multiStepsCity">City</label>
-                                            <input type="text" id="multiStepsCity" name="multiStepsCity" class="form-control" placeholder="London" />
+                                            <input type="text" id="multiStepsCity" name="CITY" class="form-control" placeholder="London" />
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="form-label" for="multiStepsCountry">Country</label>
-                                            <select id="multiStepsCountry" name="multiStepsCountry" class="select2 form-select" data-allow-clear="true">
+                                            <select id="multiStepsCountry" name="COUNTRY" class="select2 form-select" data-allow-clear="true">
                                                 <option value="">Select</option>
                                                 <option value="DE">Germany</option>
                                                 <option value="US">United States</option>
@@ -206,7 +209,7 @@
                                             <label class="form-label" for="multiStepsMobile">Mobile</label>
                                             <div class="input-group input-group-merge">
                                                 <span class="input-group-text"><i class="ti ti-phone"></i></span>
-                                                <input type="text" id="multiStepsMobile" name="multiStepsMobile" class="form-control multi-steps-mobile" placeholder="202 555 0111" />
+                                                <input type="text" id="multiStepsMobile" name="PHONE_NUMBER" class="form-control multi-steps-mobile" placeholder="202 555 0111" />
                                             </div>
                                         </div>
                                         <div class="col-12 d-flex justify-content-between">
@@ -222,8 +225,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+
                                 <!-- Education Details -->
-                                <div id="educationDetailValidation" class="content">
+                                {% if step == '2' %}
+                                <div id="educationDetailValidation" class="content" style="display: block;">
                                     <div class="content-header mb-6">
                                         <h4 class="mb-0">Education Details</h4>
                                         <p class="mb-0">Enter Your Education Details</p>
@@ -295,8 +301,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+
                                 <!-- Experience Details -->
-                                <div id="experienceDetailValidation" class="content">
+                                {% if step == '3' %}
+                                <div id="experienceDetailValidation" class="content" style="display: block;">
                                     <div class="content-header mb-6">
                                         <h4 class="mb-0">Experience Details</h4>
                                         <p class="mb-0">Enter Your Experience Details</p>
@@ -337,8 +346,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+
                                 <!-- Candidate Info -->
-                                <div id="candidateInfoValidation" class="content">
+                                {% if step == '4' %}
+                                <div id="candidateInfoValidation" class="content" style="display: block;">
                                     <div class="content-header mb-6">
                                         <h4 class="mb-0">Candidate Data</h4>
                                         <p class="mb-0">Enter Job Seeker Information</p>
@@ -362,9 +374,11 @@
                                             <i class="ti ti-arrow-left ti-xs me-sm-2 me-0"></i>
                                             <span class="align-middle d-sm-inline-block d-none">Previous</span>
                                         </button>
+                                        {% comment %} <button type="submit" class="btn btn-success btn-next btn-submit">Submit</button> {% endcomment %}
                                         <button type="submit" class="btn btn-success btn-next btn-submit">Submit</button>
                                     </div>
                                 </div>
+                                {% endif %}
                             </form>
                         </div>
                     </div>
@@ -410,7 +424,7 @@
 
     <!-- Page JS -->
     <script src="../../../static/assets/js/dashboards-analytics.js"></script>
-    <script src="../../../static/assets/js/job_seeker_create_account.js"></script>
+    <script src="../../../static/assets/js/template_js/job_seeker_create_account.js"></script>
 </body>
 
 </html>
