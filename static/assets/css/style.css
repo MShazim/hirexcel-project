@@ -1,0 +1,166 @@
+/*
+* Navbar
+******************************************************************************/
+@media (min-width: 1200px) {
+  .bg-menu-theme {
+    box-shadow: none !important;
+  }
+}
+/*
+* Start Screen
+******************************************************************************/
+.job_seeker .avatar {
+  width: 6rem !important;
+  height: 6rem !important;
+}
+
+.recruiter .avatar {
+  width: 6rem !important;
+  height: 6rem !important;
+}
+
+/*
+* Job Seeker Home
+******************************************************************************/
+/* Welcome */
+.welcome_background {
+  background-color: #7367f0;
+  padding-bottom: 120px;
+}
+
+.welcome_title {
+  font-family: "Poppins", sans-serif;
+  line-height: 1.23;
+}
+
+.welcome_subtitle {
+  max-width: 640px;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+}
+
+/* Job Banner */
+.job_banner {
+  border-radius: 1rem !important;
+}
+
+.job_banner p {
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+}
+
+/* User Activity */
+.user_activity {
+  margin-top: -150px;
+}
+
+.total_hired_number {
+  font-size: 75px;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+  line-height: 140%;
+  letter-spacing: -1.5px;
+  background: linear-gradient(90deg, #66cc80 0%, #a1dc65 100%);
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.flag {
+  width: 20px;
+  height: 20px;
+}
+
+.user_name {
+  font-family: "Poppins", sans-serif;
+}
+
+.edit_icon_bg {
+  background-color: rgb(17, 7, 126);
+}
+
+.progress-segment {
+  height: 5px;
+  background-color: #d3d3d3;
+  margin-right: 5px;
+  display: inline-block;
+}
+.progress-segment.completed {
+  background-color: #7367f0;
+}
+
+/*
+* Job Seeker & Recuriter Profile
+******************************************************************************/
+/* Required Action Accordion */
+.active.required_actions_item {
+  border-left: 8px solid #fff !important;
+  padding-top: 8px;
+  padding-right: 8px;
+}
+
+.active .required_actions_collapse {
+  background-color: #ffcf3f !important;
+  border-radius: 6px;
+  color: #fff !important;
+}
+
+.required_actions_collapse.collapsed {
+  border-left: 8px solid #ffcf3f;
+}
+
+.accordion-button:not(.collapsed)::after {
+  filter: brightness(0) invert(1);
+}
+
+/* Suggested Action Accordion */
+.active.suggested_actions_item {
+  border-left: 8px solid #fff !important;
+  padding-top: 8px;
+  padding-right: 8px;
+}
+
+.active .suggested_actions_collapse {
+  background-color: #6ba6f1 !important;
+  border-radius: 6px;
+  color: #fff !important;
+}
+
+.suggested_actions_collapse.collapsed {
+  border-left: 8px solid #66cc80;
+}
+
+.accordion-button:not(.collapsed)::after {
+  filter: brightness(0) invert(1);
+}
+
+/*
+* Quiz
+******************************************************************************/
+/* Form */
+.form-check-input {
+  display: none;
+}
+
+.form-check {
+  cursor: pointer;
+}
+
+/* Border color change on selection */
+.form-check-input:checked + .form-check-label {
+  border-color: #0d6efd !important; /* Bootstrap primary color */
+  background-color: rgba(13, 110, 253, 0.1); /* Light primary background */
+}
+
+.form-check-label {
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.form-check-label {
+  padding: 15px;
+  border: 2px solid transparent;
+  border-radius: 5px;
+}
+
+pre {
+  white-space: pre-wrap;
+}
