@@ -22,9 +22,34 @@ def start_screen(request):
 
 
 # ---------------------------------[ LOGIN/LOGOUT ]------------------------------------------
+# def jobseeker_login(request):
+#     if request.method == 'POST':
+#         email = request.POST['email']
+#         password = request.POST['password']
+
+#         try:
+#             user_info = User_Information.objects.get(EMAIL=email)
+#         except User_Information.DoesNotExist:
+#             user_info = None
+
+#         if user_info is not None and user_info.PASSWORD == password:
+#             # Check if the user is a job seeker
+#             try:
+#                 job_seeker = Job_Seeker.objects.get(USER_ID=user_info)
+#                 # Log in the user
+#                 request.session['user_id'] = str(user_info.USER_ID)
+#                 request.session['job_seeker_id'] = str(job_seeker.JOB_SEEKER_ID)
+#                 return redirect('jobseeker_home')  # Redirect to jobseeker home page or dashboard
+#             except Job_Seeker.DoesNotExist:
+#                 messages.error(request, "Couldn't find email, Please Sign Up")
+#         else:
+#             messages.error(request, 'Invalid email or password')
+
+#     return render(request, './login/jobseeker_login.html')
+
 def jobseeker_login(request):
     if request.method == 'POST':
-        email = request.POST['email']
+        email = request.POST['email-username']
         password = request.POST['password']
 
         try:
@@ -45,11 +70,36 @@ def jobseeker_login(request):
         else:
             messages.error(request, 'Invalid email or password')
 
-    return render(request, './login/jobseeker_login.html')
+    return render(request, './login/job_seeker/jobseeker_login.html')
+
+# def recruiter_login(request):
+#     if request.method == 'POST':
+#         email = request.POST['email']
+#         password = request.POST['password']
+
+#         try:
+#             user_info = User_Information.objects.get(EMAIL=email)
+#         except User_Information.DoesNotExist:
+#             user_info = None
+
+#         if user_info is not None and user_info.PASSWORD == password:
+#             # Check if the user is a recruiter
+#             try:
+#                 recruiter = Recruiter.objects.get(USER_ID=user_info)
+#                 # Log in the user
+#                 request.session['user_id'] = str(user_info.USER_ID)
+#                 request.session['recruiter_id'] = str(recruiter.RECRUITER_ID)
+#                 return redirect('recruiter_home')  # Redirect to recruiter home page or dashboard
+#             except Recruiter.DoesNotExist:
+#                 messages.error(request, "Couldn't find email, Please Sign Up")
+#         else:
+#             messages.error(request, 'Invalid email or password')
+
+#     return render(request, './login/recruiter_login.html')
 
 def recruiter_login(request):
     if request.method == 'POST':
-        email = request.POST['email']
+        email = request.POST['email-username']
         password = request.POST['password']
 
         try:
@@ -70,8 +120,7 @@ def recruiter_login(request):
         else:
             messages.error(request, 'Invalid email or password')
 
-    return render(request, './login/recruiter_login.html')
-
+    return render(request, './login/recruiter/recruiter_login.html')
 
 def jobseeker_logout_view(request):
     if 'user_id' in request.session:
@@ -85,6 +134,21 @@ def recruiter_logout_view(request):
 # --------------------------------------[ ENDS ]---------------------------------------------
 
 # ---------------------------------[ JOB SEEKER HOME ]---------------------------------------
+
+# def jobseeker_home(request):
+#     user_id = request.session.get('user_id')
+#     if user_id:
+#         user_info = User_Information.objects.get(USER_ID=user_id)
+#         job_postings = Job_Posting.objects.all()  # Get all job postings
+#         formatted_job_postings = [format_job_posting_data(job) for job in job_postings]
+
+#         return render(request, 'home/jobseeker_home.html', {
+#             'user_info': user_info,
+#             'job_postings': formatted_job_postings
+#         })
+#     else:
+#         return redirect('jobseeker_login')  # Redirect to login if not logged in
+
 def jobseeker_home(request):
     user_id = request.session.get('user_id')
     if user_id:
@@ -98,10 +162,26 @@ def jobseeker_home(request):
         })
     else:
         return redirect('jobseeker_login')  # Redirect to login if not logged in
+
 # --------------------------------------[ ENDS ]---------------------------------------------
 
 
 # ---------------------------------[ RECRUITER HOME ]----------------------------------------
+# def recruiter_home(request):
+#     user_id = request.session.get('user_id')
+#     if user_id:
+#         user_info = User_Information.objects.get(USER_ID=user_id)
+#         recruiter = Recruiter.objects.get(USER_ID=user_info)
+#         job_postings = Job_Posting.objects.filter(RECRUITER_ID=recruiter)
+#         formatted_job_postings = [format_job_posting_data(job) for job in job_postings]
+
+#         return render(request, 'home/recruiter_home.html', {
+#             'user_info': user_info,
+#             'job_postings': formatted_job_postings
+#         })
+#     else:
+#         return redirect('recruiter_login')  # Redirect to login if not logged in
+
 def recruiter_home(request):
     user_id = request.session.get('user_id')
     if user_id:
@@ -116,9 +196,10 @@ def recruiter_home(request):
         })
     else:
         return redirect('recruiter_login')  # Redirect to login if not logged in
+
 # --------------------------------------[ ENDS ]---------------------------------------------
 
-# ---------------------------------[ JOB POSTINGs RELATED ]----------------------------------
+# ---------------------------------[ JOB POSTINGs RELATED Unchanged ]----------------------------------
 def format_job_posting_data(job_posting):
     """Format job posting data for template rendering."""
     formatted_data = {
@@ -265,6 +346,89 @@ def apply_for_job(request, job_post_id):
         return redirect('jobseeker_home')
 
 # ----------------------------[ CREATE ACCOUNT JS ]------------------------------------------
+# def job_seeker_create_account_step1(request):
+#     if request.method == 'POST':
+#         form = UserInformationForm(request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             request.session['user_id'] = str(user.USER_ID)
+#             request.session['user_data'] = form.cleaned_data
+#             return redirect('job_seeker_create_account_step2')
+#     else:
+#         form = UserInformationForm()
+
+#     return render(request, 'create_account/job_seeker_create_account_step1.html', {'form': form})
+
+# def job_seeker_create_account_step2(request):
+#     if request.method == 'POST':
+#         form = JobSeekerEducationForm(request.POST)
+#         if form.is_valid():
+#             education_data = form.cleaned_data
+#             education_data['START_DATE'] = education_data['START_DATE'].isoformat()
+#             education_data['END_DATE'] = education_data['END_DATE'].isoformat()
+#             request.session['education_data'] = education_data
+#             return redirect('job_seeker_create_account_step3')
+#     else:
+#         form = JobSeekerEducationForm()
+
+#     return render(request, 'create_account/job_seeker_create_account_step2.html', {'form': form})
+
+# def job_seeker_create_account_step3(request):
+#     if request.method == 'POST':
+#         form = JobSeekerWorkExperienceForm(request.POST)
+#         if form.is_valid():
+#             work_experience_data = form.cleaned_data
+#             work_experience_data['START_DATE'] = work_experience_data['START_DATE'].isoformat()
+#             work_experience_data['END_DATE'] = work_experience_data['END_DATE'].isoformat()
+#             request.session['work_experience_data'] = work_experience_data
+#             return redirect('job_seeker_create_account_step4')
+#     else:
+#         form = JobSeekerWorkExperienceForm()
+
+#     return render(request, 'create_account/job_seeker_create_account_step3.html', {'form': form})
+
+# def job_seeker_create_account_step4(request):
+#     if request.method == 'POST':
+#         form = JobSeekerForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             user_id = request.session.get('user_id')
+#             education_data = request.session.get('education_data')
+#             work_experience_data = request.session.get('work_experience_data')
+
+#             # Convert date strings back to date objects
+#             education_data['START_DATE'] = datetime.fromisoformat(education_data['START_DATE'])
+#             education_data['END_DATE'] = datetime.fromisoformat(education_data['END_DATE'])
+#             work_experience_data['START_DATE'] = datetime.fromisoformat(work_experience_data['START_DATE'])
+#             work_experience_data['END_DATE'] = datetime.fromisoformat(work_experience_data['END_DATE'])
+
+#             education_form = JobSeekerEducationForm(education_data)
+#             work_experience_form = JobSeekerWorkExperienceForm(work_experience_data)
+#             job_seeker_form = JobSeekerForm(request.POST, request.FILES)
+
+#             if education_form.is_valid() and work_experience_form.is_valid() and job_seeker_form.is_valid():
+#                 user = User_Information.objects.get(USER_ID=user_id)
+
+#                 job_seeker = job_seeker_form.save(commit=False)
+#                 job_seeker.USER_ID = user
+#                 job_seeker.save()
+
+#                 education = education_form.save(commit=False)
+#                 education.JOB_SEEKER_ID = job_seeker
+#                 education.save()
+
+#                 work_experience = work_experience_form.save(commit=False)
+#                 work_experience.JOB_SEEKER_ID = job_seeker
+#                 work_experience.save()
+
+#                 return redirect('success_page')  # Redirecting to the success page
+#     else:
+#         form = JobSeekerForm()
+
+#     return render(request, 'create_account/job_seeker_create_account_step4.html', {'form': form})
+
+# def success_page(request):
+#     return render(request, 'create_account/success.html')
+
 def job_seeker_create_account_step1(request):
     if request.method == 'POST':
         form = UserInformationForm(request.POST)
@@ -347,9 +511,42 @@ def job_seeker_create_account_step4(request):
 
 def success_page(request):
     return render(request, 'create_account/success.html')
+
 # ------------------------------------[ ENDS ]-----------------------------------------------
 
 # ----------------------------[ CREATE ACCOUNT R ]--------------------------------------------
+# def recruiter_create_account_step1(request):
+#     if request.method == 'POST':
+#         form = UserInformationForm(request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             request.session['user_id'] = str(user.USER_ID)
+#             request.session['user_data'] = form.cleaned_data
+#             return redirect('recruiter_create_account_step2')
+#     else:
+#         form = UserInformationForm()
+
+#     return render(request, 'create_account/recruiter_create_account_step1.html', {'form': form})
+
+# def recruiter_create_account_step2(request):
+#     if request.method == 'POST':
+#         form = RecruiterForm(request.POST)
+#         if form.is_valid():
+#             user_id = request.session.get('user_id')
+
+#             recruiter = form.save(commit=False)
+#             recruiter.USER_ID = User_Information.objects.get(USER_ID=user_id)
+#             recruiter.save()
+
+#             return redirect('recruiter_success_page')  # Redirecting to the success page
+#     else:
+#         form = RecruiterForm()
+
+#     return render(request, 'create_account/recruiter_create_account_step2.html', {'form': form})
+
+# def recruiter_success_page(request):
+#     return render(request, 'create_account/recruiter_success.html')
+
 def recruiter_create_account_step1(request):
     if request.method == 'POST':
         form = UserInformationForm(request.POST)
@@ -381,12 +578,13 @@ def recruiter_create_account_step2(request):
 
 def recruiter_success_page(request):
     return render(request, 'create_account/recruiter_success.html')
+
 # ------------------------------------[ ENDS ]-----------------------------------------------
 
 # ----------------------------[ QUIZ START ]-------------------------------------------------
 def quiz_start_screen(request):
     return render(request, './quiz/quiz_start_screen.html')
-# ----------------------------[ DISC QUIZ ]--------------------------------------------------
+# ----------------------------[ DISC QUIZ unchanged ]--------------------------------------------------
 def disc_quiz_start(request):
     # Redirect to the first question
     first_question = DISC_Questions_Dataset.objects.first()
@@ -418,7 +616,7 @@ def disc_quiz_start_redirect(request):
 # ------------------------------[ ENDS ]----------------------------------------------------
 
 
-# ----------------------------[ NON VERBAL QUIZ ]--------------------------------------------
+# ----------------------------[ NON VERBAL QUIZ unchanged ]--------------------------------------------
 def non_verbal_quiz_start(request):
     if 'selected_questions' not in request.session:
         question_ids = list(Cognitive_NVI_Questions_Dataset.objects.values_list('NVI_IMAGE_QUESTION_ID', flat=True))
@@ -483,7 +681,7 @@ def non_verbal_quiz_start_redirect(request):
 # --------------------------------[ ENDS ]---------------------------------------------------
 
 
-# ----------------------------[ TECHNICAL QUIZ ]---------------------------------------------
+# ----------------------------[ TECHNICAL QUIZ Unchanged ]---------------------------------------------
 def technical_quiz_start(request):
     if 'selected_technical_questions' not in request.session:
         question_ids = list(Technical_Questions_Dataset.objects.values_list('TECH_ID', flat=True))
@@ -541,7 +739,7 @@ def technical_quiz_start_redirect(request):
 # -------------------------------[ ENDS ]-----------------------------------------------------
 
 
-# ----------------------------[ PHASE COMPLETETIONS ]-----------------------------------------
+# ----------------------------[ PHASE COMPLETETIONS Unchanged ]-----------------------------------------
 def phase_one_completed(request):
     # Assuming job_seeker_id is stored in session when the user logs in
     job_seeker_id = request.session.get('job_seeker_id')
