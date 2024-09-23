@@ -429,216 +429,104 @@ def apply_for_job(request, job_post_id):
 # def success_page(request):
 #     return render(request, 'create_account/success.html')
 
-# def job_seeker_create_account(request):
-#     if request.method == 'POST':
-#         user_form = UserInformationForm(request.POST)
-#         education_form = JobSeekerEducationForm(request.POST)
-#         work_experience_form = JobSeekerWorkExperienceForm(request.POST)
-#         job_seeker_form = JobSeekerForm(request.POST, request.FILES)
-        
-#         if (user_form.is_valid() and education_form.is_valid() and 
-#             work_experience_form.is_valid() and job_seeker_form.is_valid()):
-            
-#             # Save user data
-#             user = user_form.save()
-            
-#             # Save job seeker data and relate it to the user
-#             job_seeker = job_seeker_form.save(commit=False)
-#             job_seeker.USER_ID = user
-#             job_seeker.save()
-
-#             # Save education and work experience
-#             education = education_form.save(commit=False)
-#             education.JOB_SEEKER_ID = job_seeker
-#             education.save()
-
-#             work_experience = work_experience_form.save(commit=False)
-#             work_experience.JOB_SEEKER_ID = job_seeker
-#             work_experience.save()
-
-#             messages.success(request, "Account created successfully!")
-#             return redirect('success_page')
-
-#     else:
-#         user_form = UserInformationForm()
-#         education_form = JobSeekerEducationForm()
-#         work_experience_form = JobSeekerWorkExperienceForm()
-#         job_seeker_form = JobSeekerForm()
-
-#     context = {
-#         'user_form': user_form,
-#         'education_form': education_form,
-#         'work_experience_form': work_experience_form,
-#         'job_seeker_form': job_seeker_form,
-#     }
-#     return render(request, 'create_account/job_seeker/create_account.html', context)
-
-# def job_seeker_create_account(request):
-#     step = request.GET.get('step', '1')  # Default to step 1
-#     context = {'step': step}
-
-#     if request.method == 'POST':
-#         # Step 1: Personal Info
-#         if step == '1':
-#             form = UserInformationForm(request.POST)
-#             if form.is_valid():
-#                 user = form.save()
-#                 request.session['user_id'] = str(user.USER_ID)
-#                 request.session['user_data'] = form.cleaned_data
-#                 return redirect('?step=2')
-#             else:
-#                 context['form'] = form
-
-#         # Step 2: Education Info
-#         elif step == '2':
-#             form = JobSeekerEducationForm(request.POST)
-#             if form.is_valid():
-#                 education_data = form.cleaned_data
-#                 education_data['START_DATE'] = education_data['START_DATE'].isoformat()
-#                 education_data['END_DATE'] = education_data['END_DATE'].isoformat()
-#                 request.session['education_data'] = education_data
-#                 return redirect('?step=3')
-#             else:
-#                 context['form'] = form
-
-#         # Step 3: Work Experience
-#         elif step == '3':
-#             form = JobSeekerWorkExperienceForm(request.POST)
-#             if form.is_valid():
-#                 work_experience_data = form.cleaned_data
-#                 work_experience_data['START_DATE'] = work_experience_data['START_DATE'].isoformat()
-#                 work_experience_data['END_DATE'] = work_experience_data['END_DATE'].isoformat()
-#                 request.session['work_experience_data'] = work_experience_data
-#                 return redirect('?step=4')
-#             else:
-#                 context['form'] = form
-
-#         # Step 4: Candidate Info and Save to DB
-#         elif step == '4':
-#             form = JobSeekerForm(request.POST, request.FILES)
-#             if form.is_valid():
-#                 user_id = request.session.get('user_id')
-#                 education_data = request.session.get('education_data')
-#                 work_experience_data = request.session.get('work_experience_data')
-
-#                 # Convert date strings back to date objects
-#                 education_data['START_DATE'] = datetime.fromisoformat(education_data['START_DATE'])
-#                 education_data['END_DATE'] = datetime.fromisoformat(education_data['END_DATE'])
-#                 work_experience_data['START_DATE'] = datetime.fromisoformat(work_experience_data['START_DATE'])
-#                 work_experience_data['END_DATE'] = datetime.fromisoformat(work_experience_data['END_DATE'])
-
-#                 # Create forms for education and work experience with saved session data
-#                 education_form = JobSeekerEducationForm(education_data)
-#                 work_experience_form = JobSeekerWorkExperienceForm(work_experience_data)
-
-#                 if education_form.is_valid() and work_experience_form.is_valid():
-#                     # Save user, education, and work experience to the DB
-#                     user = User_Information.objects.get(USER_ID=user_id)
-
-#                     job_seeker = form.save(commit=False)
-#                     job_seeker.USER_ID = user
-#                     job_seeker.save()
-
-#                     education = education_form.save(commit=False)
-#                     education.JOB_SEEKER_ID = job_seeker
-#                     education.save()
-
-#                     work_experience = work_experience_form.save(commit=False)
-#                     work_experience.JOB_SEEKER_ID = job_seeker
-#                     work_experience.save()
-
-#                     # Clear session after saving data to the database
-#                     request.session.flush()
-
-#                     # Return JSON response to trigger a popup and redirect in the frontend
-#                     return JsonResponse({'status': 'success', 'message': 'Account created successfully!'})
-
-#             else:
-#                 context['form'] = form
-
-#     # If no form exists in the context for the current step, create a new one
-#     if 'form' not in context:
-#         if step == '1':
-#             context['form'] = UserInformationForm()
-#         elif step == '2':
-#             context['form'] = JobSeekerEducationForm()
-#         elif step == '3':
-#             context['form'] = JobSeekerWorkExperienceForm()
-#         elif step == '4':
-#             context['form'] = JobSeekerForm()
-
-#     return render(request, 'create_account/job_seeker/create_account.html', context)
-
 def job_seeker_create_account(request, step=1):
     step = str(step)  # Ensure step is always a string
     context = {'step': step}
     
     if request.method == 'POST':
-        # Step 1: Handle Personal Info
+        # Step 1: Handle Personal Info (Save to DB)
         if step == '1':
             form = UserInformationForm(request.POST)
             if form.is_valid():
-                user = form.save()
-                request.session['user_id'] = str(user.USER_ID)
-                request.session['user_data'] = form.cleaned_data
+                user = form.save()  # Save user info to DB
+                request.session['user_id'] = str(user.USER_ID)  # Store USER_ID in session
                 return redirect(f"{reverse('create_account_step', args=[2])}")  # Move to Step 2
             else:
                 context['form'] = form
 
-        # Step 2: Handle Education Info
+        # Step 2: Handle Education Info (Store in session)
         elif step == '2':
             form = JobSeekerEducationForm(request.POST)
             if form.is_valid():
-                request.session['education_data'] = form.cleaned_data
+                # Convert date fields to string before saving to session
+                education_data = form.cleaned_data
+                education_data['START_DATE'] = education_data['START_DATE'].isoformat()
+                education_data['END_DATE'] = education_data['END_DATE'].isoformat() if education_data['END_DATE'] else None
+
+                request.session['education_data'] = education_data  # Store education data in session
                 return redirect(f"{reverse('create_account_step', args=[3])}")  # Move to Step 3
             else:
                 context['form'] = form
 
-        # Step 3: Handle Work Experience
+        # Step 3: Handle Work Experience (Store in session)
         elif step == '3':
             form = JobSeekerWorkExperienceForm(request.POST)
             if form.is_valid():
-                request.session['work_experience_data'] = form.cleaned_data
+                # Convert date fields to string before saving to session
+                work_experience_data = form.cleaned_data
+                work_experience_data['START_DATE'] = work_experience_data['START_DATE'].isoformat()
+                work_experience_data['END_DATE'] = work_experience_data['END_DATE'].isoformat() if work_experience_data['END_DATE'] else None
+
+                request.session['work_experience_data'] = work_experience_data  # Store work experience data in session
                 return redirect(f"{reverse('create_account_step', args=[4])}")  # Move to Step 4
             else:
                 context['form'] = form
 
-        # Step 4: Handle Candidate Info and Save to DB
+        # Step 4: Handle Candidate Info and Save Everything to DB
         elif step == '4':
             form = JobSeekerForm(request.POST, request.FILES)
             if form.is_valid():
+                # Retrieve USER_ID from session
                 user_id = request.session.get('user_id')
+                
+                # Retrieve education and work experience data from session
                 education_data = request.session.get('education_data')
                 work_experience_data = request.session.get('work_experience_data')
 
-                # Save the education and work experience data
-                education_form = JobSeekerEducationForm(education_data)
-                work_experience_form = JobSeekerWorkExperienceForm(work_experience_data)
+                # Convert date fields back to date objects before saving to the database
+                if education_data:
+                    education_data['START_DATE'] = datetime.fromisoformat(education_data['START_DATE'])
+                    education_data['END_DATE'] = datetime.fromisoformat(education_data['END_DATE']) if education_data['END_DATE'] else None
+                
+                if work_experience_data:
+                    work_experience_data['START_DATE'] = datetime.fromisoformat(work_experience_data['START_DATE'])
+                    work_experience_data['END_DATE'] = datetime.fromisoformat(work_experience_data['END_DATE']) if work_experience_data['END_DATE'] else None
 
-                if education_form.is_valid() and work_experience_form.is_valid():
+                # Save to database if all data exists
+                if user_id and education_data and work_experience_data:
+                    # Get user from DB
                     user = User_Information.objects.get(USER_ID=user_id)
 
                     # Save job seeker details
                     job_seeker = form.save(commit=False)
-                    job_seeker.USER_ID = user
+                    job_seeker.USER_ID = user  # Associate with the user
                     job_seeker.save()
 
                     # Save education
-                    education = education_form.save(commit=False)
-                    education.JOB_SEEKER_ID = job_seeker
-                    education.save()
+                    education_form = JobSeekerEducationForm(education_data)
+                    if education_form.is_valid():
+                        education = education_form.save(commit=False)
+                        education.JOB_SEEKER_ID = job_seeker  # Associate with job seeker
+                        education.save()
 
                     # Save work experience
-                    work_experience = work_experience_form.save(commit=False)
-                    work_experience.JOB_SEEKER_ID = job_seeker
-                    work_experience.save()
+                    work_experience_form = JobSeekerWorkExperienceForm(work_experience_data)
+                    if work_experience_form.is_valid():
+                        work_experience = work_experience_form.save(commit=False)
+                        work_experience.JOB_SEEKER_ID = job_seeker  # Associate with job seeker
+                        work_experience.save()
 
-                    request.session.flush()  # Clear session after saving
-                    return redirect('success_page')  # Redirect to success page
+                    request.session.flush()  # Clear session after successful save
+
+                    # Redirect to success page
+                    return redirect('success_page')
+                else:
+                    # Handle missing data in session
+                    context['error'] = "Some steps' data is missing. Please start from the beginning."
             else:
                 context['form'] = form
 
-    # Load empty form if no form in context
+    # Load appropriate form for each step
     if 'form' not in context:
         if step == '1':
             context['form'] = UserInformationForm()

@@ -227,6 +227,7 @@
                                 </div>
                                 {% endif %}
 
+
                                 <!-- Education Details -->
                                 {% if step == '2' %}
                                 <div id="educationDetailValidation" class="content" style="display: block;">
@@ -247,29 +248,29 @@
                                                         <div class="row g-6 p-5">
                                                             <div class="col-md-12">
                                                                 <label class="form-label" for="multiStepsInstitute">Institiute</label>
-                                                                <input type="text" id="multiStepsInstitute" name="multiStepsInstitute" class="form-control" placeholder="Massachusetts Institute of Technology" />
+                                                                <input type="text" id="multiStepsInstitute" name="INSTITUTION_NAME" class="form-control" placeholder="Massachusetts Institute of Technology" />
                                                             </div>
                                                             <div class="col-md-12">
                                                                 <label class="form-label" for="multiStepsProgram">Program</label>
-                                                                <input type="text" id="multiStepsProgram" name="multiStepsProgram" class="form-control" placeholder="Information Technology" />
+                                                                <input type="text" id="multiStepsProgram" name="PROGRAM" class="form-control" placeholder="Information Technology" />
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label class="form-label" for="multiStepsStartDate">Start
                                                                     Date</label>
                                                                 <div class="input-group">
-                                                                    <input type="date" id="multiStepsStartDate" name="multiStepsStartDate" class="form-control" />
+                                                                    <input type="date" id="multiStepsStartDate" name="START_DATE" class="form-control" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label class="form-label" for="multiStepsEndDate">End
                                                                     Date</label>
                                                                 <div class="input-group">
-                                                                    <input type="date" id="multiStepsEndDate" name="multiStepsEndDate" class="form-control" />
+                                                                    <input type="date" id="multiStepsEndDate" name="END_DATE" class="form-control" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-12">
                                                                 <label class="form-label" for="multiStepsDegree">Degree</label>
-                                                                <input type="text" id="multiStepsDegree" name="multiStepsDegree" class="form-control" placeholder="Software Engineer" />
+                                                                <input type="text" id="multiStepsDegree" name="DEGREE" class="form-control" placeholder="Software Engineer" />
                                                             </div>
                                                             <div class="col-md-12 d-flex justify-content-end">
                                                                 <button type="button" class="btn btn-danger btn-sm ms-2 delete-accordion" style="margin-left:auto;">
@@ -313,24 +314,24 @@
                                     <div class="row g-6">
                                         <div class="col-md-12">
                                             <label class="form-label" for="multiStepsWorkplace">Workplace</label>
-                                            <input type="text" id="multiStepsWorkplace" name="multiStepsWorkplace" class="form-control" placeholder="Massachusetts Institute of Technology" />
+                                            <input type="text" id="multiStepsWorkplace" name="COMPANY_NAME" class="form-control" placeholder="Massachusetts Institute of Technology" />
                                         </div>
                                         <div class="col-md-12">
                                             <label class="form-label" for="multiStepsDesignation">Designation</label>
-                                            <input type="text" id="multiStepsDesignation" name="multiStepsDesignation" class="form-control" placeholder="Information Technology" />
+                                            <input type="text" id="multiStepsDesignation" name="DESIGNATION" class="form-control" placeholder="Information Technology" />
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="form-label" for="multiStepsStartDate">Start
                                                 Date</label>
                                             <div class="input-group">
-                                                <input type="date" id="multiStepsStartDate" name="multiStepsStartDate" class="form-control" />
+                                                <input type="date" id="multiStepsStartDate" name="START_DATE" class="form-control" />
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <label class="form-label" for="multiStepsEndDate">End
                                                 Date</label>
                                             <div class="input-group">
-                                                <input type="date" id="multiStepsEndDate" name="multiStepsEndDate" class="form-control" />
+                                                <input type="date" id="multiStepsEndDate" name="END_DATE" class="form-control" />
                                             </div>
                                         </div>
                                         <div class="col-12 d-flex justify-content-between">
@@ -358,15 +359,15 @@
                                     <div class="row g-6 mb-12">
                                         <div class="col-md-12">
                                             <label class="form-label" for="multiStepsLinkedin">Linkedin Profile</label>
-                                            <input type="url" id="multiStepsLinkedin" name="multiStepsLinkedin" class="form-control" placeholder="https://www.linkedin.com" />
+                                            <input type="url" id="multiStepsLinkedin" name="LINKEDIN_PROFILE_URL" class="form-control" placeholder="https://www.linkedin.com" />
                                         </div>
                                         <div class="col-md-12">
                                             <label class="form-label" for="multiStepsGithub">Github Profile</label>
-                                            <input type="text" id="multiStepsGithub" name="multiStepsGithub" class="form-control" placeholder="https://github.com" />
+                                            <input type="text" id="multiStepsGithub" name="GITHUB_PROFILE_URL" class="form-control" placeholder="https://github.com" />
                                         </div>
                                         <div class="col-md-12">
                                             <label class="form-label" for="multiStepsUploadCV">Upload CV</label>
-                                            <input type="file" id="multiStepsUploadCV" name="multiStepsUploadCV" class="form-control" />
+                                            <input type="file" id="multiStepsUploadCV" name="RESUME_UPLOAD" class="form-control" />
                                         </div>
                                     </div>
                                     <div class="col-12 d-flex justify-content-between">
@@ -374,7 +375,6 @@
                                             <i class="ti ti-arrow-left ti-xs me-sm-2 me-0"></i>
                                             <span class="align-middle d-sm-inline-block d-none">Previous</span>
                                         </button>
-                                        {% comment %} <button type="submit" class="btn btn-success btn-next btn-submit">Submit</button> {% endcomment %}
                                         <button type="submit" class="btn btn-success btn-next btn-submit">Submit</button>
                                     </div>
                                 </div>

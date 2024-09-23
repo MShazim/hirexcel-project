@@ -21,8 +21,7 @@ $(function() {
     }
 });
 
-// Multi Steps Validation
-// --------------------------------------------------------------------
+//* ------------------|| Multi Steps Validation ||--------------------------
 document.addEventListener('DOMContentLoaded', function(e) {
     (function() {
         const stepsValidation = document.querySelector('#multiStepsValidation');
@@ -425,75 +424,12 @@ document.addEventListener('DOMContentLoaded', function(e) {
         }
     })();
 });
-
- // Handle the form submission with AJAX
-//  document.getElementById("multiStepsForm").onsubmit = function(event) {
-//     event.preventDefault(); // Prevent default form submission
-
-//     // Send form data via AJAX
-//     var formData = new FormData(this);
-//     fetch("{% url 'create_account' %}?step={{ step }}", {
-//         method: "POST",
-//         body: formData,
-//         headers: {
-//             'X-CSRFToken': '{{ csrf_token }}',
-//         }
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         if (data.status === 'success') {
-//             // Show a success message in a dialog
-//             alert(data.message);
-
-//             // Redirect to the login page after user clicks "OK"
-//             window.location.href = "{% url 'jobseeker_login' %}";
-//         } else {
-//             // Handle validation errors if needed
-//             console.error('Form submission failed');
-//         }
-//     })
-//     .catch(error => {
-//         console.error('Error:', error);
-//     });
-// };
-
-// document.getElementById("multiStepsForm").onsubmit = function(event) {
-//     event.preventDefault(); // Prevent default form submission
-
-//     // Debugging: Log form data to ensure it's being gathered correctly
-//     var formData = new FormData(this);
-//     console.log("Form data:", [...formData.entries()]); // Log form data to the console
-
-//     fetch(window.location.href, {
-//         method: "POST",
-//         body: formData,
-//         headers: {
-//             'X-CSRFToken': '{{ csrf_token }}',
-//         }
-//     })
-//     .then(response => {
-//         console.log("Response:", response); // Log response for debugging
-//         return response.json();
-//     })
-//     .then(data => {
-//         if (data.status === 'success') {
-//             // Show a success message in a dialog
-//             alert(data.message);
-
-//             // Redirect to the login page after user clicks "OK"
-//             window.location.href = "{% url 'jobseeker_login' %}";
-//         } else {
-//             // Handle validation errors if needed
-//             console.error('Form submission failed', data);
-//             alert("Form submission failed. Check your data and try again.");
-//         }
-//     })
-//     .catch(error => {
-//         console.error('Error:', error); // Log any errors that occur during the fetch
-//     });
-// };
+//* -------------------------------------------------------------------------
 
 
+
+
+//* ------------------- Screens Steps Count Logic.----------------------
 document.getElementById("multiStepsForm").onsubmit = function(event) {
     event.preventDefault(); // Prevent default form submission
 
@@ -522,4 +458,39 @@ document.getElementById("multiStepsForm").onsubmit = function(event) {
         console.error('Error:', error);
     });
 };
+
+// document.getElementById("multiStepsForm").onsubmit = function(event) {
+//     event.preventDefault(); // Prevent the default form submission
+
+//     var formData = new FormData(this);
+    
+//     fetch("{% url 'create_account_step' step=1 %}", {
+//         method: "POST",
+//         body: formData,
+//         headers: {
+//             'X-CSRFToken': '{{ csrf_token }}',
+//         }
+//     })
+//     .then(response => {
+//         if (response.ok) {
+//             return response.json();
+//         } else {
+//             throw new Error('Something went wrong with the request.');
+//         }
+//     })
+//     .then(data => {
+//         if (data.status === 'error') {
+//             // Display an alert or dialog if the email already exists
+//             alert(data.message);  // Replace this with your preferred dialog library if needed
+//         } else {
+//             // Redirect to the next step if no error
+//             window.location.href = "{% url 'create_account_step' step=2 %}";
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//     });
+// };
+//* -------------------------------------------------------------------
+
 
