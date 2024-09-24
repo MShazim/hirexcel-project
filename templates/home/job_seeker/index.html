@@ -8,7 +8,7 @@
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-  <title>Dashboard - Analytics | Vuexy - Bootstrap Admin Template</title>
+  <title>Dashboard | JobSeeker</title>
 
   <meta name="description" content="" />
 
@@ -72,7 +72,7 @@
       <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
         <div class="container-xxl">
           <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
-            <a href="index.html" class="app-brand-link">
+            <a href="jobseeker_home" class="app-brand-link">
               <span class="app-brand-logo demo">
                 <svg width="32" height="22" viewBox="0 0 32 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path fill-rule="evenodd" clip-rule="evenodd"
@@ -87,7 +87,7 @@
                     fill="#7367F0" />
                 </svg>
               </span>
-              <span class="app-brand-text demo menu-text fw-bold">Vuexy</span>
+              <span class="app-brand-text demo menu-text fw-bold">Hirexcel</span>
             </a>
 
             <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
@@ -100,11 +100,11 @@
             <div class="container-xxl d-flex h-100">
               <ul class="menu-inner pb-2 pb-xl-0">
                 <li class="menu-item bg-primary-subtle rounded active">
-                  <a href="javascript:void(0)" class="menu-link">
+                  <a href="jobseeker_home" class="menu-link">
                     <div data-i18n="Home">Home</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                {% comment %} <li class="menu-item">
                   <a href="javascript:void(0)" class="menu-link text-black">
                     <div data-i18n="Quizes">Quizzes</div>
                   </a>
@@ -114,10 +114,10 @@
                     <div data-i18n="Challenges">Challenges</div>
                     <i class="menu-icon tf-icons ti ti-lock"></i>
                   </a>
-                </li>
+                </li> {% endcomment %}
                 <li class="menu-item">
                   <a href="javascript:void(0)" class="menu-link text-black">
-                    <div data-i18n="HIREXCEL Profile">HIREXCEL Profile</div>
+                    <div data-i18n="Profile">Profile</div>
                   </a>
                 </li>
 
@@ -134,16 +134,16 @@
           <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
             <ul class="navbar-nav flex-row align-items-center ms-auto">
               <!-- Search -->
-              <li class="nav-item navbar-search-wrapper">
+              {% comment %} <li class="nav-item navbar-search-wrapper">
                 <a class="nav-link btn btn-text-secondary btn-icon rounded-pill search-toggler"
                   href="javascript:void(0);">
                   <i class="ti ti-search ti-md"></i>
                 </a>
-              </li>
+              </li> {% endcomment %}
               <!-- /Search -->
 
               <!-- Language -->
-              <li class="nav-item dropdown-language dropdown">
+              {% comment %} <li class="nav-item dropdown-language dropdown">
                 <a class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow"
                   href="javascript:void(0);" data-bs-toggle="dropdown">
                   <i class="ti ti-language rounded-circle ti-md"></i>
@@ -170,7 +170,7 @@
                     </a>
                   </li>
                 </ul>
-              </li>
+              </li> {% endcomment %}
               <!--/ Language -->
 
               <!-- Style Switcher -->
@@ -190,17 +190,17 @@
                       <span class="align-middle"><i class="ti ti-moon-stars ti-md me-3"></i>Dark</span>
                     </a>
                   </li>
-                  <li>
+                  {% comment %} <li>
                     <a class="dropdown-item" href="javascript:void(0);" data-theme="system">
                       <span class="align-middle"><i class="ti ti-device-desktop-analytics ti-md me-3"></i>System</span>
                     </a>
-                  </li>
+                  </li> {% endcomment %}
                 </ul>
               </li>
               <!-- / Style Switcher-->
 
               <!-- Quick links  -->
-              <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown">
+              {% comment %} <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown">
                 <a class="nav-link btn btn-text-secondary btn-icon rounded-pill btn-icon dropdown-toggle hide-arrow"
                   href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside"
                   aria-expanded="false">
@@ -283,7 +283,7 @@
                     </div>
                   </div>
                 </div>
-              </li>
+              </li> {% endcomment %}
               <!-- Quick links -->
 
               <!-- Notification -->
@@ -518,7 +518,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li>
-                    <a class="dropdown-item mt-0" href="pages-account-settings-account.html">
+                    <a class="dropdown-item mt-0" href="#">
                       <div class="d-flex align-items-center">
                         <div class="flex-shrink-0 me-2">
                           <div class="avatar avatar-online">
@@ -536,16 +536,16 @@
                     <div class="dropdown-divider my-1 mx-n2"></div>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="pages-profile-user.html">
+                    <a class="dropdown-item" href="#">
                       <i class="ti ti-user me-3 ti-md"></i><span class="align-middle">My Profile</span>
                     </a>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="pages-account-settings-account.html">
+                    <a class="dropdown-item" href="#">
                       <i class="ti ti-settings me-3 ti-md"></i><span class="align-middle">Settings</span>
                     </a>
                   </li>
-                  <li>
+                  {% comment %} <li>
                     <a class="dropdown-item" href="pages-account-settings-billing.html">
                       <span class="d-flex align-items-center align-middle">
                         <i class="flex-shrink-0 ti ti-file-dollar me-3 ti-md"></i><span
@@ -554,11 +554,11 @@
                           class="flex-shrink-0 badge bg-danger d-flex align-items-center justify-content-center">4</span>
                       </span>
                     </a>
-                  </li>
+                  </li> {% endcomment %}
                   <li>
                     <div class="dropdown-divider my-1 mx-n2"></div>
                   </li>
-                  <li>
+                  {% comment %} <li>
                     <a class="dropdown-item" href="pages-pricing.html">
                       <i class="ti ti-currency-dollar me-3 ti-md"></i><span class="align-middle">Pricing</span>
                     </a>
@@ -567,7 +567,7 @@
                     <a class="dropdown-item" href="pages-faq.html">
                       <i class="ti ti-question-mark me-3 ti-md"></i><span class="align-middle">FAQ</span>
                     </a>
-                  </li>
+                  </li> {% endcomment %}
                   <li>
                     <div class="d-grid px-2 pt-2 pb-1">
                       <a class="btn btn-sm btn-danger d-flex" href="auth-login-cover.html" target="_blank">
@@ -583,11 +583,11 @@
           </div>
 
           <!-- Search Small Screens -->
-          <div class="navbar-search-wrapper search-input-wrapper container-xxl d-none">
+          {% comment %} <div class="navbar-search-wrapper search-input-wrapper container-xxl d-none">
             <input type="text" class="form-control search-input border-0" placeholder="Search..."
               aria-label="Search..." />
             <i class="ti ti-x search-toggler cursor-pointer"></i>
-          </div>
+          </div> {% endcomment %}
         </div>
       </nav>
 
@@ -603,13 +603,13 @@
             <div class="container-xxl container-p-y">
               <div class="row g-6">
                 <div class="col-lg-8">
-                  <h1 class="text-white fw-semibold fs-1 mb-2 welcome_title">Welcome, Hasaan!</h1>
-                  <p class="text-white welcome_subtitle">Thanks for joining Turing. To be eligible for jobs you must
+                  <h1 class="text-white fw-semibold fs-1 mb-2 welcome_title">Welcome Back!</h1>
+                  <p class="text-white welcome_subtitle">Thanks for joining Hirexcel. To be eligible for jobs you must
                     complete your vetting process, but don’t worry, we will guide you through the whole process. Here’s
                     your progress so far:</p>
                 </div>
               </div>
-              <div class="card h-100 mt-10 job_banner">
+              {% comment %} <div class="card h-100 mt-10 job_banner">
                 <div class="card-body">
                   <div class="d-md-flex justify-content-between align-items-center">
                     <div class="card-subtitle">
@@ -619,7 +619,7 @@
                         href="" class="btn-link text-white">Explore the Jobs tab</a></button>
                   </div>
                 </div>
-              </div>
+              </div> {% endcomment %}
             </div>
           </div>
 
@@ -631,7 +631,7 @@
                     <div class="card-subtitle">
                       <p class="mb-0 text-black">We’ve found jobs for</p>
                     </div>
-                    <h1 class="total_hired_number">200+</h1>
+                    <h1 class="total_hired_number">100+</h1>
                     <div class="card-subtitle">
                       <p class="mb-0 text-black">developers from Pakistan<img
                           src="../../../static/assets/svg/icons/pakistan.ffd6654c.svg" class="flag" alt=""> so far and
@@ -640,7 +640,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-lg-3 mb-6">
+              {% comment %} <div class="col-lg-3 mb-6">
                 <div class="card h-100">
                   <div class="card-header pb-2">
                     <h5 class="card-title mb-1">82.5k</h5>
@@ -733,7 +733,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> {% endcomment %}
               <div class="col-lg-6 mb-6">
                 <div class="card h-100">
                   <div class="card-body">
@@ -741,32 +741,35 @@
 
                       <div class="col-lg-7">
                         <div class="d-flex align-items-center">
-                          <h3 class="fw-medium mb-0 card-title user_name">Kanye West</h3>
-                          <button class="btn btn-primary ms-4 p-2 px-3 mt-sm-0"><span
+                          <h3 class="fw-medium mb-0 card-title user_name">{{ user_info.FIRST_NAME }} {{ user_info.LAST_NAME }}</h3>
+                          {% comment %} <button class="btn btn-primary ms-4 p-2 px-3 mt-sm-0"><span
                               class="rounded-circle d-flex align-items-center me-2 p-50 edit_icon_bg"><i
                                 class="ti ti-pencil ti-sm"></i></span><a href=""
-                              class="btn-link text-white">Edit</a></button>
+                              class="btn-link text-white">Edit</a></button> {% endcomment %}
                         </div>
-                        <p class="card-subtitle">Sindh Karachi, PK</p>
+                        <p class="card-subtitle">{{ user_info.CITY }} ,{{ user_info.COUNTRY }}</p>
                         <hr class="my-10">
                         <ul class="list-unstyled my-3 py-1">
                           <li class="d-flex align-items-center mb-4">
                             <span class="fw-medium mx-2">Email:</span>
-                            <span>john.doe@example.com</span>
+                            <span>{{user_info.EMAIL}}</span>
                           </li>
                           <li class="d-flex align-items-center mb-4">
                             <span class="fw-medium mx-2">Contact:</span>
-                            <span>(123) 456-7890</span>
+                            <span>{{user_info.PHONE_NUMBER}}</span>
                           </li>
                         </ul>
                       </div>
 
                       <div class="col-lg-5">
                         <div class="d-flex align-items-center justify-content-center">
-                          <img src="../../../static/assets/img/avatars/1.png" alt="user-avatar"
-                            class="d-block w-px-120 h-px-120 rounded-circle" id="uploadedAvatar">
+                          {% comment %} <img src="../../../static/assets/img/avatars/1.png" alt="user-avatar"
+                            class="d-block w-px-200 h-px-200 rounded-circle" id="uploadedAvatar"> {% endcomment %}
+                            <img src="../../../static/assets/img/illustrations/card-advance-sale.png" height="250" alt="view sales">
+
+
                         </div>
-                        <div class="d-flex align-items-center justify-content-center mt-4">
+                        {% comment %} <div class="d-flex align-items-center justify-content-center mt-4">
                           <!-- Completed segments -->
                           <div class="progress-segment completed" style="width: 50px;"></div>
                           <div class="progress-segment completed" style="width: 50px;"></div>
@@ -780,16 +783,16 @@
                           <div class="progress-segment" style="width: 50px;"></div>
                           <div class="progress-segment" style="width: 50px;"></div>
                           <div class="progress-segment" style="width: 50px;"></div>
-                        </div>
+                        </div> {% endcomment %}
                         <div class="row mt-3">
-                          <div class="col-6">
+                          {% comment %} <div class="col-6">
                             <p class="mb-0 d-flex align-items-center justify-content-center">YOUR RATING</p>
                             <h3 class="d-flex align-items-center justify-content-center">53%</h3>
-                          </div>
-                          <div class="col-6">
+                          </div> {% endcomment %}
+                          {% comment %} <div class="col-6">
                             <p class="mb-0 d-flex align-items-center justify-content-center">ACTIVITY</p>
                             <h3 class="d-flex align-items-center justify-content-center">90%</h3>
-                          </div>
+                          </div> {% endcomment %}
                         </div>
                       </div>
                     </div>
@@ -801,14 +804,14 @@
 
           <div class="container-xxl container-p-y">
 
-            <div class="mt-4">
+            <div class="mt-0 mb-2">
               <div class="dataTables_wrapper dt-bootstrap5 no-footer">
                 <div class="card-header flex-column flex-md-row">
                   <div class="head-label text-center">
-                    <h5 class="card-title mb-0">JOBS</h5>
+                    <h3 class="card-title mb-0">JOBS POSTED</h3>
                   </div>
                 </div>
-                <div class="row">
+                {% comment %} <div class="row">
                   <div class="col-sm-12 col-md-6">
                     <div class="dataTables_length">
                       <label>Show
@@ -829,12 +832,13 @@
                       </label>
                     </div>
                   </div>
-                </div>
+                </div> {% endcomment %}
               </div>
             </div>
             <div class="row g-6">
               <div id="job-list">
 
+                {% for job in job_postings %}
                 <div class="card joblist-card mb-6">
                   <div class="card-body">
                     <div class="d-flex mb-4">
@@ -846,11 +850,11 @@
                       </div>
                       <div class="ms-3 flex-grow-1">
                         <a href="#!">
-                          <h5 class="mb-0 job-title">Product Designer</h5>
+                          <h5 class="mb-0 job-title">{{ job.job_title }}</h5>
                         </a>
-                        <p class="company-name text-muted mb-0">Themesbrand</p>
+                        <p class="company-name text-muted mb-0">{{ job.job_position }} | {{job.company_name}}</p>
                       </div>
-                      <div>
+                      {% comment %} <div>
                         <button type="button" class="btn text-primary bg-primary-subtle btn-icon custom-toggle"
                           id="bookmarkToggle">
                           <span class="icon-on">
@@ -860,53 +864,81 @@
                             <i class="fa-solid fa-bookmark"></i>
                           </span>
                         </button>
-                      </div>
+                      </div> {% endcomment %}
                     </div>
-                    <p class="text-muted job-description">A UI/UX designer's job is to create user-friendly interfaces
-                      that enable users to understand how to use complex technical products. If you're passionate about
-                      the latest technology trends and devices, you'll find great fulfillment in being involved in the
-                      design process for the next hot gadget.</p>
+                    <p class="text-muted job-description">{{ job.job_description }}.</p>
+
+                    <h6 class="mb-0 job-skill">Required Skills</h6>
                     <div class="d-flex flex-row flex-nowrap overflow-auto py-2">
-                      <span class="badge bg-primary-subtle text-primary me-1">Design</span>
-                      <span class="badge bg-primary-subtle text-primary me-1">Remote</span>
-                      <span class="badge bg-primary-subtle text-primary me-1">UI/UX Designer</span>
-                      <span class="badge bg-primary-subtle text-primary me-1">Designer</span>
+                      {% for skill in job.required_skills %}
+                      <span class="badge bg-primary-subtle text-primary me-1">{{ skill }}</span>
+                      {% endfor %}
                     </div>
+
+
+                    <h6 class="mb-0 personality-traits">Personality Traits</h6>
+                    <div class="d-flex flex-row flex-nowrap overflow-auto py-2">
+                      {% for trait in job.personality_traits %}
+                      <span class="badge bg-primary-subtle text-primary me-1">{{ trait }}</span>
+                      {% endfor %}
+                    </div>
+
+                    <div class="d-flex flex-row flex-nowrap overflow-auto py-2">
+                      <div>
+                        <h6 class="mb-0 cog-weight">Cognitive Weightage</h6>
+                        <h4 class="mb-0 cog-weight">{{job.cog_weight}}</h4>
+                      </div>
+                      <div class=" px-10">
+                        <h6 class="mb-0 tech-weight">Technical Weightage</h6>
+                        <h4 class="mb-0 tech-weight">{{job.tech_weight}}</h4>
+                      </div>
+                      <div class=" px-10">
+                        <h6 class="mb-0 tech-weight">Technical Assessment Level</h6>
+                        <div class="d-flex flex-row flex-nowrap overflow-auto py-2">
+                          {% for level in job.tech_assessment_level %}
+                          <span class="badge bg-info-subtle text-info me-1">{{ level }}</span>
+                          {% endfor %}
+                        </div>
+                      </div>
+
+                    </div>
+
                   </div>
                   <div class="card-footer border-top-dashed">
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                       <div>
                         <i class="ti ti-briefcase align-bottom me-1"></i>
-                        <span class="job-type">Full Time</span>
+                        <span class="job-type">{{ job.job_type }}</span>
                       </div>
                       <div>
                         <i class="ti ti-stars align-bottom me-1"></i>
-                        <span class="job-experience">1 - 2 Year</span>
+                        <span class="job-experience">{{job.experience_requirements}}</span>
                       </div>
                       <div>
                         <i class="ti ti-map-pin align-bottom me-1"></i>
-                        <span class="job-location">United Kingdom</span>
+                        <span class="job-location">{{ job.city }}, {{ job.country }}</span>
                       </div>
                       <div>
-                        <i class="ti ti-user align-bottom me-1"></i>
-                        74 Applied
+                        <i class="ti ti-certificate align-bottom me-1"></i>
+                        {{job.required_qualifications}}
                       </div>
-                      <div>
+                      {% comment %} <div>
                         <i class="ti ti-clock align-bottom me-1"></i>
                         <span class="job-postdate">15 Sep, 2022</span>
-                      </div>
+                      </div> {% endcomment %}
                       <div>
                         <button type="button" class="btn btn-primary viewjob-list" data-bs-toggle="modal"
                           data-bs-target="#hirexcel_quizzes_modal">
-                          View More
+                          Start Quiz
                           <i class="ti ti-arrow-narrow-right align-bottom ms-1"></i>
                         </button>
                       </div>
                     </div>
                   </div>
                 </div>
+                {% endfor %}
 
-                <div class="card joblist-card mb-6">
+                {% comment %} <div class="card joblist-card mb-6">
                   <div class="card-body">
                     <div class="d-flex mb-4">
                       <div class="avatar-md">
@@ -1044,7 +1076,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> {% endcomment %}
 
               </div>
             </div>
@@ -1062,18 +1094,18 @@
                   <script>
                     document.write(new Date().getFullYear());
                   </script>
-                  , made with ❤️ by <a href="https://pixinvent.com" target="_blank" class="footer-link">Pixinvent</a>
+                  , HIREXCEL. All rights reserved.
                 </div>
                 <div class="d-none d-lg-inline-block">
-                  <a href="https://themeforest.net/licenses/standard" class="footer-link me-4"
+                  <a href="#" class="footer-link me-4"
                     target="_blank">License</a>
-                  <a href="https://1.envato.market/pixinvent_portfolio" target="_blank" class="footer-link me-4">More
-                    Themes</a>
+                  {% comment %} <a href="#" target="_blank" class="footer-link me-4">More
+                    Themes</a> {% endcomment %}
 
-                  <a href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/" target="_blank"
-                    class="footer-link me-4">Documentation</a>
+                  {% comment %} <a href="#" target="_blank"
+                    class="footer-link me-4">Documentation</a> {% endcomment %}
 
-                  <a href="https://pixinvent.ticksy.com/" target="_blank"
+                  <a href="#" target="_blank"
                     class="footer-link d-none d-sm-inline-block">Support</a>
                 </div>
               </div>
