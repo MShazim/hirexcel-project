@@ -156,7 +156,7 @@ def jobseeker_home(request):
         job_postings = Job_Posting.objects.all()  # Get all job postings
         formatted_job_postings = [format_job_posting_data(job) for job in job_postings]
 
-        return render(request, 'home/jobseeker_home.html', {
+        return render(request, 'home/job_seeker/index.html', {
             'user_info': user_info,
             'job_postings': formatted_job_postings
         })
@@ -211,12 +211,15 @@ def format_job_posting_data(job_posting):
         'city': job_posting.CITY,
         'country': job_posting.COUNTRY,
         'job_description': job_posting.DESCRIPTION,
-        'required_qualifications': job_posting.REQUIRED_QUALIFICATIONS.split(', '),
+        'required_qualifications': job_posting.REQUIRED_QUALIFICATIONS,
         'required_skills': job_posting.REQUIRED_SKILLS.split(', '),
-        'experience_requirements': job_posting.EXPERIENCE_REQUIREMENTS.split(', '),
+        'experience_requirements': job_posting.EXPERIENCE_REQUIREMENTS,
         'personality_traits': job_posting.PERSONALITY_TRAITS.split(', '),
         'required_assessments': job_posting.REQUIRED_ASSESSMENTS.split(', '),
-        'test_criteria': job_posting.TEST_CRITERIA.split(', '),
+        'cog_weight': job_posting.COGNITIVE_WEIGHTAGE,
+        'tech_weight': job_posting.TECHNICAL_WEIGHTAGE,
+        'tech_assessment_level': job_posting.TECHNICAL_ASSESSMENT_LEVEL.split(', '),
+        # 'test_criteria': job_posting.TEST_CRITERIA.split(', '),
     }
     return formatted_data
 
