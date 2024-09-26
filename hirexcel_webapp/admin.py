@@ -104,7 +104,7 @@ class CognitiveNVIAnswersDatasetAdmin(admin.ModelAdmin):
     list_display = ('COGNITIVE_NVI_ANS_ID', 'COGNITIVE_ASSESSMENT_ID', 'NVI_IMAGE_QUESTION_ID', 'JOB_SEEKER_ANS', 'IS_CORRECT')
 
 class CognitiveVIQuestionDatasetAdmin(admin.ModelAdmin):
-    list_display = ('VI_QUESTION_ID', 'QUESTION', 'OPTION1', 'OPTION2', 'OPTION3', 'OPTION4', 'OPTION5', 'OPTION6', 'OPTION7', 'OPTION8', 'ANSWER')
+    list_display = ('VI_QUESTION_ID', 'QUESTION', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'ANSWER')
 
 class CognitiveVIAnswersDatasetAdmin(admin.ModelAdmin):
     list_display = ('COGNITIVE_VI_ANS_ID', 'COGNITIVE_ASSESSMENT_ID', 'VI_QUESTION_ID', 'JOB_SEEKER_ANS', 'IS_CORRECT')

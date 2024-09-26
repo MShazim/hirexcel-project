@@ -459,14 +459,14 @@ class Cognitive_NVI_Answers_Dataset(models.Model):
 class Cognitive_VI_Question_Dataset(models.Model):
     VI_QUESTION_ID = models.CharField(primary_key=True,max_length=10)
     QUESTION = models.TextField()
-    OPTION1 = models.CharField(max_length=100)
-    OPTION2 = models.CharField(max_length=100)
-    OPTION3 = models.CharField(max_length=100)
-    OPTION4 = models.CharField(max_length=100)
-    OPTION5 = models.CharField(max_length=100)
-    OPTION6 = models.CharField(max_length=100)
-    OPTION7 = models.CharField(max_length=100)
-    OPTION8 = models.CharField(max_length=100)
+    A = models.CharField(max_length=100)
+    B = models.CharField(max_length=100)
+    C = models.CharField(max_length=100)
+    D = models.CharField(max_length=100)
+    E = models.CharField(max_length=100)
+    F = models.CharField(max_length=100)
+    G = models.CharField(max_length=100)
+    H = models.CharField(max_length=100)
     ANSWER = models.CharField(max_length=100)
 
     def __str__(self):
