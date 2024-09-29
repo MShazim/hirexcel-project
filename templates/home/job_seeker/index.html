@@ -526,8 +526,8 @@
                           </div>
                         </div>
                         <div class="flex-grow-1">
-                          <h6 class="mb-0">John Doe</h6>
-                          <small class="text-muted">Admin</small>
+                          <h6 class="mb-0">{{ user_info.FIRST_NAME }} {{ user_info.LAST_NAME }}</h6>
+                          <small class="text-muted">Job Seeker</small>
                         </div>
                       </div>
                     </a>
@@ -570,7 +570,7 @@
                   </li> {% endcomment %}
                   <li>
                     <div class="d-grid px-2 pt-2 pb-1">
-                      <a class="btn btn-sm btn-danger d-flex" href="auth-login-cover.html" target="_blank">
+                      <a class="btn btn-sm btn-danger d-flex" href="{% url 'jobseeker_logout' %}" target="_blank">
                         <small class="align-middle">Logout</small>
                         <i class="ti ti-logout ms-2 ti-14px"></i>
                       </a>
@@ -605,8 +605,7 @@
                 <div class="col-lg-8">
                   <h1 class="text-white fw-semibold fs-1 mb-2 welcome_title">Welcome Back!</h1>
                   <p class="text-white welcome_subtitle">Thanks for joining Hirexcel. To be eligible for jobs you must
-                    complete your vetting process, but don’t worry, we will guide you through the whole process. Here’s
-                    your progress so far:</p>
+                    complete your vetting process, but don’t worry, we will guide you through the whole process. </p>
                 </div>
               </div>
               {% comment %} <div class="card h-100 mt-10 job_banner">
@@ -837,7 +836,6 @@
             </div>
             <div class="row g-6">
               <div id="job-list">
-
                 {% for job in job_postings %}
                 <div class="card joblist-card mb-6">
                   <div class="card-body">
@@ -927,8 +925,19 @@
                         <span class="job-postdate">15 Sep, 2022</span>
                       </div> {% endcomment %}
                       <div>
-                        <button type="button" class="btn btn-primary viewjob-list" data-bs-toggle="modal"
+                        {% comment %} <button type="button" class="btn btn-primary viewjob-list" data-bs-toggle="modal"
                           data-bs-target="#hirexcel_quizzes_modal">
+                          Start Quiz
+                          <i class="ti ti-arrow-narrow-right align-bottom ms-1"></i>
+                        </button> {% endcomment %}
+                        <button type="button"
+                          class="btn btn-primary viewjob-list"
+                          data-bs-toggle="modal"
+                          data-bs-target="#hirexcel_quizzes_modal"
+                          data-job-title="{{ job.job_title }}"
+                          data-company-name="{{ job.company_name }}"
+                          data-job-description="{{ job.job_description }}"
+                          data-job-position="{{ job.job_position }}">
                           Start Quiz
                           <i class="ti ti-arrow-narrow-right align-bottom ms-1"></i>
                         </button>
@@ -937,147 +946,6 @@
                   </div>
                 </div>
                 {% endfor %}
-
-                {% comment %} <div class="card joblist-card mb-6">
-                  <div class="card-body">
-                    <div class="d-flex mb-4">
-                      <div class="avatar-md">
-                        <div
-                          class="align-items-center text-white d-flex fw-normal justify-content-center w-100 h-100 bg-light rounded">
-                          <img src="../../../static/assets/img/companies/img-1.png" alt="" class="avatar-xs">
-                        </div>
-                      </div>
-                      <div class="ms-3 flex-grow-1">
-                        <a href="#!">
-                          <h5 class="mb-0 job-title">Product Designer</h5>
-                        </a>
-                        <p class="company-name text-muted mb-0">Themesbrand</p>
-                      </div>
-                      <div>
-                        <button type="button" class="btn text-primary bg-primary-subtle btn-icon custom-toggle"
-                          id="bookmarkToggle">
-                          <span class="icon-on">
-                            <i class="fa-regular fa-bookmark"></i>
-                          </span>
-                          <span class="icon-off d-none">
-                            <i class="fa-solid fa-bookmark"></i>
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-                    <p class="text-muted job-description">A UI/UX designer's job is to create user-friendly interfaces
-                      that enable users to understand how to use complex technical products. If you're passionate about
-                      the latest technology trends and devices, you'll find great fulfillment in being involved in the
-                      design process for the next hot gadget.</p>
-                    <div class="d-flex flex-row flex-nowrap overflow-auto py-2">
-                      <span class="badge bg-primary-subtle text-primary me-1">Design</span>
-                      <span class="badge bg-primary-subtle text-primary me-1">Remote</span>
-                      <span class="badge bg-primary-subtle text-primary me-1">UI/UX Designer</span>
-                      <span class="badge bg-primary-subtle text-primary me-1">Designer</span>
-                    </div>
-                  </div>
-                  <div class="card-footer border-top-dashed">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                      <div>
-                        <i class="ti ti-briefcase align-bottom me-1"></i>
-                        <span class="job-type">Full Time</span>
-                      </div>
-                      <div>
-                        <i class="ti ti-stars align-bottom me-1"></i>
-                        <span class="job-experience">1 - 2 Year</span>
-                      </div>
-                      <div>
-                        <i class="ti ti-map-pin align-bottom me-1"></i>
-                        <span class="job-location">United Kingdom</span>
-                      </div>
-                      <div>
-                        <i class="ti ti-user align-bottom me-1"></i>
-                        74 Applied
-                      </div>
-                      <div>
-                        <i class="ti ti-clock align-bottom me-1"></i>
-                        <span class="job-postdate">15 Sep, 2022</span>
-                      </div>
-                      <div>
-                        <a href="#!" class="btn btn-primary viewjob-list">
-                          View More
-                          <i class="ti ti-arrow-narrow-right align-bottom ms-1"></i>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card joblist-card mb-6">
-                  <div class="card-body">
-                    <div class="d-flex mb-4">
-                      <div class="avatar-md">
-                        <div
-                          class="align-items-center text-white d-flex fw-normal justify-content-center w-100 h-100 bg-light rounded">
-                          <img src="../../../static/assets/img/companies/img-1.png" alt="" class="avatar-xs">
-                        </div>
-                      </div>
-                      <div class="ms-3 flex-grow-1">
-                        <a href="#!">
-                          <h5 class="mb-0 job-title">Product Designer</h5>
-                        </a>
-                        <p class="company-name text-muted mb-0">Themesbrand</p>
-                      </div>
-                      <div>
-                        <button type="button" class="btn text-primary bg-primary-subtle btn-icon custom-toggle"
-                          id="bookmarkToggle">
-                          <span class="icon-on">
-                            <i class="fa-regular fa-bookmark"></i>
-                          </span>
-                          <span class="icon-off d-none">
-                            <i class="fa-solid fa-bookmark"></i>
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-                    <p class="text-muted job-description">A UI/UX designer's job is to create user-friendly interfaces
-                      that enable users to understand how to use complex technical products. If you're passionate about
-                      the latest technology trends and devices, you'll find great fulfillment in being involved in the
-                      design process for the next hot gadget.</p>
-                    <div class="d-flex flex-row flex-nowrap overflow-auto py-2">
-                      <span class="badge bg-primary-subtle text-primary me-1">Design</span>
-                      <span class="badge bg-primary-subtle text-primary me-1">Remote</span>
-                      <span class="badge bg-primary-subtle text-primary me-1">UI/UX Designer</span>
-                      <span class="badge bg-primary-subtle text-primary me-1">Designer</span>
-                    </div>
-                  </div>
-                  <div class="card-footer border-top-dashed">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                      <div>
-                        <i class="ti ti-briefcase align-bottom me-1"></i>
-                        <span class="job-type">Full Time</span>
-                      </div>
-                      <div>
-                        <i class="ti ti-stars align-bottom me-1"></i>
-                        <span class="job-experience">1 - 2 Year</span>
-                      </div>
-                      <div>
-                        <i class="ti ti-map-pin align-bottom me-1"></i>
-                        <span class="job-location">United Kingdom</span>
-                      </div>
-                      <div>
-                        <i class="ti ti-user align-bottom me-1"></i>
-                        74 Applied
-                      </div>
-                      <div>
-                        <i class="ti ti-clock align-bottom me-1"></i>
-                        <span class="job-postdate">15 Sep, 2022</span>
-                      </div>
-                      <div>
-                        <a href="#!" class="btn btn-primary viewjob-list">
-                          View More
-                          <i class="ti ti-arrow-narrow-right align-bottom ms-1"></i>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div> {% endcomment %}
-
               </div>
             </div>
 
@@ -1124,7 +992,7 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="hirexcel_quizzes_modal" tabindex="-1" aria-hidden="true">
+  {% comment %} <div class="modal fade" id="hirexcel_quizzes_modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -1141,9 +1009,7 @@
               </div>
             </div>
             <div class="ms-3 flex-grow-1">
-              <a href="#!">
                 <h5 class="mb-0 job-title">Product Designer</h5>
-              </a>
               <p class="company-name text-muted mb-0">Themesbrand</p>
             </div>
           </div>
@@ -1170,15 +1036,116 @@
         </div>
         <hr>
         <div class="d-flex flex-column flex-sm-row justify-content-sm-center justify-content-md-end gap-4 mt-4 p-6">
-          <button class="btn bg-light px-5 py-2" style="cursor: default;"><i class="ti ti-alarm ti-sm"></i>Max. Time
-            18
-            min</button>
-          <button type="button" class="btn btn-primary"><i class="ti ti-player-play ti-sm me-4"></i>Accept & Start
-            Quiz</button>
+          <button class="btn bg-light px-5 py-2" style="cursor: default;"><i class="ti ti-alarm ti-sm"></i>Max. Time 1 hour</button>
+            <form action="{% url 'disc_quiz_start_redirect' %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary"><i class="ti ti-player-play ti-sm me-4"></i>Accept & Start Quiz</button>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div> {% endcomment %}
+  <!--/ Modal -->
+
+  <!-- Modal -->
+  <div class="modal fade" id="hirexcel_quizzes_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCenterTitle">Quiz Overview</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <hr>
+        <div class="modal-body">
+          <!-- Job & Company Details -->
+          <div class="d-flex mb-4">
+            <div class="avatar-md">
+              <div class="align-items-center text-white d-flex fw-normal justify-content-center w-100 h-100 bg-light rounded">
+                <img src="../../../static/assets/img/companies/img-1.png" alt="" class="avatar-xs">
+              </div>
+            </div>
+            <div class="ms-3 flex-grow-1">
+              <h5 class="mb-0 job-title">Product Designer</h5>
+              <p class="company-name text-muted mb-0">Themesbrand</p>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <p class="job-description">
+            This quiz is your next step towards ReactJS positions in Silicon Valley, and other top U.S companies.
+          </p>
+
+          <!-- Quiz Phases Overview -->
+          <div class="quiz-phases">
+            <h5 class="fw-bold mb-2">Quiz Phases Overview</h5>
+            <ul>
+              <li>
+                <strong>Phase 1: Personality Assessment</strong>
+                <ul>
+                  <li>Disc Assessment</li>
+                  <li>Big Five Assessment</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Phase 2: Cognitive Assessment</strong>
+                <ul>
+                  <li>Non-Verbal</li>
+                  <li>Verbal</li>
+                </ul>
+              </li>
+              <li>
+                <strong>Phase 3: Technical Assessment</strong>
+                <ul>
+                  <li>Technical questions based on difficulty level:
+                    <ul>
+                      <li>Beginner</li>
+                      <li>Intermediate</li>
+                      <li>Hard</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Fair Assessment Policy -->
+          <h5 class="fw-bold mt-4">Fair Assessment Policy</h5>
+          <p>To ensure fairness, we track browser activity and submission patterns to detect any signs of cheating during the test attempt.</p>
+          <div>
+            <p class="mb-0">During the test attempt, DO NOT:</p>
+            <ul>
+              <li>Open new browser tabs or windows</li>
+              <li>Capture screenshots</li>
+              <li>Conduct any online searches for answers</li>
+              <li>Utilize any tools to answer questions (such as ChatGPT, browser plugins, etc.)</li>
+            </ul>
+            <div class="alert alert-warning alert-outline-warning">
+              <i class="ti ti-alert-triangle-filled"></i>
+              <span>Violation of this policy can result in a temporary or permanent ban from the platform.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <hr>
+        <div class="d-flex flex-column flex-sm-row justify-content-sm-center justify-content-md-end gap-4 mt-4 p-6">
+          <button class="btn bg-light px-5 py-2" style="cursor: default;">
+            <i class="ti ti-alarm ti-sm"></i>
+            Max. Time 1 hour
+          </button>
+          <form action="{% url 'disc_quiz_start_redirect' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">
+              <i class="ti ti-player-play ti-sm me-4"></i>
+              Accept & Start Quiz
+            </button>
+          </form>
         </div>
       </div>
     </div>
   </div>
+  <!--/ Modal -->
+
 
   <!-- Drag Target Area To SlideIn Menu On Small Screens -->
   <div class="drag-target"></div>
@@ -1197,7 +1164,8 @@
   <script src="../../../static/assets/vendor/libs/i18n/i18n.js"></script>
   <script src="../../../static/assets/vendor/libs/typeahead-js/typeahead.js"></script>
   <script src="../../../static/assets/vendor/js/menu.js"></script>
-  <script src="../../../static/assets/vendor/js/script.js"></script>
+  {% comment %} <script src="../../../static/assets/vendor/js/script.js"></script> {% endcomment %}
+  <script src="../../../static/assets/vendor/js/job_seeker_dashboard.js"></script>
 
   <!-- endbuild -->
 

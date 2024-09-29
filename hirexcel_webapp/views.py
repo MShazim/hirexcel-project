@@ -2,16 +2,17 @@ from django.shortcuts import render , get_object_or_404 , redirect
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.urls import reverse
 from django.contrib import messages
-from .models import DISC_Questions_Dataset, Cognitive_NVI_Questions_Dataset, Technical_Questions_Dataset , Job_Position_Criteria ,User_Information, Job_Seeker, Job_Seeker_Education, Job_Seeker_Work_Experience , Recruiter, Job_Posting , Assessment , Job_Seeker_Assessment, Cognitive_Assessment , Cognitive_NVI_Answers_Dataset, Technical_Assessment, Technical_Answers_Dataset
+from .models import DISC_Questions_Dataset, Cognitive_NVI_Questions_Dataset, Technical_Questions_Dataset , Job_Position_Criteria ,User_Information, Job_Seeker, Job_Seeker_Education, Job_Seeker_Work_Experience , Recruiter, Job_Posting , Assessment , Job_Seeker_Assessment, Cognitive_Assessment , Cognitive_NVI_Answers_Dataset, Technical_Assessment, Technical_Answers_Dataset, BigFive_Assessment, BigFive_Questions_Dataset
 from .forms import UserInformationForm, JobSeekerForm, JobSeekerEducationForm, JobSeekerWorkExperienceForm , RecruiterForm , JobPostingForm
 import random
 from datetime import datetime
 import json
+import re
 # ---------------------------------[ for generating the evaluation summary using ChatGPT ]-----------------------------------------
-from django.shortcuts import get_object_or_404
-from .models import Personality_Assessment_Report, Evaluation_Summary, Job_Seeker, Job_Seeker_Assessment, Job_Posting, Technical_Assessment, Technical_Assessment_Result, Cognitive_Assessment, Cognitive_Assessment_Results
-from .utils.chatgpt_integration import ChatGPTIntegration
-from django.conf import settings
+# from django.shortcuts import get_object_or_404
+# from .models import Personality_Assessment_Report, Evaluation_Summary, Job_Seeker, Job_Seeker_Assessment, Job_Posting, Technical_Assessment, Technical_Assessment_Result, Cognitive_Assessment, Cognitive_Assessment_Results
+# from .utils.chatgpt_integration import ChatGPTIntegration
+# from django.conf import settings
 # ---------------------------------[ end ]-----------------------------------------
 
 
@@ -327,6 +328,27 @@ def get_personality_traits(request):
         print("No job position provided")
     return JsonResponse({'personality_traits': []})
 
+# def apply_for_job(request, job_post_id):
+#     if request.method == 'POST':
+#         # Hardcoded assessment categories
+#         assessment_categories = ["Cognitive_nvi", "Technical"]
+#         assessment_category_str = ', '.join(assessment_categories)
+
+#         # Create a single assessment record with combined categories
+#         assessment = Assessment.objects.create(
+#             ASSESSMENT_CATEGORY=assessment_category_str
+#         )
+
+#         # Store assessment_id and job_post_id in the session
+#         request.session['assessment_id'] = str(assessment.ASSESSMENT_ID)
+#         request.session['job_post_id'] = job_post_id
+
+#         # Redirect to the quiz start screen
+#         return redirect('quiz_start_screen')
+#     else:
+#         # If not a POST request, redirect back to jobseeker home
+#         return redirect('jobseeker_home')
+
 def apply_for_job(request, job_post_id):
     if request.method == 'POST':
         # Hardcoded assessment categories
@@ -342,8 +364,8 @@ def apply_for_job(request, job_post_id):
         request.session['assessment_id'] = str(assessment.ASSESSMENT_ID)
         request.session['job_post_id'] = job_post_id
 
-        # Redirect to the quiz start screen
-        return redirect('quiz_start_screen')
+        # Redirect directly to disc quiz start
+        return redirect('disc_quiz_start')
     else:
         # If not a POST request, redirect back to jobseeker home
         return redirect('jobseeker_home')
@@ -617,8 +639,18 @@ def recruiter_success_page(request):
 def quiz_start_screen(request):
     return render(request, './quiz/quiz_start_screen.html')
 # ----------------------------[ DISC QUIZ unchanged ]--------------------------------------------------
+# def disc_quiz_start(request):
+#     # Redirect to the first question
+#     first_question = DISC_Questions_Dataset.objects.first()
+#     if first_question:
+#         first_question_id = first_question.DISC_PROFILE_ID
+#         return redirect('disc_quiz', question_id=first_question_id)
+#     else:
+#         # Handle the case where there are no questions in the dataset
+#         return render(request, 'disc_quiz/no_questions.html')
+
 def disc_quiz_start(request):
-    # Redirect to the first question
+    # Redirect to the first question of DISC quiz
     first_question = DISC_Questions_Dataset.objects.first()
     if first_question:
         first_question_id = first_question.DISC_PROFILE_ID
@@ -627,9 +659,32 @@ def disc_quiz_start(request):
         # Handle the case where there are no questions in the dataset
         return render(request, 'disc_quiz/no_questions.html')
 
+
+# def disc_quiz(request, question_id):
+#     # Get the question based on the current question ID
+#     question = get_object_or_404(DISC_Questions_Dataset, DISC_PROFILE_ID=question_id)
+#     next_question_id = None
+#     try:
+#         next_question_id = DISC_Questions_Dataset.objects.filter(DISC_PROFILE_ID__gt=question_id).order_by('DISC_PROFILE_ID').first().DISC_PROFILE_ID
+#     except AttributeError:
+#         next_question_id = None
+
+#     context = {
+#         'question': question,
+#         'next_question_id': next_question_id,
+#         'total_questions': DISC_Questions_Dataset.objects.count()
+#     }
+#     return render(request, 'disc_quiz/disc_quiz.html', context)
+
 def disc_quiz(request, question_id):
     # Get the question based on the current question ID
     question = get_object_or_404(DISC_Questions_Dataset, DISC_PROFILE_ID=question_id)
+    
+    # Get all questions to calculate the question number
+    all_questions = list(DISC_Questions_Dataset.objects.order_by('DISC_PROFILE_ID'))
+    total_questions = len(all_questions)
+    current_question_number = all_questions.index(question) + 1  # Calculate the current question index
+    
     next_question_id = None
     try:
         next_question_id = DISC_Questions_Dataset.objects.filter(DISC_PROFILE_ID__gt=question_id).order_by('DISC_PROFILE_ID').first().DISC_PROFILE_ID
@@ -639,12 +694,113 @@ def disc_quiz(request, question_id):
     context = {
         'question': question,
         'next_question_id': next_question_id,
-        'total_questions': DISC_Questions_Dataset.objects.count()
+        'total_questions': total_questions,
+        'current_question_number': current_question_number,  # Pass the current question number
     }
     return render(request, 'disc_quiz/disc_quiz.html', context)
 
+
 def disc_quiz_start_redirect(request):
     return redirect('disc_quiz_start')
+# ------------------------------[ ENDS ]----------------------------------------------------
+
+# ------------------------------[ BIG FIVE QUIZ ]----------------------------------------------------
+
+# def big_five_quiz_start(request):
+#     # Redirect to the first question of Big Five quiz ordered properly
+#     first_question = BigFive_Questions_Dataset.objects.order_by('DIMENSION_ID').first()
+#     if first_question:
+#         first_question_id = first_question.DIMENSION_ID
+#         return redirect('big_five_quiz', question_id=first_question_id)
+#     else:
+#         # Handle the case where there are no questions in the dataset
+#         return render(request, 'big_five_quiz/no_questions.html')
+
+def big_five_quiz_start(request):
+    # Get all questions and sort them properly based on the numeric part of the dimension ID
+    all_questions = list(BigFive_Questions_Dataset.objects.all())
+    sorted_questions = sorted(
+        all_questions,
+        key=lambda q: int(re.search(r'(\d+)$', q.DIMENSION_ID).group())
+    )
+    
+    # Redirect to the first sorted question
+    if sorted_questions:
+        first_question_id = sorted_questions[0].DIMENSION_ID
+        return redirect('big_five_quiz', question_id=first_question_id)
+    else:
+        # Handle the case where there are no questions in the dataset
+        return render(request, 'big_five_quiz/no_questions.html')
+
+
+# def big_five_quiz(request, question_id):
+#     # Get the question based on the current question ID
+#     question = get_object_or_404(BigFive_Questions_Dataset, DIMENSION_ID=question_id)
+    
+#     # Order questions properly by extracting and sorting the numeric part of DIMENSION_ID
+#     all_questions = sorted(
+#         BigFive_Questions_Dataset.objects.all(),
+#         key=lambda q: int(q.DIMENSION_ID.split('_')[-1])
+#     )
+    
+#     total_questions = len(all_questions)
+#     current_question_number = all_questions.index(question) + 1  # Calculate the current question index
+    
+#     # Get the next question ID
+#     next_question_id = None
+#     try:
+#         next_question_id = all_questions[current_question_number].DIMENSION_ID
+#     except IndexError:
+#         next_question_id = None  # Last question
+
+#     context = {
+#         'question': question,
+#         'next_question_id': next_question_id,
+#         'total_questions': total_questions,
+#         'current_question_number': current_question_number,  # Pass the current question number
+#     }
+#     return render(request, 'big_five_quiz/big_five_quiz.html', context)
+
+def big_five_quiz(request, question_id):
+    # Get the question based on the current question ID
+    question = get_object_or_404(BigFive_Questions_Dataset, DIMENSION_ID=question_id)
+    
+    # Extract all questions and sort them by the numeric part of DIMENSION_ID
+    all_questions = list(BigFive_Questions_Dataset.objects.all())
+    
+    # Debugging: print all DIMENSION_IDs before sorting
+    print("DIMENSION_IDs before sorting:", [q.DIMENSION_ID for q in all_questions])
+
+    # Sort based on the numeric part of the DIMENSION_ID
+    sorted_questions = sorted(
+        all_questions,
+        key=lambda q: int(re.search(r'(\d+)$', q.DIMENSION_ID).group())
+    )
+    
+    # Debugging: print all DIMENSION_IDs after sorting
+    print("DIMENSION_IDs after sorting:", [q.DIMENSION_ID for q in sorted_questions])
+
+    total_questions = len(sorted_questions)
+    current_question_number = sorted_questions.index(question) + 1  # Calculate the current question index
+    
+    # Get the next question ID
+    next_question_id = None
+    try:
+        next_question_id = sorted_questions[current_question_number].DIMENSION_ID
+    except IndexError:
+        next_question_id = None  # Last question
+
+    context = {
+        'question': question,
+        'next_question_id': next_question_id,
+        'total_questions': total_questions,
+        'current_question_number': current_question_number,  # Pass the current question number
+    }
+    return render(request, 'big_five_quiz/big_five_quiz.html', context)
+
+def big_five_quiz_start_redirect(request):
+    return redirect('big_five_quiz_start')
+
 # ------------------------------[ ENDS ]----------------------------------------------------
 
 
@@ -873,100 +1029,100 @@ def phase_three_completed(request):
 
 
 # ---------------------------------[ for generating the evaluation summary using ChatGPT ]-----------------------------------------
-def process_assessment_and_generate_summary(report_id):
-    # Step 1: Retrieve the Personality Assessment Report
-    report = get_object_or_404(Personality_Assessment_Report, PERSONALITY_ASSESSMENT_REPORT_ID=report_id)
+# def process_assessment_and_generate_summary(report_id):
+#     # Step 1: Retrieve the Personality Assessment Report
+#     report = get_object_or_404(Personality_Assessment_Report, PERSONALITY_ASSESSMENT_REPORT_ID=report_id)
 
-    # Step 2: Extract JOB_POST_ID from Job_Seeker_Assessment using JOB_SEEKER_ASSESSMENT_ID from Personality_Assessment_Report
-    job_seeker_assessment = report.JOB_SEEKER_ASSESSMENT_ID  
-    job_post_id = job_seeker_assessment.JOB_POST_ID  # Extract JOB_POST_ID from Job_Seeker_Assessment
+#     # Step 2: Extract JOB_POST_ID from Job_Seeker_Assessment using JOB_SEEKER_ASSESSMENT_ID from Personality_Assessment_Report
+#     job_seeker_assessment = report.JOB_SEEKER_ASSESSMENT_ID  
+#     job_post_id = job_seeker_assessment.JOB_POST_ID  # Extract JOB_POST_ID from Job_Seeker_Assessment
 
-    # Step 3: Use JOB_POST_ID to extract COGNITIVE_WEIGHTAGE and TECHNICAL_WEIGHTAGE from Job_Posting
-    job_post = Job_Posting.objects.get(JOB_POST_ID=job_post_id)  # Fetch the job post details
-    cognitive_weightage = int(job_post.COGNITIVE_WEIGHTAGE)
-    technical_weightage = int(job_post.TECHNICAL_WEIGHTAGE)
+#     # Step 3: Use JOB_POST_ID to extract COGNITIVE_WEIGHTAGE and TECHNICAL_WEIGHTAGE from Job_Posting
+#     job_post = Job_Posting.objects.get(JOB_POST_ID=job_post_id)  # Fetch the job post details
+#     cognitive_weightage = int(job_post.COGNITIVE_WEIGHTAGE)
+#     technical_weightage = int(job_post.TECHNICAL_WEIGHTAGE)
     
-    # Step 4: Extract USER_ID from Job_Seeker
-    job_seeker_id = job_seeker_assessment.JOB_SEEKER_ID
-    user_id = Job_Seeker.objects.get(JOB_SEEKER_ID=job_seeker_id).USER_ID
+#     # Step 4: Extract USER_ID from Job_Seeker
+#     job_seeker_id = job_seeker_assessment.JOB_SEEKER_ID
+#     user_id = Job_Seeker.objects.get(JOB_SEEKER_ID=job_seeker_id).USER_ID
 
-    # Step 5: Extract TECHNICAL_ASSESSMENT_RESULT_ID and COGNITIVE_ASSESSMENT_RESULT_ID
-    technical_assessment_id = Technical_Assessment.objects.get(JOB_SEEKER_ASSESSMENT_ID=job_seeker_assessment).TECHNICAL_ASSESSMENT_ID
-    technical_assessment_result = Technical_Assessment_Result.objects.get(TECHNICAL_ASSESSMENT_ID=technical_assessment_id)
+#     # Step 5: Extract TECHNICAL_ASSESSMENT_RESULT_ID and COGNITIVE_ASSESSMENT_RESULT_ID
+#     technical_assessment_id = Technical_Assessment.objects.get(JOB_SEEKER_ASSESSMENT_ID=job_seeker_assessment).TECHNICAL_ASSESSMENT_ID
+#     technical_assessment_result = Technical_Assessment_Result.objects.get(TECHNICAL_ASSESSMENT_ID=technical_assessment_id)
 
-    cognitive_assessment_id = Cognitive_Assessment.objects.get(JOB_SEEKER_ASSESSMENT_ID=job_seeker_assessment).COGNITIVE_ASSESSMENT_ID
-    cognitive_assessment_result = Cognitive_Assessment_Results.objects.get(COGNITIVE_ASSESSMENT_ID=cognitive_assessment_id)
+#     cognitive_assessment_id = Cognitive_Assessment.objects.get(JOB_SEEKER_ASSESSMENT_ID=job_seeker_assessment).COGNITIVE_ASSESSMENT_ID
+#     cognitive_assessment_result = Cognitive_Assessment_Results.objects.get(COGNITIVE_ASSESSMENT_ID=cognitive_assessment_id)
 
-    # Step 6: Check the Cognitive Test Criteria
-    cognitive_score_percentage = int(cognitive_assessment_result.COGNITIVE_SCORE_PERCENTAGE)
+#     # Step 6: Check the Cognitive Test Criteria
+#     cognitive_score_percentage = int(cognitive_assessment_result.COGNITIVE_SCORE_PERCENTAGE)
 
-    if cognitive_score_percentage < cognitive_weightage:
-        # Candidate did not pass the cognitive test, so "Not Recommended"
-        candidate_status = "Not Recommended"
-    else:
-        # Step 7: Check the Technical Test Criteria
-        technical_score_percentage = int(technical_assessment_result.TECH_SCORE_PERCENTAGE)
+#     if cognitive_score_percentage < cognitive_weightage:
+#         # Candidate did not pass the cognitive test, so "Not Recommended"
+#         candidate_status = "Not Recommended"
+#     else:
+#         # Step 7: Check the Technical Test Criteria
+#         technical_score_percentage = int(technical_assessment_result.TECH_SCORE_PERCENTAGE)
 
-        if technical_score_percentage < technical_weightage:
-            # Candidate did not pass the technical test, so "Not Recommended"
-            candidate_status = "Not Recommended"
-        else:
-            # Step 8: If both tests are passed, use ChatGPT to determine final recommendation
-            personality_report_fields = {
-                "DISC_CATEGORY": report.DISC_CATEGORY,
-                "DISC_PERSONALITY_TRAIT": report.DISC_PERSONALITY_TRAIT,
-                "DISC_COGNITIVE_ABILITY": report.DISC_COGNITIVE_ABILITY,
-                "DISC_EMOTIONAL_REGULATION": report.DISC_EMOTIONAL_REGULATION,
-                "DISC_TENDENCIES": report.DISC_TENDENCIES,
-                "DISC_WEAKNESSES": report.DISC_WEAKNESSES,
-                "DISC_BEHAVIOUR": report.DISC_BEHAVIOUR,
-                "DISC_MOTIVATED_BY": report.DISC_MOTIVATED_BY,
-                "BIGFIVE_OPENNESS_CATEGORY": report.BIGFIVE_OPENNESS_CATEGORY,
-                "BIGFIVE_OPENNESS_PERSONALITY": report.BIGFIVE_OPENNESS_PERSONALITY,
-                "BIGFIVE_OPENNESS_DESCRIPTION": report.BIGFIVE_OPENNESS_DESCRIPTION,
-                "BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR": report.BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR,
-                "BIGFIVE_CONCIENTIOUSNESS_CATEGORY": report.BIGFIVE_CONCIENTIOUSNESS_CATEGORY,
-                "BIGFIVE_CONCIENTIOUSNESS_PERSONALITY": report.BIGFIVE_CONCIENTIOUSNESS_PERSONALITY,
-                "BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION": report.BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION,
-                "BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR": report.BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR,
-                "BIGFIVE_EXTRAVERSION_CATEGORY": report.BIGFIVE_EXTRAVERSION_CATEGORY,
-                "BIGFIVE_EXTRAVERSION_PERSONALITY": report.BIGFIVE_EXTRAVERSION_PERSONALITY,
-                "BIGFIVE_EXTRAVERSION_DESCRIPTION": report.BIGFIVE_EXTRAVERSION_DESCRIPTION,
-                "BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR": report.BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR,
-                "BIGFIVE_AGREEABLENESS_CATEGORY": report.BIGFIVE_AGREEABLENESS_CATEGORY,
-                "BIGFIVE_AGREEABLENESS_PERSONALITY": report.BIGFIVE_AGREEABLENESS_PERSONALITY,
-                "BIGFIVE_AGREEABLENESS_DESCRIPTION": report.BIGFIVE_AGREEABLENESS_DESCRIPTION,
-                "BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR": report.BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR,
-                "BIGFIVE_NEUROTICISM_CATEGORY": report.BIGFIVE_NEUROTICISM_CATEGORY,
-                "BIGFIVE_NEUROTICISM_PERSONALITY": report.BIGFIVE_NEUROTICISM_PERSONALITY,
-                "BIGFIVE_NEUROTICISM_DESCRIPTION": report.BIGFIVE_NEUROTICISM_DESCRIPTION,
-                "BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR": report.BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR
-            }
+#         if technical_score_percentage < technical_weightage:
+#             # Candidate did not pass the technical test, so "Not Recommended"
+#             candidate_status = "Not Recommended"
+#         else:
+#             # Step 8: If both tests are passed, use ChatGPT to determine final recommendation
+#             personality_report_fields = {
+#                 "DISC_CATEGORY": report.DISC_CATEGORY,
+#                 "DISC_PERSONALITY_TRAIT": report.DISC_PERSONALITY_TRAIT,
+#                 "DISC_COGNITIVE_ABILITY": report.DISC_COGNITIVE_ABILITY,
+#                 "DISC_EMOTIONAL_REGULATION": report.DISC_EMOTIONAL_REGULATION,
+#                 "DISC_TENDENCIES": report.DISC_TENDENCIES,
+#                 "DISC_WEAKNESSES": report.DISC_WEAKNESSES,
+#                 "DISC_BEHAVIOUR": report.DISC_BEHAVIOUR,
+#                 "DISC_MOTIVATED_BY": report.DISC_MOTIVATED_BY,
+#                 "BIGFIVE_OPENNESS_CATEGORY": report.BIGFIVE_OPENNESS_CATEGORY,
+#                 "BIGFIVE_OPENNESS_PERSONALITY": report.BIGFIVE_OPENNESS_PERSONALITY,
+#                 "BIGFIVE_OPENNESS_DESCRIPTION": report.BIGFIVE_OPENNESS_DESCRIPTION,
+#                 "BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR": report.BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR,
+#                 "BIGFIVE_CONCIENTIOUSNESS_CATEGORY": report.BIGFIVE_CONCIENTIOUSNESS_CATEGORY,
+#                 "BIGFIVE_CONCIENTIOUSNESS_PERSONALITY": report.BIGFIVE_CONCIENTIOUSNESS_PERSONALITY,
+#                 "BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION": report.BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION,
+#                 "BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR": report.BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR,
+#                 "BIGFIVE_EXTRAVERSION_CATEGORY": report.BIGFIVE_EXTRAVERSION_CATEGORY,
+#                 "BIGFIVE_EXTRAVERSION_PERSONALITY": report.BIGFIVE_EXTRAVERSION_PERSONALITY,
+#                 "BIGFIVE_EXTRAVERSION_DESCRIPTION": report.BIGFIVE_EXTRAVERSION_DESCRIPTION,
+#                 "BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR": report.BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR,
+#                 "BIGFIVE_AGREEABLENESS_CATEGORY": report.BIGFIVE_AGREEABLENESS_CATEGORY,
+#                 "BIGFIVE_AGREEABLENESS_PERSONALITY": report.BIGFIVE_AGREEABLENESS_PERSONALITY,
+#                 "BIGFIVE_AGREEABLENESS_DESCRIPTION": report.BIGFIVE_AGREEABLENESS_DESCRIPTION,
+#                 "BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR": report.BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR,
+#                 "BIGFIVE_NEUROTICISM_CATEGORY": report.BIGFIVE_NEUROTICISM_CATEGORY,
+#                 "BIGFIVE_NEUROTICISM_PERSONALITY": report.BIGFIVE_NEUROTICISM_PERSONALITY,
+#                 "BIGFIVE_NEUROTICISM_DESCRIPTION": report.BIGFIVE_NEUROTICISM_DESCRIPTION,
+#                 "BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR": report.BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR
+#             }
 
-            # Initialize ChatGPT Integration and use GPT-4-turbo to check candidate status
-            chatgpt = ChatGPTIntegration(api_key=settings.OPENAI_API_KEY)
-            candidate_status = chatgpt.generate_candidate_status(personality_report_fields, job_post.JOB_POSITION)
+#             # Initialize ChatGPT Integration and use GPT-4-turbo to check candidate status
+#             chatgpt = ChatGPTIntegration(api_key=settings.OPENAI_API_KEY)
+#             candidate_status = chatgpt.generate_candidate_status(personality_report_fields, job_post.JOB_POSITION)
 
-    # Step 9: Generate profile synopsis and optimal job matches using ChatGPT
-    profile_synopsis = chatgpt.generate_profile_synopsis(personality_report_fields)
-    optimal_job_matches = chatgpt.generate_optimal_job_matches(personality_report_fields)
+#     # Step 9: Generate profile synopsis and optimal job matches using ChatGPT
+#     profile_synopsis = chatgpt.generate_profile_synopsis(personality_report_fields)
+#     optimal_job_matches = chatgpt.generate_optimal_job_matches(personality_report_fields)
 
-    # Step 10: Save to Evaluation_Summary table
-    evaluation_summary = Evaluation_Summary.objects.create(
-        USER_ID=user_id,
-        JOB_SEEKER_ID=job_seeker_id,
-        JOB_POST_ID=job_post_id,
-        ASSESSMENT_ID=report.PERSONALITY_ASSESSMENT_ID,
-        PERSONALITY_ASSESSMENT_REPORT_ID=report.PERSONALITY_ASSESSMENT_REPORT_ID,
-        COGNITIVE_ASSESSMENT_RESULT_ID=cognitive_assessment_result.COGNITIVE_ASSESSMENT_RESULT_ID,
-        TECHNICAL_ASSESSMENT_RESULT_ID=technical_assessment_result.TECHNICAL_ASSESSMENT_RESULT_ID,
-        CANDIDATE_STATUS=candidate_status,
-        PROFILE_SYNOPSIS=profile_synopsis,
-        OPTIMAL_JOB_MATCHES=optimal_job_matches
-    )
+#     # Step 10: Save to Evaluation_Summary table
+#     evaluation_summary = Evaluation_Summary.objects.create(
+#         USER_ID=user_id,
+#         JOB_SEEKER_ID=job_seeker_id,
+#         JOB_POST_ID=job_post_id,
+#         ASSESSMENT_ID=report.PERSONALITY_ASSESSMENT_ID,
+#         PERSONALITY_ASSESSMENT_REPORT_ID=report.PERSONALITY_ASSESSMENT_REPORT_ID,
+#         COGNITIVE_ASSESSMENT_RESULT_ID=cognitive_assessment_result.COGNITIVE_ASSESSMENT_RESULT_ID,
+#         TECHNICAL_ASSESSMENT_RESULT_ID=technical_assessment_result.TECHNICAL_ASSESSMENT_RESULT_ID,
+#         CANDIDATE_STATUS=candidate_status,
+#         PROFILE_SYNOPSIS=profile_synopsis,
+#         OPTIMAL_JOB_MATCHES=optimal_job_matches
+#     )
 
-    # Save the evaluation summary
-    evaluation_summary.save()
+#     # Save the evaluation summary
+#     evaluation_summary.save()
 
-    return "Evaluation summary generated and saved successfully."
+#     return "Evaluation summary generated and saved successfully."
 # ---------------------------------[ END ]-----------------------------------------

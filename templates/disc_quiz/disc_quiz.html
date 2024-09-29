@@ -1,0 +1,358 @@
+<!doctype html>
+
+<html lang="en" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default"
+    data-assets-path="../../../static/assets/" data-template="horizontal-menu-template" data-style="light">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <title>DISC ASSESSMENT</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../../../static/assets/img/favicon/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../../../static/assets/vendor/fonts/fontawesome.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/fonts/tabler-icons.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/fonts/flag-icons.css" />
+
+    <!-- Core CSS -->
+
+    <link rel="stylesheet" href="../../../static/assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/css/rtl/theme-default.css"
+        class="template-customizer-theme-css" />
+
+    <link rel="stylesheet" href="../../../static/assets/css/demo.css" />
+    <link rel="stylesheet" href="../../../static/assets/css/style.css " />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/node-waves/node-waves.css" />
+
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/typeahead-js/typeahead.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/apex-charts/apex-charts.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/swiper/swiper.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
+    <link rel="stylesheet"
+        href="../../../static/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
+    <link rel="stylesheet"
+        href="../../../static/assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css" />
+
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="../../../static/assets/vendor/css/pages/cards-advance.css" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+
+    <!-- Helpers -->
+    <script src="../../../static/assets/vendor/js/helpers.js"></script>
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+
+    <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
+    <script src="../../../static/assets/vendor/js/template-customizer.js"></script>
+
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="../../../static/assets/js/config.js"></script>
+</head>
+
+<body>
+
+
+    <!-- Content wrapper -->
+    <div class="content-wrapper">
+
+        <!-- Content -->
+        <div class="container-p-x">
+
+            <div class="row">
+
+                <div class="col-lg-6 col-md-12 border-end">
+                    <div class="card shadow-none bg-transparent h-100">
+                        <div class="card-body">
+                            {% comment %} <div class="pt-2 mb-5 w-px-100 ms-md-12 me-md-12">
+                                <img src="../../static/assets/img/logo/download.svg" alt="">
+                            </div> {% endcomment %}
+                            <div class="avatar-md ms-md-12 me-md-12">
+                                <img src="../../../static/assets/img/companies/img-1.png" alt="" class="avatar-md">
+                            </div>
+                            <div class="mt-6 ms-md-12 me-md-12">
+                                <span class="d-block text-black">
+                                    <strong>DISC ASSESSMENT</strong>
+                                </span>
+                                <span class="d-block text-black-50">
+                                    {% comment %} <strong>Question 1 of 15</strong> {% endcomment %}
+                                    <strong>Question {{ current_question_number }} of {{ total_questions }}</strong>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                    <div class="card shadow-none bg-transparent h-100">
+                        <div class="card-body">
+                            <div class="row ms-md-12 me-md-12 pe-4 pt-6 d-flex align-items-center">
+                                <div class="col-md-6 col-12">
+                                    <div class="pt-2">
+                                        <strong>Select one answer</strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12 d-flex justify-content-between align-items-center">
+                                    <!-- Timer Display -->
+                                    <div class="me-md-8">
+                                        <span id="timer" class="fs-4">00:15</span>
+                                    </div>
+                                    {% if next_question_id %}
+                                    <a href="{% url 'disc_quiz' next_question_id %}" class="btn btn-primary">Next Question</a>
+                                    {% else %}
+                                    {% comment %} <a href="{% url 'phase_one_completed' %}" class="btn btn-primary">Done</a> {% endcomment %}
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#discCompletionModal">
+                                        Done
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="mt-12 ms-md-12 me-md-12">
+                <div class="row mt-12 ms-md-12 me-md-12">
+                    <div class="col-12">
+                        <p class="fw-bold fs-4">{{ question.QUESTION }}</p>
+                    </div>
+                </div>
+                <form>
+                    <div class="row m-md-12">
+                        <!-- Option A -->
+                        <div class="col-md-6 col-12 mt-4  d-flex justify-content-center">
+                            <div id="optionA-container" class="border rounded w-100">
+                                <input class="form-check-input" type="radio" name="question1" id="optionA">
+                                <label class="form-check-label d-flex justify-content-between align-items-center"
+                                    for="optionA">
+                                    <span class="display-6 text-muted option-label" id="optionALabel">A</span>
+                                    <div class="w-100">
+                                        <div class="d-flex">
+                                            <div class="ms-8 fs-3" id="pre-containerA">{{ question.A }}</div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Option B -->
+                        <div class="col-md-6 col-12 mt-4  d-flex justify-content-center">
+                            <div id="optionB-container" class="border rounded w-100">
+                                <input class="form-check-input" type="radio" name="question1" id="optionB">
+                                <label class="form-check-label d-flex justify-content-between align-items-center"
+                                    for="optionB">
+                                    <span class="display-6 text-muted option-label" id="optionBLabel">B</span>
+                                    <div class="me-auto" id="pre-containerB">
+                                        <div class="ms-8 fs-3" id="pre-containerA">{{ question.B }}</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Option C -->
+                        <div class="col-md-6 col-12 mt-4  d-flex justify-content-center">
+                            <div id="optionC-container" class="border rounded w-100">
+                                <input class="form-check-input" type="radio" name="question1" id="optionC">
+                                <label class="form-check-label d-flex justify-content-between align-items-center"
+                                    for="optionC">
+                                    <span class="display-6 text-muted option-label" id="optionCLabel">C</span>
+                                    <div class="w-100">
+                                        <div class="d-flex">
+                                            <div class="ms-8 fs-3" id="pre-containerA">{{ question.C }}</div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Option D -->
+                        <div class="col-md-6 col-12 mt-4  d-flex justify-content-center">
+                            <div id="optionD-container" class="border rounded w-100">
+                                <input class="form-check-input" type="radio" name="question1" id="optionD">
+                                <label class="form-check-label d-flex justify-content-between align-items-center"
+                                    for="optionD">
+                                    <span class="display-6 text-muted option-label" id="optionDLabel">D</span>
+                                    <div class="w-100">
+                                        <div class="d-flex">
+                                            <div class="ms-8 fs-3" id="pre-containerA">{{ question.D }}</div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+            {% comment %} <div class="row ms-md-12 justify-content-start mt-8 mb-8">
+                <div class="col-auto">
+                    <div class="card alert alert-outline-info alert-info w-auto ps-5 pe-4">
+                        <div class="d-flex w-100">
+                            <i class="ti ti-info-circle ti-xl me-4 text-info"></i>
+                            <div>
+                                <h4 class="mb-0 fw-medium">Quick Note</h4>
+                                <p class="fs-5 text-black mt-2">If the question is same as the last one or
+                                    showing blank content,
+                                    please click "Reload Question"</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="d-flex flex-column flex-sm-row justify-content-sm-center justify-content-md-start gap-4 mt-4">
+                        <button type="button" class="btn btn-outline-secondary">Reload question</button>
+                        <button type="button" class="btn btn-outline-secondary">Report a problem</button>
+                    </div>
+                </div>
+            </div> {% endcomment %}
+
+        </div>
+        <!--/ Content -->
+
+        <!-- Modal -->
+        {% comment %} <div class="modal fade" id="discCompletionModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">DISC Assessment Completed</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>You have completed the DISC assessment. Moving to the next phase, which is the Big Five assessment.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- Button to proceed to the Big Five quiz -->
+                        <a href="{% url 'big_five_quiz_start' %}" class="btn btn-primary">Proceed to Big Five Quiz</a>
+                    </div>
+                </div>
+            </div>
+        </div> {% endcomment %}
+        <!--/ Modal -->
+
+        <!-- Modal -->
+        <div class="modal fade" id="discCompletionModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title">DISC Assessment Completed</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <!-- Updated description for context -->
+                <p>
+                    Congratulations! You have successfully completed the <strong>DISC Assessment</strong>.
+                    This concludes the first part of Phase 1, the <strong>Personality Assessment</strong>.
+                </p>
+                <p>
+                    The next part of the Personality Assessment is the <strong>Big Five Assessment</strong>, where you'll be asked questions
+                    to evaluate your personality traits across different dimensions.
+                </p>
+                <div class="alert alert-info alert-outline-info mt-4">
+                    <i class="ti ti-info-circle"></i>
+                    <span>Please ensure you are prepared to proceed to the next set of questions to accurately reflect your personality traits.</span>
+                </div>
+                </div>
+                <div class="modal-footer">
+                <!-- Button to proceed to the Big Five quiz -->
+                <a href="{% url 'big_five_quiz_start' %}" class="btn btn-primary">Proceed to Big Five Quiz</a>
+                {% comment %} <a href="{% url 'big_five_quiz' %}" class="btn btn-primary">Proceed to Big Five Quiz</a> {% endcomment %}
+                </div>
+            </div>
+            </div>
+        </div>
+        <!--/ Modal -->
+  
+
+    </div>
+    <!--/ Content wrapper -->
+
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+
+    <script src="../../../static/assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="../../../static/assets/vendor/libs/popper/popper.js"></script>
+    <script src="../../../static/assets/vendor/js/bootstrap.js"></script>
+    <script src="../../../static/assets/vendor/libs/node-waves/node-waves.js"></script>
+    <script src="../../../static/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="../../../static/assets/vendor/libs/hammer/hammer.js"></script>
+    <script src="../../../static/assets/vendor/libs/i18n/i18n.js"></script>
+    <script src="../../../static/assets/vendor/libs/typeahead-js/typeahead.js"></script>
+    <script src="../../../static/assets/vendor/js/menu.js"></script>
+    <script src="../../../static/assets/vendor/js/script.js"></script>
+
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+    <script src="../../../static/assets/vendor/libs/apex-charts/apexcharts.js"></script>
+    <script src="../../../static/assets/vendor/libs/swiper/swiper.js"></script>
+    <script src="../../../static/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+
+    <!-- Main JS -->
+    <script src="../../../static/assets/js/main.js"></script>
+
+    <!-- Page JS -->
+    <script src="../../../static/assets/js/dashboards-analytics.js"></script>
+
+    <script>
+        document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                // Reset all the labels' colors to default (text-muted)
+                document.querySelectorAll('.option-label').forEach(function (label) {
+                    label.classList.remove('text-primary');
+                    label.classList.add('text-muted');
+                });
+
+                // Change the color of the selected label to primary
+                var selectedLabel = document.querySelector('label[for="' + this.id + '"] .option-label');
+                selectedLabel.classList.remove('text-muted');
+                selectedLabel.classList.add('text-primary');
+            });
+        });
+    </script>
+    <!-- JavaScript for the Timer -->
+    <script>
+        let timerDuration = 15; // 15 seconds
+        let timerElement = document.getElementById('timer');
+        let timerInterval = setInterval(updateTimer, 1000);
+
+        function updateTimer() {
+            if (timerDuration > 0) {
+                // Calculate minutes and seconds
+                let minutes = Math.floor(timerDuration / 60);
+                let seconds = timerDuration % 60;
+
+                // Display the timer
+                timerElement.innerHTML = `00:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                // Decrement the timer
+                timerDuration -= 1;
+            } else {
+                // Timer has reached zero
+                clearInterval(timerInterval);
+
+                // Display the message when timer is up
+                timerElement.innerHTML = "Please Select.";
+            }
+        }
+    </script>
+</body>
+
+</html>
