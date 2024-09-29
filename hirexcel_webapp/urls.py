@@ -76,6 +76,11 @@ urlpatterns = [
     path('phase_one_completed', views.phase_one_completed, name='phase_one_completed'),
     # -------------------------------------------------------------------------------------------
 
+    # ----------------------------[ BIG FIVE QUIZ ]--------------------------------------------------
+    path('big_five_quiz/start/', views.big_five_quiz_start, name='big_five_quiz_start'),
+    path('big_five_quiz/<str:question_id>/', views.big_five_quiz, name='big_five_quiz'),
+    path('big_five_quiz/', views.big_five_quiz_start_redirect, name='big_five_quiz_start_redirect'),
+    # -------------------------------------------------------------------------------------------
 
     # ----------------------------[ NON VERBAL QUIZ ]--------------------------------------------------
     path('non_verbal_quiz/start/', views.non_verbal_quiz_start, name='non_verbal_quiz_start'),
