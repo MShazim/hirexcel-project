@@ -111,15 +111,20 @@
                                 <div class="col-md-6 col-12 d-flex justify-content-between align-items-center">
                                     <!-- Timer Display -->
                                     <div class="me-md-8">
-                                        <span id="timer" class="fs-4">00:15</span>
+                                        <span id="timer" class="fs-4">00:30</span>
                                     </div>
-                                    {% if next_question_id %}
+                                    {% comment %} {% if next_question_id %}
                                     <a href="{% url 'disc_quiz' next_question_id %}" class="btn btn-primary">Next Question</a>
                                     {% else %}
-                                    {% comment %} <a href="{% url 'phase_one_completed' %}" class="btn btn-primary">Done</a> {% endcomment %}
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#discCompletionModal">
                                         Done
                                     </button>
+                                    {% endif %} {% endcomment %}
+                                    {% if next_question_id %}
+                                    <button type="button" id="next-question-btn" class="btn btn-primary" disabled>Next Question</button>
+                                    {% else %}
+                                    <button type="button" id="done-button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#discCompletionModal" disabled>Done</button>
                                     {% endif %}
                                 </div>
                             </div>
@@ -135,7 +140,7 @@
                         <p class="fw-bold fs-4">{{ question.QUESTION }}</p>
                     </div>
                 </div>
-                <form>
+                {% comment %} <form>
                     <div class="row m-md-12">
                         <!-- Option A -->
                         <div class="col-md-6 col-12 mt-4  d-flex justify-content-center">
@@ -199,6 +204,70 @@
                             </div>
                         </div>
                     </div>
+                </form> {% endcomment %}
+                <form id="disc-assessment-form" method="POST" action="{% url 'disc_quiz' question.DISC_PROFILE_ID %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="question_time" id="question-time-input">
+                    <!-- Radio buttons for options A, B, C, D -->
+                    <div class="row m-md-12">
+                        <!-- Option A -->
+                        <div class="col-md-6 col-12 mt-4 d-flex justify-content-center">
+                            <div id="optionA-container" class="border rounded w-100">
+                                <input class="form-check-input" type="radio" name="selected_option" id="optionA" value="A">
+                                <label class="form-check-label d-flex justify-content-between align-items-center" for="optionA">
+                                    <span class="display-6 text-muted option-label" id="optionALabel">A</span>
+                                    <div class="w-100">
+                                        <div class="d-flex">
+                                            <div class="ms-8 fs-3" id="pre-containerA">{{ question.A }}</div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <!-- Similarly define options B, C, D -->
+                        <!-- Option B -->
+                        <div class="col-md-6 col-12 mt-4  d-flex justify-content-center">
+                            <div id="optionB-container" class="border rounded w-100">
+                                <input class="form-check-input" type="radio" name="selected_option" id="optionB" value="B">
+                                <label class="form-check-label d-flex justify-content-between align-items-center" for="optionB">
+                                    <span class="display-6 text-muted option-label" id="optionBLabel">B</span>
+                                    <div class="me-auto" id="pre-containerB">
+                                        <div class="ms-8 fs-3" id="pre-containerA">{{ question.B }}</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Option C -->
+                        <div class="col-md-6 col-12 mt-4  d-flex justify-content-center">
+                            <div id="optionC-container" class="border rounded w-100">
+                                <input class="form-check-input" type="radio" name="selected_option" id="optionC" value="C">
+                                <label class="form-check-label d-flex justify-content-between align-items-center" for="optionC">
+                                    <span class="display-6 text-muted option-label" id="optionCLabel">C</span>
+                                    <div class="w-100">
+                                        <div class="d-flex">
+                                            <div class="ms-8 fs-3" id="pre-containerA">{{ question.C }}</div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Option D -->
+                        <div class="col-md-6 col-12 mt-4  d-flex justify-content-center">
+                            <div id="optionD-container" class="border rounded w-100">
+                                <input class="form-check-input" type="radio" name="selected_option" id="optionD" value="C">
+                                <label class="form-check-label d-flex justify-content-between align-items-center" for="optionD">
+                                    <span class="display-6 text-muted option-label" id="optionDLabel">D</span>
+                                    <div class="w-100">
+                                        <div class="d-flex">
+                                            <div class="ms-8 fs-3" id="pre-containerA">{{ question.D }}</div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
 
@@ -230,26 +299,6 @@
         <!-- Modal -->
         {% comment %} <div class="modal fade" id="discCompletionModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">DISC Assessment Completed</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>You have completed the DISC assessment. Moving to the next phase, which is the Big Five assessment.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <!-- Button to proceed to the Big Five quiz -->
-                        <a href="{% url 'big_five_quiz_start' %}" class="btn btn-primary">Proceed to Big Five Quiz</a>
-                    </div>
-                </div>
-            </div>
-        </div> {% endcomment %}
-        <!--/ Modal -->
-
-        <!-- Modal -->
-        <div class="modal fade" id="discCompletionModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                 <h5 class="modal-title">DISC Assessment Completed</h5>
@@ -273,9 +322,39 @@
                 <div class="modal-footer">
                 <!-- Button to proceed to the Big Five quiz -->
                 <a href="{% url 'big_five_quiz_start' %}" class="btn btn-primary">Proceed to Big Five Quiz</a>
-                {% comment %} <a href="{% url 'big_five_quiz' %}" class="btn btn-primary">Proceed to Big Five Quiz</a> {% endcomment %}
                 </div>
             </div>
+            </div>
+        </div> {% endcomment %}
+        <!--/ Modal -->
+
+        <!-- Modal -->
+        <div class="modal fade" id="discCompletionModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">DISC Assessment Completed</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Congratulations! You have successfully completed the <strong>DISC Assessment</strong>.
+                            This concludes the first part of Phase 1, the <strong>Personality Assessment</strong>.
+                        </p>
+                        <p>
+                            The next part of the Personality Assessment is the <strong>Big Five Assessment</strong>, where you'll be asked questions
+                            to evaluate your personality traits across different dimensions.
+                        </p>
+                        <div class="alert alert-info alert-outline-info mt-4">
+                            <i class="ti ti-info-circle"></i>
+                            <span>Please ensure you are prepared to proceed to the next set of questions to accurately reflect your personality traits.</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- Button to proceed to the Big Five quiz -->
+                        <button type="button" id="modal-proceed-btn" class="btn btn-primary">Proceed to Big Five Quiz</button>
+                    </div>
+                </div>
             </div>
         </div>
         <!--/ Modal -->
@@ -296,7 +375,8 @@
     <script src="../../../static/assets/vendor/libs/i18n/i18n.js"></script>
     <script src="../../../static/assets/vendor/libs/typeahead-js/typeahead.js"></script>
     <script src="../../../static/assets/vendor/js/menu.js"></script>
-    <script src="../../../static/assets/vendor/js/script.js"></script>
+    {% comment %} <script src="../../../static/assets/vendor/js/script.js"></script> {% endcomment %}
+    <script src="../../../static/assets/vendor/js/disc-quiz.js"></script>
 
     <!-- endbuild -->
 
@@ -311,7 +391,7 @@
     <!-- Page JS -->
     <script src="../../../static/assets/js/dashboards-analytics.js"></script>
 
-    <script>
+    {% comment %} <script>
         document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
             radio.addEventListener('change', function () {
                 // Reset all the labels' colors to default (text-muted)
@@ -326,10 +406,10 @@
                 selectedLabel.classList.add('text-primary');
             });
         });
-    </script>
+    </script> {% endcomment %}
     <!-- JavaScript for the Timer -->
-    <script>
-        let timerDuration = 15; // 15 seconds
+    {% comment %} <script>
+        let timerDuration = 30;
         let timerElement = document.getElementById('timer');
         let timerInterval = setInterval(updateTimer, 1000);
 
@@ -352,7 +432,7 @@
                 timerElement.innerHTML = "Please Select.";
             }
         }
-    </script>
+    </script> {% endcomment %}
 </body>
 
 </html>

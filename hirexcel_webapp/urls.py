@@ -74,6 +74,7 @@ urlpatterns = [
     path('disc_quiz/<str:question_id>/', views.disc_quiz, name='disc_quiz'),
     path('disc_quiz/', views.disc_quiz_start_redirect, name='disc_quiz_start_redirect'),
     path('phase_one_completed', views.phase_one_completed, name='phase_one_completed'),
+    path('populate-disc-result/', views.populate_disc_result, name='populate_disc_result'),
     # -------------------------------------------------------------------------------------------
 
     # ----------------------------[ BIG FIVE QUIZ ]--------------------------------------------------
@@ -88,6 +89,13 @@ urlpatterns = [
     path('non_verbal_quiz/', views.non_verbal_quiz_start_redirect, name='non_verbal_quiz_start_redirect'),
     path('phase_two_completed', views.phase_two_completed, name='phase_two_completed'),
     # -------------------------------------------------------------------------------------------------
+
+    # ----------------------------[ VERBAL QUIZ ]--------------------------------------------------
+    path('verbal_quiz/start/', views.verbal_quiz_start, name='verbal_quiz_start'),
+    path('verbal_quiz/<int:question_index>/', views.verbal_quiz, name='verbal_quiz'),
+    path('verbal_quiz/', views.verbal_quiz_start_redirect, name='verbal_quiz_start_redirect'),
+    # -------------------------------------------------------------------------------------------------
+
 
     # ----------------------------[ TECHNICAL QUIZ ]--------------------------------------------------
     path('technical_quiz/start/', views.technical_quiz_start, name='technical_quiz_start'),
