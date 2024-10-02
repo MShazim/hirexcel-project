@@ -834,6 +834,8 @@
                 </div> {% endcomment %}
               </div>
             </div>
+
+            <!-- Job Posted Cards -->
             <div class="row g-6">
               <div id="job-list">
                 {% for job in job_postings %}
@@ -925,11 +927,6 @@
                         <span class="job-postdate">15 Sep, 2022</span>
                       </div> {% endcomment %}
                       <div>
-                        {% comment %} <button type="button" class="btn btn-primary viewjob-list" data-bs-toggle="modal"
-                          data-bs-target="#hirexcel_quizzes_modal">
-                          Start Quiz
-                          <i class="ti ti-arrow-narrow-right align-bottom ms-1"></i>
-                        </button> {% endcomment %}
                         <button type="button"
                           class="btn btn-primary viewjob-list"
                           data-bs-toggle="modal"
@@ -937,7 +934,9 @@
                           data-job-title="{{ job.job_title }}"
                           data-company-name="{{ job.company_name }}"
                           data-job-description="{{ job.job_description }}"
-                          data-job-position="{{ job.job_position }}">
+                          data-job-position="{{ job.job_position }}"
+                          data-job-post-id="{{ job.job_post_id }}"
+                          data-user-id="{{ user_info.USER_ID }}">
                           Start Quiz
                           <i class="ti ti-arrow-narrow-right align-bottom ms-1"></i>
                         </button>
@@ -948,6 +947,7 @@
                 {% endfor %}
               </div>
             </div>
+            <!--/ Job Posted Cards -->
 
           </div>
           <!--/ Content -->
@@ -1135,6 +1135,9 @@
           </button>
           <form action="{% url 'disc_quiz_start_redirect' %}" method="post">
             {% csrf_token %}
+            <!-- Hidden fields to store job_post_id and user_id -->
+            <input type="hidden" name="job_post_id" id="job_post_id">
+            <input type="hidden" name="user_id" id="user_id">
             <button type="submit" class="btn btn-primary">
               <i class="ti ti-player-play ti-sm me-4"></i>
               Accept & Start Quiz

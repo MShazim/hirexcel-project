@@ -8,7 +8,7 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Technical Assessment</title>
+    <title>Verbal Assessment</title>
 
     <meta name="description" content="" />
 
@@ -88,7 +88,7 @@
                             </div>
                             <div class="mt-6 ms-md-12 me-md-12">
                                 <span class="d-block text-black">
-                                    <strong>TECHNICAL ASSESSMENT</strong>
+                                    <strong>VERBAL ASSESSMENT</strong>
                                 </span>
                                 <span class="d-block text-black-50">
                                     <strong>Question {{ current_question_number }} of {{ total_questions }}</strong>
@@ -98,20 +98,25 @@
                                 <!-- <img src="../../static/assets/img/quiz/code.png" alt="" class="img-fluid"> -->
                                 <div class="row mt-4">
                                     <div class="col-12">
-                                        <p class="fw-bold">{{ question.QUESTION }}</p>
+                                        <p class="fw-bold">Question: {{ question.QUESTION }}</p>
                                     </div>
                                 </div>
-                                <div class="row mt-2">
+                                {% comment %} <div class="question-image-container">
+                                    <img src="{{ question.IMAGE.url }}" alt="Question Image" class="img-fluid" />
+                                </div> {% endcomment %}
+                                {% comment %} <div class="row mt-2">
                                     <div class="col-12">
                                         <div class="code-box ">
-                                            <pre class="language-javascript text-start">
-                                                <code class="language-javascript">
-                                                {{ question.QUESTION }}
-                                                </code>
-                                            </pre>
+                                            <pre class="language-javascript text-start"><code class="language-javascript">
+                                const element = (
+                                  &lt;h1 className="hello"&gt;
+                                    Greetings!
+                                  &lt;/h1&gt;
+                                );
+                                        </code></pre>
                                         </div>
                                     </div>
-                                </div>
+                                </div> {% endcomment %}
                             </div>
                         </div>
                     </div>
@@ -127,75 +132,41 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12 d-flex justify-content-between align-items-center">
+                                    <!-- Timer Display -->
                                     <div class="me-md-8">
-                                        <span id="timer" class="fs-4">00:15:00</span>
+                                        <span id="timer" class="fs-4">00:15</span>
                                     </div>
+                                    {% comment %} <button class="btn btn-primary">Next question</button> {% endcomment %}
+                                    <!-- Navigation Button for Next Question -->
                                     {% if next_question_index is not None %}
-                                    <a href="{% url 'technical_quiz' next_question_index %}" class="btn btn-primary">Next Question</a>
+                                        <a href="{% url 'verbal_quiz' next_question_index %}" class="btn btn-primary">Next Question</a>
                                     {% else %}
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#technicalCompletionModal">
-                                            Finish
+                                    <!-- If there are no more questions, show the "Done" button -->
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verbalCompletionModal">
+                                            Done
                                         </button>
                                     {% endif %}
                                 </div>
                             </div>
                             <div class="mt-12 ms-md-12 me-md-12">
                                 <form>
-                                    <!-- Option A -->
-                                    <div id="optionA-container" class="border rounded mb-2">
-                                        <input class="form-check-input" type="radio" name="option" id="option1" value="A">
-                                        <label class="form-check-label d-flex justify-content-between align-items-center"
-                                            for="option1">
+                                    <!-- Options -->
+                                    <!-- Loop through options dynamically -->
+                                    {% for option in options %}
+                                    <div id="option{{ forloop.counter }}-container" class="border rounded mb-2">
+                                        <input class="form-check-input" type="radio" name="option" id="option{{ forloop.counter }}" value="{{ option }}">
+                                        <label
+                                            class="form-check-label d-flex justify-content-between align-items-center"
+                                            for="option{{ forloop.counter }}">
                                             <div class="w-100">
                                                 <div class="d-flex">
-                                                    <div class="me-auto">{{ options.0 }}</div>
+                                                    <div class="me-auto" id="pre-container{{ forloop.counter }}">{{ option }}</div>
                                                 </div>
                                             </div>
-                                            <span class="display-6 text-muted option-label">A</span>
+                                            <span class="display-6 text-muted option-label" id="option{{ forloop.counter }}Label">{{ forloop.counter }}</span>
                                         </label>
                                     </div>
-
-                                    <!-- Option B -->
-                                    <div id="optionB-container" class="border rounded mb-2">
-                                        <input class="form-check-input" type="radio" name="option" id="option2" value="B">
-                                        <label class="form-check-label d-flex justify-content-between align-items-center"
-                                            for="option2">
-                                            <div class="w-100">
-                                                <div class="d-flex">
-                                                    <div class="me-auto">{{ options.1 }}</div>
-                                                </div>
-                                            </div>
-                                            <span class="display-6 text-muted option-label">B</span>
-                                        </label>
-                                    </div>
-
-                                    <!-- Option C -->
-                                    <div id="optionC-container" class="border rounded mb-2">
-                                        <input class="form-check-input" type="radio" name="option" id="option3" value="C">
-                                        <label class="form-check-label d-flex justify-content-between align-items-center"
-                                            for="option3">
-                                            <div class="w-100">
-                                                <div class="d-flex">
-                                                    <div class="me-auto">{{ options.2 }}</div>
-                                                </div>
-                                            </div>
-                                            <span class="display-6 text-muted option-label">C</span>
-                                        </label>
-                                    </div>
-
-                                    <!-- Option D -->
-                                    <div id="optionD-container" class="border rounded mb-2">
-                                        <input class="form-check-input" type="radio" name="option" id="option4" value="D">
-                                        <label class="form-check-label d-flex justify-content-between align-items-center"
-                                            for="option4">
-                                            <div class="w-100">
-                                                <div class="d-flex">
-                                                    <div class="me-auto">{{ options.3 }}</div>
-                                                </div>
-                                            </div>
-                                            <span class="display-6 text-muted option-label">D</span>
-                                        </label>
-                                    </div>
+                                    {% endfor %}
                                 </form>
                             </div>
                         </div>
@@ -229,42 +200,35 @@
         <!--/ Content -->
 
         <!-- Modal -->
-        <div class="modal fade" id="technicalCompletionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="verbalCompletionModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">All Phases Completed</h5>
+                        <h5 class="modal-title">Verbal Assessment Completed</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <!-- Updated description for context -->
                         <p>
-                            Congratulations! You have successfully completed all the phases of your assessment journey. 
+                            Congratulations! You have successfully completed the <strong>Verbal Assessment</strong>, which is the first part of the <strong>Cognitive Assessment</strong>. Your efforts in language and reasoning skills have been evaluated.
                         </p>
                         <p>
-                            Here’s a quick recap of the three phases you’ve completed:
-                        </p>
-                        <ul>
-                            <li><strong>Personality Assessment</strong>: Consisting of the DISC and Big Five Assessments, which provided insights into your personality traits.</li>
-                            <li><strong>Cognitive Assessment</strong>: Including both the Verbal and Non-Verbal Assessments, which tested your language, reasoning, problem-solving, and analytical skills.</li>
-                            <li><strong>Technical Assessment</strong>: Aimed to challenge your technical knowledge at various difficulty levels, from Beginner to Advanced.</li>
-                        </ul>
-                        <p>
-                            With all assessments now completed, we are preparing your detailed evaluation report. Please wait a moment while we generate your report, providing a comprehensive analysis of your performance.
+                            Now, it's time to move forward to the next challenge: the <strong>Non-Verbal Assessment</strong>. This section will assess your problem-solving abilities and analytical thinking, focusing on visual and logical reasoning.
                         </p>
                         <div class="alert alert-info alert-outline-info mt-4">
                             <i class="ti ti-info-circle"></i>
-                            <span>Thank you for your participation! Your effort throughout the assessments is greatly appreciated.</span>
+                            <span>Please ensure you are ready for the upcoming questions in the Non-Verbal Assessment. Take a deep breath, stay focused, and give your best effort!</span>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <!-- Button to proceed to report generation -->
-                        <a href="#" class="btn btn-primary">View My Report</a>
+                        <!-- Button to proceed to the Non-Verbal Quiz -->
+                        <a href="{% url 'non_verbal_quiz' 0 %}" class="btn btn-primary">Proceed to Non-Verbal Quiz</a>
                     </div>
                 </div>
             </div>
         </div>
         <!--/ Modal -->
+
 
 
     </div>
@@ -358,6 +322,7 @@ const element = React.createElement(
             });
         });
     </script>
+
     <script>
         // Timer Logic (15 seconds)
         let time = 15;
