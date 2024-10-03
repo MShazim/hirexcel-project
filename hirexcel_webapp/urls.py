@@ -74,13 +74,14 @@ urlpatterns = [
     path('disc_quiz/<str:question_id>/', views.disc_quiz, name='disc_quiz'),
     path('disc_quiz/', views.disc_quiz_start_redirect, name='disc_quiz_start_redirect'),
     path('phase_one_completed', views.phase_one_completed, name='phase_one_completed'),
-    path('populate-disc-result/', views.populate_disc_result, name='populate_disc_result'),
+    path('disc-completion/', views.disc_completion, name='disc_completion'),
     # -------------------------------------------------------------------------------------------
 
     # ----------------------------[ BIG FIVE QUIZ ]--------------------------------------------------
     path('big_five_quiz/start/', views.big_five_quiz_start, name='big_five_quiz_start'),
     path('big_five_quiz/<str:question_id>/', views.big_five_quiz, name='big_five_quiz'),
     path('big_five_quiz/', views.big_five_quiz_start_redirect, name='big_five_quiz_start_redirect'),
+    path('big-five-completion/', views.big_five_completion, name='big_five_completion'),
     # -------------------------------------------------------------------------------------------
 
     # ----------------------------[ NON VERBAL QUIZ ]--------------------------------------------------

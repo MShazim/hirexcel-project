@@ -283,8 +283,8 @@ class BigFive_Assessment(models.Model):
     BIGFIVE_COMPLETION_TIME_REQUIRED = models.CharField(max_length=100)
     
     def save(self, *args, **kwargs):
-        if not self.BIG_FIVE_ASSESSMENT_ID:
-            self.BIG_FIVE_ASSESSMENT_ID = generate_unique_id(BigFive_Assessment)
+        if not self.BIGFIVE_ASSESSMENT_ID:
+            self.BIGFIVE_ASSESSMENT_ID = generate_unique_id(BigFive_Assessment)
         with transaction.atomic():
             super(BigFive_Assessment, self).save(*args, **kwargs)
 
@@ -325,8 +325,8 @@ class BigFive_Assessment_Answers(models.Model):
     JOB_SEEKER_ANS = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
-        if not self.BIG_FIVE_ASSESSMENT_ANS_ID:
-            self.BIG_FIVE_ASSESSMENT_ANS_ID = generate_unique_id(BigFive_Assessment_Answers)
+        if not self.BIGFIVE_ASSESSMENT_ANS_ID:
+            self.BIGFIVE_ASSESSMENT_ANS_ID = generate_unique_id(BigFive_Assessment_Answers)
         with transaction.atomic():
             super(BigFive_Assessment_Answers, self).save(*args, **kwargs)
 
@@ -345,8 +345,8 @@ class BigFive_Assessment_Result(models.Model):
     TOTAL_BIGFIVE_COMPLETION_TIME = models.CharField(max_length=100, default='0')
 
     def save(self, *args, **kwargs):
-        if not self.BIG_FIVE_ASSESSMENT_RESULT_ID:
-            self.BIG_FIVE_ASSESSMENT_RESULT_ID = generate_unique_id(BigFive_Assessment_Result)
+        if not self.BIGFIVE_ASSESSMENT_RESULT_ID:
+            self.BIGFIVE_ASSESSMENT_RESULT_ID = generate_unique_id(BigFive_Assessment_Result)
         with transaction.atomic():
             super(BigFive_Assessment_Result, self).save(*args, **kwargs)
 
@@ -357,7 +357,7 @@ class Personality_Assessment_Report(models.Model):
     PERSONALITY_ASSESSMENT_REPORT_ID = models.CharField(primary_key=True, editable=False, max_length=9)
     PERSONALITY_ASSESSMENT_ID =  models.ForeignKey(Personality_Assessment, on_delete=models.CASCADE)
     JOB_SEEKER_ASSESSMENT_ID = models.ForeignKey(Job_Seeker_Assessment, on_delete=models.CASCADE)
-    BIG_FIVE_ASSESSMENT_ID = models.ForeignKey(BigFive_Assessment, on_delete=models.CASCADE)
+    BIGFIVE_ASSESSMENT_ID = models.ForeignKey(BigFive_Assessment, on_delete=models.CASCADE)
     DISC_ASSESSMENT_ID = models.ForeignKey(DISC_Assessment, on_delete=models.CASCADE)
     DISC_CATEGORY = models.CharField(max_length=300)
     DISC_PERSONALITY_TRAIT = models.CharField(max_length=300)
