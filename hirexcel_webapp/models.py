@@ -164,7 +164,7 @@ class Job_Seeker_Assessment(models.Model):
     ASSESSMENT_ID = models.ForeignKey(Assessment, on_delete=models.CASCADE)
     NAME = models.CharField(max_length=100)
     ASSESSMENT_TYPE = models.CharField(max_length=100)
-    TOTAL_COMPLETION_TIME_REQUIRED = models.DateTimeField()
+    TOTAL_COMPLETION_TIME_REQUIRED = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
         if not self.JOB_SEEKER_ASSESSMENT_ID:
@@ -191,7 +191,7 @@ class Personality_Assessment(models.Model):
 class DISC_Assessment(models.Model):
     DISC_ASSESSMENT_ID = models.CharField(primary_key=True, editable=False, max_length=9)
     PERSONALITY_ASSESSMENT_ID = models.ForeignKey(Personality_Assessment, on_delete=models.CASCADE)
-    DISC_COMPLETION_TIME_REQUIRED = models.DateTimeField()
+    DISC_COMPLETION_TIME_REQUIRED = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
         if not self.DISC_ASSESSMENT_ID:
@@ -217,7 +217,7 @@ class DISC_Questions_Dataset(models.Model):
 
 # creating model for disc score calculation datset
 class DISC_Score_Calculation_Dataset(models.Model):
-    DISC_PROFILE_ID = models.CharField(primary_key=True,max_length=10)
+    DISC_PROFILE_SCORE_ID = models.CharField(primary_key=True,max_length=10)
     D = models.CharField(max_length=4)
     I = models.CharField(max_length=4)
     S = models.CharField(max_length=4)
@@ -225,7 +225,7 @@ class DISC_Score_Calculation_Dataset(models.Model):
 
     def __str__(self):
         # String representation of the model instance
-        return self.DISC_PROFILE_ID
+        return self.DISC_PROFILE_SCORE_ID
     
 class DISC_Assessment_Answer(models.Model):
     DISC_ASSESSMENT_ANS_ID = models.CharField(primary_key=True, editable=False, max_length=9)
@@ -266,8 +266,8 @@ class DISC_Assessment_Result(models.Model):
     INFLUENCING_SCORE = models.IntegerField()
     STEADINESS_SCORE = models.IntegerField()
     CONCIENTIOUSNESS_SCORE = models.IntegerField()
-    TOTAL_DISC_COMPLETION_TIME = models.DateTimeField()
-
+    TOTAL_DISC_COMPLETION_TIME = models.CharField(max_length=100)
+    
     def save(self, *args, **kwargs):
         if not self.DISC_ASSESSMENT_RESULT_ID:
             self.DISC_ASSESSMENT_RESULT_ID = generate_unique_id(DISC_Assessment_Result)
@@ -280,7 +280,7 @@ class DISC_Assessment_Result(models.Model):
 class BigFive_Assessment(models.Model):
     BIGFIVE_ASSESSMENT_ID = models.CharField(primary_key=True, editable=False, max_length=9)
     PERSONALITY_ASSESSMENT_ID = models.ForeignKey(Personality_Assessment, on_delete=models.CASCADE)
-    BIGFIVE_COMPLETION_TIME_REQUIRED = models.DateTimeField()
+    BIGFIVE_COMPLETION_TIME_REQUIRED = models.CharField(max_length=100)
     
     def save(self, *args, **kwargs):
         if not self.BIG_FIVE_ASSESSMENT_ID:
@@ -342,6 +342,7 @@ class BigFive_Assessment_Result(models.Model):
     EXTRAVERSION_SCORE = models.IntegerField()
     AGREEABLENESS_SCORE = models.IntegerField()
     NEUROTICISM_SCORE = models.IntegerField()
+    TOTAL_BIGFIVE_COMPLETION_TIME = models.CharField(max_length=100, default='0')
 
     def save(self, *args, **kwargs):
         if not self.BIG_FIVE_ASSESSMENT_RESULT_ID:
@@ -404,7 +405,7 @@ class Personality_Assessment_Report(models.Model):
 class Cognitive_Assessment(models.Model):
     COGNITIVE_ASSESSMENT_ID = models.CharField(primary_key=True, editable=False, max_length=9)
     JOB_SEEKER_ASSESSMENT_ID = models.ForeignKey(Job_Seeker_Assessment, on_delete=models.CASCADE)
-    COGNITIVE_COMPLETION_TIME_REQUIRED = models.DateTimeField()
+    COGNITIVE_COMPLETION_TIME_REQUIRED = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
         if not self.COGNITIVE_ASSESSMENT_ID:
@@ -495,9 +496,9 @@ class Cognitive_Assessment_Results(models.Model):
     COGNITIVE_NVI_SCORE = models.IntegerField()
     TOTAL_COGNITIVE_SCORE = models.IntegerField()
     COGNITIVE_SCORE_PERCENTAGE = models.IntegerField(default=0)
-    VI_COMPLETION_TIME = models.DateTimeField()
-    NVI_COMPLETION_TIME = models.DateTimeField()
-    TOTAL_COGNITIVE_COMPLETION_TIME = models.DateTimeField()
+    VI_COMPLETION_TIME = models.CharField(max_length=100)
+    NVI_COMPLETION_TIME = models.CharField(max_length=100)
+    TOTAL_COGNITIVE_COMPLETION_TIME = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
         if not self.COGNITIVE_ASSESSMENT_RESULT_ID:
@@ -512,7 +513,7 @@ class Technical_Assessment(models.Model):
     TECHNICAL_ASSESSMENT_ID = models.CharField(primary_key=True, editable=False, max_length=9)
     JOB_SEEKER_ASSESSMENT_ID = models.ForeignKey(Job_Seeker_Assessment, on_delete=models.CASCADE)
     TECHNICAL_ASSESSMENT_LEVEL = models.TextField()
-    TECHNICAL_COMPLETION_TIME_REQUIRED = models.DateTimeField()
+    TECHNICAL_COMPLETION_TIME_REQUIRED = models.CharField(max_length=100)
     
     def save(self, *args, **kwargs):
         if not self.TECHNICAL_ASSESSMENT_ID:
@@ -560,7 +561,7 @@ class Technical_Assessment_Result(models.Model):
     TECHNICAL_ASSESSMENT_ID = models.ForeignKey(Technical_Assessment, on_delete=models.CASCADE)
     TOTAL_TECH_SCORE = models.IntegerField()
     TECH_SCORE_PERCENTAGE = models.IntegerField(default=0)
-    TOTAL_TECHNICAL_COMPLETION_TIME = models.DateTimeField()
+    TOTAL_TECHNICAL_COMPLETION_TIME = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
         if not self.TECHNICAL_ASSESSMENT_RESULT_ID:
