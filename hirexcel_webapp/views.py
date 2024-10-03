@@ -629,7 +629,9 @@ def quiz_start_screen(request):
     return render(request, './quiz/quiz_start_screen.html')
 
 
-# ----------------------------[ DISC QUIZ MODIFIED ]--------------------------------------------------
+#* ------------------------------------------------------------------------------------------
+#* ----------------------------[ DISC QUIZ INTEGRATED ]--------------------------------------
+#* ------------------------------------------------------------------------------------------
 def disc_quiz_start_redirect(request):
     if request.method == 'POST':
         job_post_id = request.POST.get('job_post_id')
@@ -658,10 +660,10 @@ def disc_quiz_start_redirect(request):
         first_name = user_info.FIRST_NAME
 
         # Calculate completion time
-        completion_time = now() + timedelta(seconds=2040)
+        # completion_time = now() + timedelta(seconds=2040)
 
         # Debugging: Print the completion_time to ensure it's a valid datetime
-        print(f"Calculated Completion Time: {completion_time} (type: {type(completion_time)})")
+        # print(f"Calculated Completion Time: {completion_time} (type: {type(completion_time)})")
 
         # Step 4: Create a Job_Seeker_Assessment record
         job_seeker_assessment = Job_Seeker_Assessment.objects.create(
@@ -670,7 +672,7 @@ def disc_quiz_start_redirect(request):
             ASSESSMENT_ID=assessment,
             NAME=first_name,
             ASSESSMENT_TYPE="Personality Assessment",
-            TOTAL_COMPLETION_TIME_REQUIRED=completion_time,  # Ensure this is a datetime object
+            TOTAL_COMPLETION_TIME_REQUIRED="2040",  # Ensure this is a datetime object
         )
 
         # Step 5: Create a Personality_Assessment record
@@ -681,9 +683,11 @@ def disc_quiz_start_redirect(request):
         # Step 6: Create a DISC_Assessment record
         disc_assessment = DISC_Assessment.objects.create(
             PERSONALITY_ASSESSMENT_ID=personality_assessment,
-            DISC_COMPLETION_TIME_REQUIRED=now() + timedelta(seconds=720)
+            DISC_COMPLETION_TIME_REQUIRED="720"
         )
 
+        # Save PERSONALITY_ASSESSMENT_ID in session
+        request.session['PERSONALITY_ASSESSMENT_ID'] = personality_assessment.PERSONALITY_ASSESSMENT_ID
         # Save DISC_ASSESSMENT_ID in session
         request.session['DISC_ASSESSMENT_ID'] = disc_assessment.DISC_ASSESSMENT_ID
 
@@ -703,46 +707,28 @@ def disc_quiz_start(request):
         # Handle the case where there are no questions in the dataset
         return render(request, 'disc_quiz/no_questions.html')
 
-# def disc_quiz(request, question_id):
-#     # Get the question based on the current question ID
-#     question = get_object_or_404(DISC_Questions_Dataset, DISC_PROFILE_ID=question_id)
-    
-#     # Get all questions to calculate the question number
-#     all_questions = list(DISC_Questions_Dataset.objects.order_by('DISC_PROFILE_ID'))
-#     total_questions = len(all_questions)
-#     current_question_number = all_questions.index(question) + 1  # Calculate the current question index
-    
-#     next_question_id = None
-#     try:
-#         next_question_id = DISC_Questions_Dataset.objects.filter(DISC_PROFILE_ID__gt=question_id).order_by('DISC_PROFILE_ID').first().DISC_PROFILE_ID
-#     except AttributeError:
-#         next_question_id = None
-
-#     context = {
-#         'question': question,
-#         'next_question_id': next_question_id,
-#         'total_questions': total_questions,
-#         'current_question_number': current_question_number,  # Pass the current question number
-#     }
-#     return render(request, 'disc_quiz/disc_quiz.html', context)
-
 def disc_quiz(request, question_id):
     # Fetch current question
     question = get_object_or_404(DISC_Questions_Dataset, DISC_PROFILE_ID=question_id)
 
     # All questions and next question logic...
     disc_assessment_id = request.session.get('DISC_ASSESSMENT_ID')  # Get DISC Assessment ID from session
-    
+    total_time = request.session.get('total_time', 0)  # Get total time spent on quiz
+
     if request.method == 'POST':
         selected_option = request.POST.get('selected_option')
         question_time = int(request.POST.get('question_time', 0))
+        
+        # Accumulate the time taken for this question
+        total_time += question_time
+        request.session['total_time'] = total_time  # Update the session with the new total time
 
-        # Validate that an option is selected
+        # If no option is selected (either by user or timer ran out), set it as 'nan'
         if not selected_option:
-            return render(request, 'disc_quiz/error.html', {'message': 'Please select an option.'})
+            selected_option = 'nan'
 
         # Fetch score calculation entry
-        score_calculation_entry = get_object_or_404(DISC_Score_Calculation_Dataset, DISC_PROFILE_ID=question.DISC_PROFILE_ID)
+        score_calculation_entry = get_object_or_404(DISC_Score_Calculation_Dataset, DISC_PROFILE_SCORE_ID=question.DISC_PROFILE_ID)
 
         # Determine DISC profile
         if selected_option == score_calculation_entry.D:
@@ -754,7 +740,7 @@ def disc_quiz(request, question_id):
         elif selected_option == score_calculation_entry.C:
             disc_profile = 'C'
         else:
-            disc_profile = None
+            disc_profile = 'nan'  # Set 'nan' for unselected or unknown options
 
         # Save the answer
         DISC_Assessment_Answer.objects.create(
@@ -765,13 +751,14 @@ def disc_quiz(request, question_id):
             DISC_PROFILE=disc_profile
         )
 
-        # Redirect to next question
+        # Check if it's the last question
         next_question = DISC_Questions_Dataset.objects.filter(DISC_PROFILE_ID__gt=question_id).order_by('DISC_PROFILE_ID').first()
         if next_question:
+            # Redirect to next question
             return redirect('disc_quiz', question_id=next_question.DISC_PROFILE_ID)
         else:
-            # Open modal at the end
-            return redirect('disc_quiz', question_id=question.DISC_PROFILE_ID)
+            # If last question, calculate total score and redirect to completion
+            return redirect('disc_completion')
 
     # Get all questions to calculate the question number
     all_questions = list(DISC_Questions_Dataset.objects.order_by('DISC_PROFILE_ID'))
@@ -787,63 +774,72 @@ def disc_quiz(request, question_id):
 
     return render(request, 'disc_quiz/disc_quiz.html', context)
 
-def populate_disc_result(request):
+def disc_completion(request):
+    disc_assessment_id = request.session.get('DISC_ASSESSMENT_ID')
+    total_time = request.session.get('total_time', 0)  # Get total time in seconds
+
+    # Calculate scores
+    answers = DISC_Assessment_Answer.objects.filter(DISC_ASSESSMENT_ID=disc_assessment_id)
+    dominance_score = answers.filter(DISC_PROFILE='D').count()
+    influencing_score = answers.filter(DISC_PROFILE='I').count()
+    steadiness_score = answers.filter(DISC_PROFILE='S').count()
+    concientiousness_score = answers.filter(DISC_PROFILE='C').count()
+
+    disc_scores = {
+        'Dominance': dominance_score,
+        'Influencing': influencing_score,
+        'Steadiness': steadiness_score,
+        'Conscientiousness': concientiousness_score
+    }
+    disc_category = max(disc_scores, key=disc_scores.get)
+
+    # Store total time as a string in seconds
+    total_time_str = str(total_time)
+
+    # Populate DISC_Assessment_Result table
+    DISC_Assessment_Result.objects.create(
+        DISC_ASSESSMENT_ID_id=disc_assessment_id,
+        DISC_CATEGORY=disc_category,
+        DOMINANCE_SCORE=dominance_score,
+        INFLUENCING_SCORE=influencing_score,
+        STEADINESS_SCORE=steadiness_score,
+        CONCIENTIOUSNESS_SCORE=concientiousness_score,
+        TOTAL_DISC_COMPLETION_TIME=total_time_str  # Save total time in seconds as string
+    )
+
+    # Delete the total time from session
+    if 'total_time' in request.session:
+        del request.session['total_time']
+
+    # Redirect to the disc_completion.html template
+    return render(request, 'disc_quiz/disc_completion.html')
+#* ------------------------------------------------------------------------------------------
+#* -----------------------------------[ ENDS ]-----------------------------------------------
+#* ------------------------------------------------------------------------------------------
+
+#* ------------------------------------------------------------------------------------------
+#* ------------------------------[ BIG FIVE QUIZ INTEGRATED ]--------------------------------
+#* ------------------------------------------------------------------------------------------
+def big_five_quiz_start_redirect(request):
+    # Retrieve the Personality Assessment ID from session
+    personality_assessment_id = request.session.get('PERSONALITY_ASSESSMENT_ID')
+
+    # Ensure we handle POST method for creating the BigFive_Assessment entry
     if request.method == 'POST':
-        # Get the DISC Assessment ID from the request body
-        body = json.loads(request.body)
-        disc_assessment_id = body.get('disc_assessment_id')
-        
-        # Check if the assessment ID is valid
-        if not disc_assessment_id:
-            return JsonResponse({'status': 'error', 'message': 'Invalid DISC Assessment ID.'})
-
-        # Fetch all answers related to the given assessment ID
-        answers = DISC_Assessment_Answer.objects.filter(DISC_ASSESSMENT_ID_id=disc_assessment_id)
-
-        # Calculate scores
-        d_score = answers.filter(DISC_PROFILE='D').count()
-        i_score = answers.filter(DISC_PROFILE='I').count()
-        s_score = answers.filter(DISC_PROFILE='S').count()
-        c_score = answers.filter(DISC_PROFILE='C').count()
-
-        # Determine the DISC category with the highest score
-        disc_category = max(
-            ('Dominance', d_score),
-            ('Influencing', i_score),
-            ('Steadiness', s_score),
-            ('Conscientiousness', c_score),
-            key=lambda x: x[1]
-        )[0]
-
-        try:
-            # Save the results to the DISC_Assessment_Result table
-            DISC_Assessment_Result.objects.create(
-                DISC_ASSESSMENT_ID_id=disc_assessment_id,
-                DISC_CATEGORY=disc_category,
-                DOMINANCE_SCORE=d_score,
-                INFLUENCING_SCORE=i_score,
-                STEADINESS_SCORE=s_score,
-                CONCIENTIOUSNESS_SCORE=c_score,
-                TOTAL_DISC_COMPLETION_TIME=now()
+        if personality_assessment_id:
+            # Create the BigFive_Assessment entry
+            big_five_assessment = BigFive_Assessment.objects.create(
+                PERSONALITY_ASSESSMENT_ID_id=personality_assessment_id,
+                BIGFIVE_COMPLETION_TIME_REQUIRED='1320'  # Static value as specified
             )
-            return JsonResponse({'status': 'success'})
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)})
+            # Store the BIGFIVE_ASSESSMENT_ID in the session
+            request.session['BIGFIVE_ASSESSMENT_ID'] = big_five_assessment.BIGFIVE_ASSESSMENT_ID
 
+        # Redirect to the first question of the quiz
+        return redirect('big_five_quiz_start')
 
-# ------------------------------[ ENDS ]----------------------------------------------------
-
-# ------------------------------[ BIG FIVE QUIZ ]----------------------------------------------------
-
-# def big_five_quiz_start(request):
-#     # Redirect to the first question of Big Five quiz ordered properly
-#     first_question = BigFive_Questions_Dataset.objects.order_by('DIMENSION_ID').first()
-#     if first_question:
-#         first_question_id = first_question.DIMENSION_ID
-#         return redirect('big_five_quiz', question_id=first_question_id)
-#     else:
-#         # Handle the case where there are no questions in the dataset
-#         return render(request, 'big_five_quiz/no_questions.html')
+    # If not a POST request, render a confirmation form (for demonstration)
+    return render(request, 'big_five_quiz/confirm_start.html')
 
 def big_five_quiz_start(request):
     # Get all questions and sort them properly based on the numeric part of the dimension ID
@@ -852,7 +848,7 @@ def big_five_quiz_start(request):
         all_questions,
         key=lambda q: int(re.search(r'(\d+)$', q.DIMENSION_ID).group())
     )
-    
+
     # Redirect to the first sorted question
     if sorted_questions:
         first_question_id = sorted_questions[0].DIMENSION_ID
@@ -861,57 +857,20 @@ def big_five_quiz_start(request):
         # Handle the case where there are no questions in the dataset
         return render(request, 'big_five_quiz/no_questions.html')
 
-
-# def big_five_quiz(request, question_id):
-#     # Get the question based on the current question ID
-#     question = get_object_or_404(BigFive_Questions_Dataset, DIMENSION_ID=question_id)
-    
-#     # Order questions properly by extracting and sorting the numeric part of DIMENSION_ID
-#     all_questions = sorted(
-#         BigFive_Questions_Dataset.objects.all(),
-#         key=lambda q: int(q.DIMENSION_ID.split('_')[-1])
-#     )
-    
-#     total_questions = len(all_questions)
-#     current_question_number = all_questions.index(question) + 1  # Calculate the current question index
-    
-#     # Get the next question ID
-#     next_question_id = None
-#     try:
-#         next_question_id = all_questions[current_question_number].DIMENSION_ID
-#     except IndexError:
-#         next_question_id = None  # Last question
-
-#     context = {
-#         'question': question,
-#         'next_question_id': next_question_id,
-#         'total_questions': total_questions,
-#         'current_question_number': current_question_number,  # Pass the current question number
-#     }
-#     return render(request, 'big_five_quiz/big_five_quiz.html', context)
-
 def big_five_quiz(request, question_id):
     # Get the question based on the current question ID
     question = get_object_or_404(BigFive_Questions_Dataset, DIMENSION_ID=question_id)
-    
+
     # Extract all questions and sort them by the numeric part of DIMENSION_ID
     all_questions = list(BigFive_Questions_Dataset.objects.all())
-    
-    # Debugging: print all DIMENSION_IDs before sorting
-    print("DIMENSION_IDs before sorting:", [q.DIMENSION_ID for q in all_questions])
-
-    # Sort based on the numeric part of the DIMENSION_ID
     sorted_questions = sorted(
         all_questions,
         key=lambda q: int(re.search(r'(\d+)$', q.DIMENSION_ID).group())
     )
-    
-    # Debugging: print all DIMENSION_IDs after sorting
-    print("DIMENSION_IDs after sorting:", [q.DIMENSION_ID for q in sorted_questions])
 
     total_questions = len(sorted_questions)
-    current_question_number = sorted_questions.index(question) + 1  # Calculate the current question index
-    
+    current_question_number = sorted_questions.index(question) + 1
+
     # Get the next question ID
     next_question_id = None
     try:
@@ -919,19 +878,90 @@ def big_five_quiz(request, question_id):
     except IndexError:
         next_question_id = None  # Last question
 
+    # Get BIGFIVE_ASSESSMENT_ID from session
+    bigfive_assessment_id = request.session.get('BIGFIVE_ASSESSMENT_ID')
+    total_time = request.session.get('total_bigfive_time', 0)  # Get total time spent
+
+    if request.method == 'POST':
+        # Get user's answer
+        selected_option = request.POST.get('selected_option', '0')  # Defaults to '0' if no option is selected
+        question_time = int(request.POST.get('question_time', 0))  # Time taken for the question in seconds
+
+        # Add time taken for the current question to the total time
+        total_time += question_time
+        request.session['total_bigfive_time'] = total_time  # Update session with the new total time
+
+        # Save the answer to the BigFive_Assessment_Answers table
+        BigFive_Assessment_Answers.objects.create(
+            BIGFIVE_ASSESSMENT_ID_id=bigfive_assessment_id,
+            DIMENSION_ID=question,
+            DIMENSION=question.DIMENSION,
+            JOB_SEEKER_ANS=selected_option
+        )
+
+        # Redirect to next question or completion page
+        if next_question_id:
+            return redirect('big_five_quiz', question_id=next_question_id)
+        else:
+            # Redirect to the completion screen
+            return redirect('big_five_completion')
+
     context = {
         'question': question,
         'next_question_id': next_question_id,
         'total_questions': total_questions,
-        'current_question_number': current_question_number,  # Pass the current question number
+        'current_question_number': current_question_number,
     }
     return render(request, 'big_five_quiz/big_five_quiz.html', context)
 
-def big_five_quiz_start_redirect(request):
-    return redirect('big_five_quiz_start')
+def big_five_completion(request):
+    bigfive_assessment_id = request.session.get('BIGFIVE_ASSESSMENT_ID')
+    total_time = request.session.get('total_bigfive_time', 0)  # Get total time in seconds
 
-# ------------------------------[ ENDS ]----------------------------------------------------
+    # Calculate scores
+    answers = BigFive_Assessment_Answers.objects.filter(BIGFIVE_ASSESSMENT_ID=bigfive_assessment_id)
+    
+    # Sum scores based on dimensions
+    openness_score = sum(int(answer.JOB_SEEKER_ANS) for answer in answers.filter(DIMENSION='Openness'))
+    concientiousness_score = sum(int(answer.JOB_SEEKER_ANS) for answer in answers.filter(DIMENSION='Conscientiousness'))
+    extraversion_score = sum(int(answer.JOB_SEEKER_ANS) for answer in answers.filter(DIMENSION='Extraversion'))
+    agreeableness_score = sum(int(answer.JOB_SEEKER_ANS) for answer in answers.filter(DIMENSION='Agreeableness'))
+    neuroticism_score = sum(int(answer.JOB_SEEKER_ANS) for answer in answers.filter(DIMENSION='Neuroticism'))
 
+    # Calculate dimension with the highest score
+    dimension_scores = {
+        'Openness': openness_score,
+        'Conscientiousness': concientiousness_score,
+        'Extraversion': extraversion_score,
+        'Agreeableness': agreeableness_score,
+        'Neuroticism': neuroticism_score,
+    }
+    highest_dimension = max(dimension_scores, key=dimension_scores.get)
+
+    # Store total time as a string in seconds
+    total_time_str = str(total_time)
+
+    # Populate BigFive_Assessment_Result table
+    BigFive_Assessment_Result.objects.create(
+        BIGFIVE_ASSESSMENT_ID_id=bigfive_assessment_id,
+        DIMENSION=highest_dimension,
+        OPENNESS_SCORE=openness_score,
+        CONCIENTIOUSNESS_SCORE=concientiousness_score,
+        EXTRAVERSION_SCORE=extraversion_score,
+        AGREEABLENESS_SCORE=agreeableness_score,
+        NEUROTICISM_SCORE=neuroticism_score,
+        TOTAL_BIGFIVE_COMPLETION_TIME=total_time_str  # Save total time in seconds as string
+    )
+
+    # Delete the total time from session
+    if 'total_bigfive_time' in request.session:
+        del request.session['total_bigfive_time']
+
+    # Redirect to the big_five_completion.html template or the next assessment phase
+    return render(request, 'big_five_quiz/bigfive_completion.html')
+#* ------------------------------------------------------------------------------------------
+#* --------------------------------------[ ENDS ]--------------------------------------------
+#* ------------------------------------------------------------------------------------------
 
 # ----------------------------[ NON VERBAL QUIZ unchanged ]--------------------------------------------
 def non_verbal_quiz_start(request):

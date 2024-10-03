@@ -111,14 +111,19 @@
                                 <div class="col-md-6 col-12 d-flex justify-content-between align-items-center">
                                     <!-- Timer Display -->
                                     <div class="me-md-8">
-                                        <span id="timer" class="fs-4">00:15</span>
+                                        <span id="timer" class="fs-4">00:30</span>
                                     </div>
-                                    {% if next_question_id %}
+                                    {% comment %} {% if next_question_id %}
                                         <a href="{% url 'big_five_quiz' next_question_id %}" class="btn btn-primary">Next question</a>
                                     {% else %}
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#big5CompletionModal">
                                         Done
                                     </button>
+                                    {% endif %} {% endcomment %}
+                                    {% if next_question_id %}
+                                    <button type="button" id="next-question-btn" class="btn btn-primary" disabled>Next question</button>
+                                    {% else %}
+                                    <button type="button" id="done-button" class="btn btn-primary" disabled>Done</button>
                                     {% endif %}
                                 </div>
                             </div>
@@ -169,6 +174,7 @@
                     </div>
                 </div> {% endcomment %}
 
+
                 <!-- Options as a Rating Scale (1-6) -->
                 <div class="container mt-4">
                     <div class="d-flex justify-content-start align-items-start g-10">
@@ -180,6 +186,13 @@
                         {% endfor %}
                     </div>
                 </div>
+
+                <!-- Corrected form for submitting the answer -->
+                <form id="big-five-assessment-form" method="POST" action="{% url 'big_five_quiz' question.DIMENSION_ID %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="selected_option" id="selected_option">
+                    <input type="hidden" name="question_time" id="question-time" value="0">
+                </form>
 
             </div>
 
@@ -279,7 +292,7 @@
     <script src="../../../static/assets/vendor/libs/i18n/i18n.js"></script>
     <script src="../../../static/assets/vendor/libs/typeahead-js/typeahead.js"></script>
     <script src="../../../static/assets/vendor/js/menu.js"></script>
-    <script src="../../../static/assets/vendor/js/script.js"></script>
+    <script src="../../../static/assets/vendor/js/bigfive-quiz.js"></script>
 
     <!-- endbuild -->
 
@@ -296,42 +309,6 @@
     <script src="../../../static/assets/js/dashboards-analytics.js"></script>
     <script src="../../static/assets/js/extended-ui-star-ratings.js"></script>
 
-    <script>
-        const circles = document.querySelectorAll('.circle-rating-item');
-
-        circles.forEach(circle => {
-
-            circle.addEventListener('click', function () {
-                const rating = this.getAttribute('data-rating');
-
-                circles.forEach(c => c.querySelector('.circle').classList.remove('bg-primary'));
-
-                circles.forEach(c => {
-                    if (c.getAttribute('data-rating') <= rating) {
-                        c.querySelector('.circle').classList.add('bg-primary');
-                    }
-                });
-
-                console.log(`You selected rating: ${rating}`);
-            });
-        });
-
-    </script>
-    <script>
-        // Timer Logic (15 seconds)
-        let time = 15;
-        const timerElement = document.getElementById('timer');
-        const interval = setInterval(() => {
-            time--;
-            timerElement.textContent = `00:${time < 10 ? '0' : ''}${time}`;
-            
-            // Display the message after time is up
-            if (time === 0) {
-                clearInterval(interval);
-                timerElement.textContent = 'Please Select';
-            }
-        }, 1000);
-    </script>
 </body>
 
 </html>
