@@ -651,9 +651,17 @@ def disc_quiz_start_redirect(request):
             TECHNICAL_ASSESSMENT_LEVEL=technical_assessment_level,
         )
 
+        # Save JOB_POST_ID in session
+        request.session['JOB_POST_ID'] = job_post_id
+        # Save ASSESSMENT_ID in session
+        request.session['ASSESSMENT_ID'] = assessment.ASSESSMENT_ID
+
         # Fetch the job_seeker using user_id
         job_seeker = Job_Seeker.objects.get(USER_ID=user_id)
         job_seeker_id = job_seeker.JOB_SEEKER_ID
+
+        # Save JOB_SEEKER_ID in session
+        request.session['JOB_SEEKER_ID'] = job_seeker_id
 
         # Fetch user's first name
         user_info = User_Information.objects.get(USER_ID=user_id)
@@ -686,6 +694,8 @@ def disc_quiz_start_redirect(request):
             DISC_COMPLETION_TIME_REQUIRED="720"
         )
 
+        # Save JOB_SEEKER_ASSESSMENT_ID in session
+        request.session['JOB_SEEKER_ASSESSMENT_ID'] = job_seeker_assessment.JOB_SEEKER_ASSESSMENT_ID
         # Save PERSONALITY_ASSESSMENT_ID in session
         request.session['PERSONALITY_ASSESSMENT_ID'] = personality_assessment.PERSONALITY_ASSESSMENT_ID
         # Save DISC_ASSESSMENT_ID in session
@@ -777,6 +787,13 @@ def disc_quiz(request, question_id):
 def disc_completion(request):
     disc_assessment_id = request.session.get('DISC_ASSESSMENT_ID')
     total_time = request.session.get('total_time', 0)  # Get total time in seconds
+
+    # If the total time is zero, prevent further processing
+    if total_time == 0:
+        # Render a message or simply redirect to prevent duplicate entry
+        return render(request, 'disc_quiz/disc_completion.html', {
+            'message': "DISC Assessment already completed."
+        })
 
     # Calculate scores
     answers = DISC_Assessment_Answer.objects.filter(DISC_ASSESSMENT_ID=disc_assessment_id)
@@ -916,14 +933,25 @@ def big_five_quiz(request, question_id):
 
 def big_five_completion(request):
     bigfive_assessment_id = request.session.get('BIGFIVE_ASSESSMENT_ID')
+    disc_assessment_id = request.session.get('DISC_ASSESSMENT_ID')
+    personality_assessment_id = request.session.get('PERSONALITY_ASSESSMENT_ID')
+    job_seeker_assessment_id = request.session.get('JOB_SEEKER_ASSESSMENT_ID')
     total_time = request.session.get('total_bigfive_time', 0)  # Get total time in seconds
+
+
+    # If the total time is zero, prevent further processing
+    if total_time == 0:
+        # Render a message or simply redirect to prevent duplicate entry
+        return render(request, 'big_five_quiz/bigfive_completion.html', {
+            'message': "Assessment already completed."
+        })
 
     # Calculate scores
     answers = BigFive_Assessment_Answers.objects.filter(BIGFIVE_ASSESSMENT_ID=bigfive_assessment_id)
     
     # Sum scores based on dimensions
     openness_score = sum(int(answer.JOB_SEEKER_ANS) for answer in answers.filter(DIMENSION='Openness'))
-    concientiousness_score = sum(int(answer.JOB_SEEKER_ANS) for answer in answers.filter(DIMENSION='Conscientiousness'))
+    conscientiousness_score = sum(int(answer.JOB_SEEKER_ANS) for answer in answers.filter(DIMENSION='Conscientiousness'))
     extraversion_score = sum(int(answer.JOB_SEEKER_ANS) for answer in answers.filter(DIMENSION='Extraversion'))
     agreeableness_score = sum(int(answer.JOB_SEEKER_ANS) for answer in answers.filter(DIMENSION='Agreeableness'))
     neuroticism_score = sum(int(answer.JOB_SEEKER_ANS) for answer in answers.filter(DIMENSION='Neuroticism'))
@@ -931,7 +959,7 @@ def big_five_completion(request):
     # Calculate dimension with the highest score
     dimension_scores = {
         'Openness': openness_score,
-        'Conscientiousness': concientiousness_score,
+        'Conscientiousness': conscientiousness_score,
         'Extraversion': extraversion_score,
         'Agreeableness': agreeableness_score,
         'Neuroticism': neuroticism_score,
@@ -946,89 +974,207 @@ def big_five_completion(request):
         BIGFIVE_ASSESSMENT_ID_id=bigfive_assessment_id,
         DIMENSION=highest_dimension,
         OPENNESS_SCORE=openness_score,
-        CONCIENTIOUSNESS_SCORE=concientiousness_score,
+        CONCIENTIOUSNESS_SCORE=conscientiousness_score,
         EXTRAVERSION_SCORE=extraversion_score,
         AGREEABLENESS_SCORE=agreeableness_score,
         NEUROTICISM_SCORE=neuroticism_score,
         TOTAL_BIGFIVE_COMPLETION_TIME=total_time_str  # Save total time in seconds as string
     )
 
-    # Delete the total time from session
+    # Get DISC category from DISC_Assessment_Result
+    disc_result = DISC_Assessment_Result.objects.get(DISC_ASSESSMENT_ID=disc_assessment_id)
+    disc_category = disc_result.DISC_CATEGORY.strip()
+
+    if disc_category == "Dominance":
+        disc_category = "Dominance "
+    elif disc_category == "Influencing":
+        disc_category = "Influencing"
+    elif disc_category == "Steadiness":
+        disc_category = "Steadiness "
+    elif disc_category == "Conscientiousness":
+        disc_category = "Conscientiousness "
+
+    print(f"----------------Disc category---------------: {disc_category}")
+
+    # Print all DISC categories in the database for debugging
+    all_disc_categories = DISC_Characteristics_Dataset.objects.values_list('DISC_CATEGORY', flat=True)
+    # print(f"All DISC categories in dataset: {list(all_disc_categories)}")
+
+    # Find matching DISC characteristics
+    try:
+        disc_characteristics = DISC_Characteristics_Dataset.objects.get(DISC_CATEGORY__iexact=disc_category)
+        # print(f"-------------Fetched DISC characteristics----------------: {disc_characteristics}")
+    except DISC_Characteristics_Dataset.DoesNotExist:
+        # Handle if no match found
+        disc_characteristics = None
+        # print(f"-------------NOT FETCHED DISC characteristics----------------: {disc_characteristics}")
+
+    # Extract DISC details
+    disc_personality_trait = disc_characteristics.PERSONALITY_TRAIT if disc_characteristics else "Unknown"
+    disc_cognitive_ability = disc_characteristics.COGNITIVE_ABILITY if disc_characteristics else "Not available"
+    disc_emotional_regulation = disc_characteristics.EMOTIONAL_REGULATION if disc_characteristics else "Not available"
+    disc_tendencies = disc_characteristics.TENDENCIES if disc_characteristics else "Not available"
+    disc_weaknesses = disc_characteristics.WEAKNESSES if disc_characteristics else "Not available"
+    disc_behaviour = disc_characteristics.BEHAVIOUR if disc_characteristics else "Not available"
+    disc_motivated_by = disc_characteristics.MOTIVATED_BY if disc_characteristics else "Not available"
+
+    # print("---------- DIMENSION PRINT-----------")
+    # print(list(BigFive_Characteristics_Dataset.objects.values_list('DIMENSION', flat=True)))
+    # print("----------------------------------")
+
+    # Function to get BigFive details based on score and dimension
+    def get_bigfive_characteristics(dimension, score):
+
+        if dimension == "Openness":
+            dimension = "Openness "
+        elif dimension == "Conscientiousness":
+            dimension = "Conscientiousness "
+        elif dimension == "Agreeableness":
+            dimension = "Agreeableness "
+
+
+        bigfive_characteristic = BigFive_Characteristics_Dataset.objects.filter(
+            DIMENSION__iexact=dimension
+        ).order_by('RANGE')
+
+        # print(f"Fetching details for Dimension: {dimension}, Score: {score}")
+
+        # Print all ranges for the current dimension
+        # for characteristic in bigfive_characteristic:
+        #     print(f"Available range for {dimension}: {characteristic.RANGE}")
+
+        for characteristic in bigfive_characteristic:
+            range_parts = list(map(int, characteristic.RANGE.strip().replace(' ', '').split('-')))
+            # print(f"Checking dimension: {dimension}, Score: {score}, Range: {range_parts}")
+
+            if range_parts[0] <= score <= range_parts[1]:
+                # print(f"Match found for Dimension: {dimension}, Score: {score}, Range: {range_parts}")
+                return {
+                    "category": characteristic.CATEGORY,
+                    "personality": characteristic.PERSONALITY,
+                    "description": characteristic.DESCRIPTION,
+                    "workplace_behaviour": characteristic.WORKPLACE_BEHAVIOUR
+                }
+
+        # print(f"No match found for Dimension: {dimension}, Score: {score}")
+        return {
+            "category": "Unknown",
+            "personality": "Not available",
+            "description": "Not available",
+            "workplace_behaviour": "Not available"
+        }
+
+
+    # Fetch characteristics for each Big Five dimension
+    openness_details = get_bigfive_characteristics('Openness', openness_score)
+    conscientiousness_details = get_bigfive_characteristics('Conscientiousness', conscientiousness_score)
+    extraversion_details = get_bigfive_characteristics('Extraversion', extraversion_score)
+    agreeableness_details = get_bigfive_characteristics('Agreeableness', agreeableness_score)
+    neuroticism_details = get_bigfive_characteristics('Neuroticism', neuroticism_score)
+
+    # Populate Personality_Assessment_Report table
+    Personality_Assessment_Report.objects.create(
+        PERSONALITY_ASSESSMENT_ID_id=personality_assessment_id,
+        JOB_SEEKER_ASSESSMENT_ID_id=job_seeker_assessment_id,
+        BIGFIVE_ASSESSMENT_ID_id=bigfive_assessment_id,
+        DISC_ASSESSMENT_ID_id=disc_assessment_id,
+        DISC_CATEGORY=disc_category,
+        DISC_PERSONALITY_TRAIT=disc_personality_trait,
+        DISC_COGNITIVE_ABILITY=disc_cognitive_ability,
+        DISC_EMOTIONAL_REGULATION=disc_emotional_regulation,
+        DISC_TENDENCIES=disc_tendencies,
+        DISC_WEAKNESSES=disc_weaknesses,
+        DISC_BEHAVIOUR=disc_behaviour,
+        DISC_MOTIVATED_BY=disc_motivated_by,
+        BIGFIVE_OPENNESS_SCORE=openness_score,
+        BIGFIVE_OPENNESS_CATEGORY=openness_details["category"],
+        BIGFIVE_OPENNESS_PERSONALITY=openness_details["personality"],
+        BIGFIVE_OPENNESS_DESCRIPTION=openness_details["description"],
+        BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR=openness_details["workplace_behaviour"],
+        BIGFIVE_CONCIENTIOUSNESS_SCORE=conscientiousness_score,
+        BIGFIVE_CONCIENTIOUSNESS_CATEGORY=conscientiousness_details["category"],
+        BIGFIVE_CONCIENTIOUSNESS_PERSONALITY=conscientiousness_details["personality"],
+        BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION=conscientiousness_details["description"],
+        BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR=conscientiousness_details["workplace_behaviour"],
+        BIGFIVE_EXTRAVERSION_SCORE=extraversion_score,
+        BIGFIVE_EXTRAVERSION_CATEGORY=extraversion_details["category"],
+        BIGFIVE_EXTRAVERSION_PERSONALITY=extraversion_details["personality"],
+        BIGFIVE_EXTRAVERSION_DESCRIPTION=extraversion_details["description"],
+        BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR=extraversion_details["workplace_behaviour"],
+        BIGFIVE_AGREEABLENESS_SCORE=agreeableness_score,
+        BIGFIVE_AGREEABLENESS_CATEGORY=agreeableness_details["category"],
+        BIGFIVE_AGREEABLENESS_PERSONALITY=agreeableness_details["personality"],
+        BIGFIVE_AGREEABLENESS_DESCRIPTION=agreeableness_details["description"],
+        BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR=agreeableness_details["workplace_behaviour"],
+        BIGFIVE_NEUROTICISM_SCORE=neuroticism_score,
+        BIGFIVE_NEUROTICISM_CATEGORY=neuroticism_details["category"],
+        BIGFIVE_NEUROTICISM_PERSONALITY=neuroticism_details["personality"],
+        BIGFIVE_NEUROTICISM_DESCRIPTION=neuroticism_details["description"],
+        BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR=neuroticism_details["workplace_behaviour"]
+    )
+
+    # Delete the total time from session after completion
     if 'total_bigfive_time' in request.session:
         del request.session['total_bigfive_time']
 
-    # Redirect to the big_five_completion.html template or the next assessment phase
+    # Render the completion screen
     return render(request, 'big_five_quiz/bigfive_completion.html')
+
 #* ------------------------------------------------------------------------------------------
 #* --------------------------------------[ ENDS ]--------------------------------------------
 #* ------------------------------------------------------------------------------------------
 
-# ----------------------------[ NON VERBAL QUIZ unchanged ]--------------------------------------------
-def non_verbal_quiz_start(request):
-    if 'selected_questions' not in request.session:
-        question_ids = list(Cognitive_NVI_Questions_Dataset.objects.values_list('NVI_IMAGE_QUESTION_ID', flat=True))
-        selected_questions = random.sample(question_ids, 30) if len(question_ids) >= 30 else question_ids
-        request.session['selected_questions'] = selected_questions
-        print(selected_questions)
-    return redirect('non_verbal_quiz', question_index=0)
 
-
-def non_verbal_quiz(request, question_index=0):
-    selected_questions = request.session.get('selected_questions', [])
-
-    if not selected_questions:
-        return redirect('non_verbal_quiz_start')
-
-    question_id = selected_questions[question_index]
-    question = get_object_or_404(Cognitive_NVI_Questions_Dataset, NVI_IMAGE_QUESTION_ID=question_id)
-    next_question_index = question_index + 1 if question_index < len(selected_questions) - 1 else None
-
+#* ------------------------------------------------------------------------------------------
+#* -----------------------------[ VERBAL QUIZ INTEGRATED]------------------------------------
+#* ------------------------------------------------------------------------------------------
+def verbal_quiz_start_redirect(request):
+    # Ensure this view is only accessed via a POST request
     if request.method == 'POST':
-        selected_option = request.POST.get('option')
-        cognitive_assessment_id = request.session.get('cognitive_assessment_id')
+        # Step 1: Remove the old JOB_SEEKER_ASSESSMENT_ID from session if exists
+        if 'JOB_SEEKER_ASSESSMENT_ID' in request.session:
+            del request.session['JOB_SEEKER_ASSESSMENT_ID']
+        
+        # Retrieve required values from session
+        job_seeker_id = request.session.get('JOB_SEEKER_ID')
+        job_post_id = request.session.get('JOB_POST_ID')
+        assessment_id = request.session.get('ASSESSMENT_ID')
 
-        if cognitive_assessment_id and selected_option:
-            cognitive_assessment = Cognitive_Assessment.objects.get(COGNITIVE_ASSESSMENT_ID=cognitive_assessment_id)
-            is_correct = selected_option == question.ANSWERS
+        # Fetch the `Job_Seeker` instance using `job_seeker_id`
+        job_seeker = Job_Seeker.objects.get(JOB_SEEKER_ID=job_seeker_id)
 
-            Cognitive_NVI_Answers_Dataset.objects.create(
-                COGNITIVE_ASSESSMENT_ID=cognitive_assessment,
-                NVI_IMAGE_QUESTION_ID=question,
-                JOB_SEEKER_ANS=selected_option,
-                IS_CORRECT=is_correct
-            )
+        # Fetch user's first name from `User_Information`
+        user_info = User_Information.objects.get(USER_ID=job_seeker.USER_ID)
+        first_name = user_info.FIRST_NAME
 
-        if next_question_index is not None:
-            return redirect('non_verbal_quiz', question_index=next_question_index)
-        else:
-            return redirect('phase_two_completed')
+        # Create a new `Job_Seeker_Assessment` record
+        job_seeker_assessment = Job_Seeker_Assessment.objects.create(
+            JOB_SEEKER_ID=job_seeker,
+            JOB_POST_ID_id=job_post_id,
+            ASSESSMENT_ID_id=assessment_id,
+            NAME=first_name,
+            ASSESSMENT_TYPE="Cognitive Assessment",
+            TOTAL_COMPLETION_TIME_REQUIRED="1800"  # Static value as specified
+        )
+        
+        # Save the newly created `JOB_SEEKER_ASSESSMENT_ID` in session
+        request.session['JOB_SEEKER_ASSESSMENT_ID'] = job_seeker_assessment.JOB_SEEKER_ASSESSMENT_ID
+        
+        # Step 2: Populate the `Cognitive_Assessment` table
+        cognitive_assessment = Cognitive_Assessment.objects.create(
+            JOB_SEEKER_ASSESSMENT_ID=job_seeker_assessment,
+            COGNITIVE_COMPLETION_TIME_REQUIRED="1800"  # Static value as specified
+        )
+        
+        # Save the `COGNITIVE_ASSESSMENT_ID` in session for further use
+        request.session['COGNITIVE_ASSESSMENT_ID'] = cognitive_assessment.COGNITIVE_ASSESSMENT_ID
+        
+        # Step 3: Redirect to the start of the verbal quiz
+        return redirect('verbal_quiz_start')
+    
+    # Fallback in case of non-POST request
+    return redirect('jobseeker_home')
 
-    options = [
-        question.OPTION1.strip(), question.OPTION2.strip(),
-        question.OPTION3.strip(), question.OPTION4.strip(),
-        question.OPTION5.strip(), question.OPTION6.strip(),
-        question.OPTION7.strip(), question.OPTION8.strip()
-    ]
-
-    # Filter out options that are "NONE"
-    options = [option for option in options if option and option != "nan"]
-
-    context = {
-        'question': question,
-        'next_question_index': next_question_index,
-        'total_questions': len(selected_questions),
-        'options': options,
-    }
-
-    return render(request, 'non_verbal_quiz/non_verbal_quiz.html', context)
-
-
-def non_verbal_quiz_start_redirect(request):
-    return redirect('non_verbal_quiz_start')
-# --------------------------------[ ENDS ]---------------------------------------------------
-
-
-# ----------------------------[VERBAL QUIZ ]------------------------------------------------
 def verbal_quiz_start(request):
     # Fetch 15 random questions from the Cognitive_VI_Question_Dataset
     if 'verbal_selected_questions' not in request.session:
@@ -1043,8 +1189,6 @@ def verbal_quiz_start(request):
 def verbal_quiz(request, question_index=0):
     # Fetch the selected questions from the session
     selected_questions = request.session.get('verbal_selected_questions', [])
-    print(f"Selected Verbal Questions: {selected_questions}")
-
     
     if not selected_questions:
         return redirect('verbal_quiz_start')
@@ -1056,18 +1200,38 @@ def verbal_quiz(request, question_index=0):
     # Get the next question index
     next_question_index = question_index + 1 if question_index < len(selected_questions) - 1 else None
 
+    cognitive_assessment_id = request.session.get('COGNITIVE_ASSESSMENT_ID')
+
     if request.method == 'POST':
-        # Capture the user's selected option
-        selected_option = request.POST.get('option')
-        # Process the answer as needed (save to DB, check correctness, etc.)
-        # ...
+        # Capture the user's selected option or "nan" if not selected
+        selected_option = request.POST.get('option', 'nan')
+
+        # Check if the selected option is correct
+        is_correct = selected_option == question.ANSWER
+
+        # Save the answer to Cognitive_VI_Answers_Dataset
+        Cognitive_VI_Answers_Dataset.objects.create(
+            COGNITIVE_ASSESSMENT_ID_id=cognitive_assessment_id,
+            VI_QUESTION_ID=question,
+            JOB_SEEKER_ANS=selected_option,
+            IS_CORRECT=is_correct
+        )
+
+        # Save the time taken for the question
+        time_taken = request.POST.get('time_taken', 60)  # Default to 60 if not present
+        cog_vi_time = request.session.get('cog_vi_time', 0) + int(time_taken)
+        request.session['cog_vi_time'] = cog_vi_time
+        
+        # Debugging: Print the time taken and cumulative time
+        print(f"----Time taken for question {question_index}: {time_taken} seconds---------------")
+        print(f"----------Cumulative time so far: {cog_vi_time} seconds--------------------------")
 
         # Redirect to the next question or completion if finished
         if next_question_index is not None:
             return redirect('verbal_quiz', question_index=next_question_index)
         else:
-            # Redirect to the next quiz phase (e.g., non-verbal) after completion
-            return redirect('non_verbal_quiz_start_redirect')
+            # Redirect to the verbal quiz completion page
+            return redirect('verbal_quiz_completion')
 
     # Prepare the options from the question object
     options = [
@@ -1088,17 +1252,235 @@ def verbal_quiz(request, question_index=0):
 
     return render(request, 'verbal_quiz/verbal_quiz.html', context)
 
-def verbal_quiz_start_redirect(request):
-    return redirect('verbal_quiz_start')
-# --------------------------------[ ENDS ]---------------------------------------------------
+def verbal_quiz_completion(request):
 
-# ----------------------------[ TECHNICAL QUIZ Unchanged ]---------------------------------------------
+    # Reset the cumulative time for the verbal quiz
+    # if 'cog_vi_time' in request.session:
+    #     del request.session['cog_vi_time']
+
+    cog_vi_time = request.session['cog_vi_time']
+    print(f"----------COGNITIVE VERBAL ASSESSMENT TIME IS : {cog_vi_time} --------------")
+
+    return render(request, 'verbal_quiz/verbal_quiz_completion.html')
+#* ------------------------------------------------------------------------------------------
+#* --------------------------------------[ ENDS ]--------------------------------------------
+#* ------------------------------------------------------------------------------------------
+
+#* ------------------------------------------------------------------------------------------
+#* ----------------------------[ NON VERBAL QUIZ INTEGRATED ]--------------------------------
+#* ------------------------------------------------------------------------------------------
+def non_verbal_quiz_start_redirect(request):
+    return redirect('non_verbal_quiz_start')
+
+def non_verbal_quiz_start(request):
+    if 'selected_questions' not in request.session:
+        question_ids = list(Cognitive_NVI_Questions_Dataset.objects.values_list('NVI_IMAGE_QUESTION_ID', flat=True))
+        selected_questions = random.sample(question_ids, 15) if len(question_ids) >= 15 else question_ids
+        request.session['selected_questions'] = selected_questions
+        print(selected_questions)
+    return redirect('non_verbal_quiz', question_index=0)
+
+
+def non_verbal_quiz(request, question_index=0):
+    selected_questions = request.session.get('selected_questions', [])
+    
+    if not selected_questions:
+        return redirect('non_verbal_quiz_start')
+
+    question_id = selected_questions[question_index]
+    question = get_object_or_404(Cognitive_NVI_Questions_Dataset, NVI_IMAGE_QUESTION_ID=question_id)
+    next_question_index = question_index + 1 if question_index < len(selected_questions) - 1 else None
+    cognitive_assessment_id = request.session.get('COGNITIVE_ASSESSMENT_ID')
+
+    if request.method == 'POST':
+        # Capture user's answer or "nan" if not answered within time
+        selected_option_index = request.POST.get('option', 'nan')
+
+        # Map the user's option (1 to 8) to corresponding answer (A to H)
+        option_map = {
+            '1': question.OPTION1,
+            '2': question.OPTION2,
+            '3': question.OPTION3,
+            '4': question.OPTION4,
+            '5': question.OPTION5,
+            '6': question.OPTION6,
+            '7': question.OPTION7,
+            '8': question.OPTION8,
+            'nan': 'nan'
+        }
+        job_seeker_answer = option_map.get(selected_option_index, 'nan')
+
+        # Check if answer is correct
+        is_correct = job_seeker_answer == question.ANSWERS
+
+        # Save the answer in Cognitive_NVI_Answers_Dataset
+        Cognitive_NVI_Answers_Dataset.objects.create(
+            COGNITIVE_ASSESSMENT_ID_id=cognitive_assessment_id,
+            NVI_IMAGE_QUESTION_ID=question,
+            JOB_SEEKER_ANS=job_seeker_answer,
+            IS_CORRECT=is_correct
+        )
+
+        # Save time taken for the question
+        time_taken = int(request.POST.get('time_taken', 60))  # Default 60 if time_taken not present
+        cog_nvi_time = request.session.get('cog_nvi_time', 0) + time_taken
+        request.session['cog_nvi_time'] = cog_nvi_time
+
+        # Redirect to next question or completion
+        if next_question_index is not None:
+            return redirect('non_verbal_quiz', question_index=next_question_index)
+        else:
+            # End of quiz, reset time and go to completion
+            # request.session['cog_nvi_time'] = 0
+            return redirect('non_verbal_completion')
+
+    options = [
+        question.OPTION1.strip(), question.OPTION2.strip(),
+        question.OPTION3.strip(), question.OPTION4.strip(),
+        question.OPTION5.strip(), question.OPTION6.strip(),
+        question.OPTION7.strip(), question.OPTION8.strip()
+    ]
+
+    # Filter out options that are "nan"
+    options = [option for option in options if option and option.lower() != "nan"]
+
+    context = {
+        'question': question,
+        'next_question_index': next_question_index,
+        'total_questions': len(selected_questions),
+        'current_question_number': question_index + 1,
+        'options': options,
+    }
+
+    return render(request, 'non_verbal_quiz/non_verbal_quiz.html', context)
+
+def non_verbal_completion(request):
+    # Retrieve the `cognitive_assessment_id` from the session
+    cognitive_assessment_id = request.session.get('COGNITIVE_ASSESSMENT_ID')
+
+    # Retrieve `VI_COMPLETION_TIME` and `NVI_COMPLETION_TIME` from session
+    vi_completion_time = request.session.get('cog_vi_time', 0)
+    nvi_completion_time = request.session.get('cog_nvi_time', 0)
+
+    if not cognitive_assessment_id:
+        # Redirect to home or show an error if no assessment ID is available
+        return redirect('jobseeker_home')
+
+    # If the total time is zero, prevent further processing
+    if vi_completion_time == 0 or nvi_completion_time == 0:
+        # Render a message or simply redirect to prevent duplicate entry
+        return render(request, 'non_verbal_quiz/non_verbal_completion.html', {
+            'message': "Assessment already completed."
+        })
+
+    # Calculate `COGNITIVE_VI_SCORE` as the count of true answers in `Cognitive_VI_Answers_Dataset`
+    cognitive_vi_score = Cognitive_VI_Answers_Dataset.objects.filter(
+        COGNITIVE_ASSESSMENT_ID=cognitive_assessment_id,
+        IS_CORRECT=True
+    ).count()
+
+    # Calculate `COGNITIVE_NVI_SCORE` as the count of true answers in `Cognitive_NVI_Answers_Dataset`
+    cognitive_nvi_score = Cognitive_NVI_Answers_Dataset.objects.filter(
+        COGNITIVE_ASSESSMENT_ID=cognitive_assessment_id,
+        IS_CORRECT=True
+    ).count()
+
+    # `TOTAL_COGNITIVE_SCORE` is the sum of `COGNITIVE_VI_SCORE` and `COGNITIVE_NVI_SCORE`
+    total_cognitive_score = cognitive_vi_score + cognitive_nvi_score
+
+    # `COGNITIVE_SCORE_PERCENTAGE` is `(TOTAL_COGNITIVE_SCORE / 30) * 100`
+    cognitive_score_percentage = int((total_cognitive_score / 30) * 100)
+
+    
+
+    # `TOTAL_COGNITIVE_COMPLETION_TIME` is the sum of `VI_COMPLETION_TIME` and `NVI_COMPLETION_TIME`
+    total_cognitive_completion_time = vi_completion_time + nvi_completion_time
+
+    # Create `Cognitive_Assessment_Results` entry
+    Cognitive_Assessment_Results.objects.create(
+        COGNITIVE_ASSESSMENT_ID_id=cognitive_assessment_id,
+        COGNITIVE_VI_SCORE=cognitive_vi_score,
+        COGNITIVE_NVI_SCORE=cognitive_nvi_score,
+        TOTAL_COGNITIVE_SCORE=total_cognitive_score,
+        COGNITIVE_SCORE_PERCENTAGE=cognitive_score_percentage,
+        VI_COMPLETION_TIME=str(vi_completion_time),  # Convert to string if necessary
+        NVI_COMPLETION_TIME=str(nvi_completion_time),  # Convert to string if necessary
+        TOTAL_COGNITIVE_COMPLETION_TIME=str(total_cognitive_completion_time)  # Convert to string if necessary
+    )
+
+    # Reset time-related session variables to prevent data leakage between assessments
+    request.session['cog_vi_time'] = 0
+    request.session['cog_nvi_time'] = 0
+
+    # Render the completion template
+    return render(request, 'non_verbal_quiz/non_verbal_completion.html')
+#* ------------------------------------------------------------------------------------------
+#* --------------------------------------[ ENDS ]--------------------------------------------
+#* ------------------------------------------------------------------------------------------
+
+#* ------------------------------------------------------------------------------------------
+#* -----------------------[ TECHNICAL QUIZ INTEGRATED ]--------------------------------------
+#* ------------------------------------------------------------------------------------------
+def technical_quiz_start_redirect(request):
+    # Ensure this view is only accessed via a POST request
+    if request.method == 'POST':
+        # Step 1: Remove the old JOB_SEEKER_ASSESSMENT_ID from session if exists
+        if 'JOB_SEEKER_ASSESSMENT_ID' in request.session:
+            del request.session['JOB_SEEKER_ASSESSMENT_ID']
+        
+        # Retrieve required values from session
+        job_seeker_id = request.session.get('JOB_SEEKER_ID')
+        job_post_id = request.session.get('JOB_POST_ID')
+        assessment_id = request.session.get('ASSESSMENT_ID')
+
+        # Fetch the `Job_Seeker` instance using `job_seeker_id`
+        job_seeker = Job_Seeker.objects.get(JOB_SEEKER_ID=job_seeker_id)
+
+        # Fetch user's first name from `User_Information`
+        user_info = User_Information.objects.get(USER_ID=job_seeker.USER_ID)
+        first_name = user_info.FIRST_NAME
+
+        # Create a new `Job_Seeker_Assessment` record
+        job_seeker_assessment = Job_Seeker_Assessment.objects.create(
+            JOB_SEEKER_ID=job_seeker,
+            JOB_POST_ID_id=job_post_id,
+            ASSESSMENT_ID_id=assessment_id,
+            NAME=first_name,
+            ASSESSMENT_TYPE="Technical Assessment",
+            TOTAL_COMPLETION_TIME_REQUIRED="900"  # Static value as specified
+        )
+        
+        # Save the newly created `JOB_SEEKER_ASSESSMENT_ID` in session
+        request.session['JOB_SEEKER_ASSESSMENT_ID'] = job_seeker_assessment.JOB_SEEKER_ASSESSMENT_ID
+        
+        # Fetch the `TECHNICAL_ASSESSMENT_LEVEL` from the `Assessment` table
+        assessment = Assessment.objects.get(ASSESSMENT_ID=assessment_id)
+        technical_assessment_level = assessment.TECHNICAL_ASSESSMENT_LEVEL
+
+        # Step 2: Populate the `Technical_Assessment` table
+        technical_assessment = Technical_Assessment.objects.create(
+            JOB_SEEKER_ASSESSMENT_ID=job_seeker_assessment,
+            TECHNICAL_ASSESSMENT_LEVEL=technical_assessment_level,  # Value from the Assessment table
+            TECHNICAL_COMPLETION_TIME_REQUIRED="900"  # Static value as specified
+        )
+        
+        # Save the `TECHNICAL_ASSESSMENT_ID` in session for further use
+        request.session['TECHNICAL_ASSESSMENT_ID'] = technical_assessment.TECHNICAL_ASSESSMENT_ID
+        
+        # Step 3: Redirect to the start of the technical quiz
+        return redirect('technical_quiz_start')
+    
+    # Fallback in case of non-POST request
+    return redirect('jobseeker_home')
+
+
 def technical_quiz_start(request):
     if 'selected_technical_questions' not in request.session:
         question_ids = list(Technical_Questions_Dataset.objects.values_list('TECH_ID', flat=True))
-        selected_questions = random.sample(question_ids, 30) if len(question_ids) >= 30 else question_ids
+        selected_questions = random.sample(question_ids, 15) if len(question_ids) >= 15 else question_ids
         request.session['selected_technical_questions'] = selected_questions
     return redirect('technical_quiz', question_index=0)
+
 
 def technical_quiz(request, question_index=0):
     selected_questions = request.session.get('selected_technical_questions', [])
@@ -1110,25 +1492,30 @@ def technical_quiz(request, question_index=0):
     question = get_object_or_404(Technical_Questions_Dataset, TECH_ID=question_id)
     next_question_index = question_index + 1 if question_index < len(selected_questions) - 1 else None
 
+    technical_assessment_id = request.session.get('TECHNICAL_ASSESSMENT_ID')
+    
     if request.method == 'POST':
-        selected_option = request.POST.get('option')
-        technical_assessment_id = request.session.get('technical_assessment_id')
+        selected_option = request.POST.get('option', 'nan')
 
-        if technical_assessment_id and selected_option:
-            technical_assessment = Technical_Assessment.objects.get(TECHNICAL_ASSESSMENT_ID=technical_assessment_id)
-            is_correct = selected_option == question.ANSWER
+        is_correct = selected_option == question.ANSWER
 
-            Technical_Answers_Dataset.objects.create(
-                TECHNICAL_ASSESSMENT_ID=technical_assessment,
-                TECH_ID=question,
-                JOB_SEEKER_ANS=selected_option,
-                IS_CORRECT=is_correct
-            )
+        Technical_Answers_Dataset.objects.create(
+            TECH_ID=question,
+            TECHNICAL_ASSESSMENT_ID_id=technical_assessment_id,
+            JOB_SEEKER_ANS=selected_option,
+            IS_CORRECT=is_correct
+        )
+        
+        # Save the time taken
+        time_taken = request.POST.get('time_taken', 60)
+        tech_time = request.session.get('tech_time', 0) + int(time_taken)
+        request.session['tech_time'] = tech_time
 
+        # Redirect to the next question or completion
         if next_question_index is not None:
             return redirect('technical_quiz', question_index=next_question_index)
         else:
-            return redirect('phase_three_completed')
+            return redirect('technical_quiz_completion')
 
     options = [
         question.A.strip(), question.B.strip(),
@@ -1139,16 +1526,76 @@ def technical_quiz(request, question_index=0):
         'question': question,
         'next_question_index': next_question_index,
         'total_questions': len(selected_questions),
+        'current_question_number': question_index + 1,
         'options': options,
     }
 
     return render(request, 'technical_quiz/technical_quiz.html', context)
 
+def technical_quiz_completion(request):
+    technical_assessment_id = request.session.get('TECHNICAL_ASSESSMENT_ID')
+    
+    # Get the total technical completion time from the session
+    total_technical_completion_time = request.session.get('tech_time')
+    
+    # If the total time is zero, prevent further processing
+    if total_technical_completion_time == 0:
+        # Render a message or simply redirect to prevent duplicate entry
+        return render(request, 'technical_quiz/technical_completion.html', {
+            'message': "Assessment already completed."
+        })
 
-def technical_quiz_start_redirect(request):
-    return redirect('technical_quiz_start')
-# -------------------------------[ ENDS ]-----------------------------------------------------
+    # Calculate the total correct answers (Total Tech Score)
+    total_correct_answers = Technical_Answers_Dataset.objects.filter(
+        TECHNICAL_ASSESSMENT_ID=technical_assessment_id,
+        IS_CORRECT=True
+    ).count()
 
+    # Calculate the tech score percentage
+    tech_score_percentage = (total_correct_answers / 15) * 100
+
+    
+
+    # Populate the Technical_Assessment_Result table
+    Technical_Assessment_Result.objects.create(
+        TECHNICAL_ASSESSMENT_ID_id=technical_assessment_id,
+        TOTAL_TECH_SCORE=total_correct_answers,
+        TECH_SCORE_PERCENTAGE=tech_score_percentage,
+        TOTAL_TECHNICAL_COMPLETION_TIME=total_technical_completion_time
+    )
+
+
+    # List of session keys related to assessments to be cleared
+    # keys_to_clear = [
+    #     'JOB_POST_ID',
+    #     'JOB_SEEKER_ID',
+    #     'ASSESSMENT_ID',
+    #     'JOB_SEEKER_ASSESSMENT_ID',
+    #     'PERSONALITY_ASSESSMENT_ID',
+    #     'DISC_ASSESSMENT_ID',
+    #     'total_time',
+    #     'BIGFIVE_ASSESSMENT_ID',
+    #     'COGNITIVE_ASSESSMENT_ID',
+    #     'time_taken',
+    #     'cog_vi_time',
+    #     'cog_nvi_time',
+    #     'TECHNICAL_ASSESSMENT_ID',
+    #     'verbal_selected_questions',
+    #     'selected_questions',
+    #     'selected_technical_questions',
+    #     'tech_time',
+    # ]
+
+    # Delete each key from the session if it exists
+    # for key in keys_to_clear:
+    #     if key in request.session:
+    #         del request.session[key]
+
+    # Render the completion template or redirect as necessary
+    return render(request, 'technical_quiz/technical_completion.html')
+#* ------------------------------------------------------------------------------------------
+#* -------------------------------[ ENDS ]---------------------------------------------------
+#* ------------------------------------------------------------------------------------------
 
 # ----------------------------[ PHASE COMPLETETIONS Unchanged ]-----------------------------------------
 def phase_one_completed(request):

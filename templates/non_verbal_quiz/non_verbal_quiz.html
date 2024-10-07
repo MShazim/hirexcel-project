@@ -104,19 +104,6 @@
                                 <div class="question-image-container">
                                     <img src="{{ question.IMAGE.url }}" alt="Question Image" class="img-fluid" />
                                 </div>
-                                {% comment %} <div class="row mt-2">
-                                    <div class="col-12">
-                                        <div class="code-box ">
-                                            <pre class="language-javascript text-start"><code class="language-javascript">
-                                const element = (
-                                  &lt;h1 className="hello"&gt;
-                                    Greetings!
-                                  &lt;/h1&gt;
-                                );
-                                        </code></pre>
-                                        </div>
-                                    </div>
-                                </div> {% endcomment %}
                             </div>
                         </div>
                     </div>
@@ -134,22 +121,27 @@
                                 <div class="col-md-6 col-12 d-flex justify-content-between align-items-center">
                                     <!-- Timer Display -->
                                     <div class="me-md-8">
-                                        <span id="timer" class="fs-4">00:15:00</span>
+                                        <span id="timer" class="fs-4">00:60</span>
                                     </div>
                                     {% comment %} <button class="btn btn-primary">Next question</button> {% endcomment %}
                                     <!-- Navigation Button for Next Question -->
-                                    {% if next_question_index is not None %}
+                                    {% comment %} {% if next_question_index is not None %}
                                         <a href="{% url 'non_verbal_quiz' next_question_index %}" class="btn btn-primary">Next Question</a>
                                     {% else %}
                                     <!-- If there are no more questions, show the "Done" button -->
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nonVerbalCompletionModal">
                                             Done
                                         </button>
+                                    {% endif %} {% endcomment %}
+                                    {% if next_question_index is not None %}
+                                        <button type="submit" class="btn btn-primary" id="next-question-btn" form="non-verbal-quiz-form" disabled>Next Question</button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-primary" id="done-button" form="non-verbal-quiz-form" disabled>Done</button>
                                     {% endif %}
                                 </div>
                             </div>
                             <div class="mt-12 ms-md-12 me-md-12">
-                                <form>
+                                {% comment %} <form>
                                     <!-- Options -->
                                     <!-- Loop through options dynamically -->
                                     {% for option in options %}
@@ -167,6 +159,29 @@
                                         </label>
                                     </div>
                                     {% endfor %}
+                                </form> {% endcomment %}
+
+                                <form id="non-verbal-quiz-form" method="post">
+                                    {% csrf_token %}
+                                    <!-- Options -->
+                                    {% for option in options %}
+                                    <div id="option{{ forloop.counter }}-container" class="border rounded mb-2">
+                                        <input class="form-check-input" type="radio" name="option" id="option{{ forloop.counter }}" value="{{ forloop.counter }}">
+                                        <label
+                                            class="form-check-label d-flex justify-content-between align-items-center"
+                                            for="option{{ forloop.counter }}">
+                                            <div class="w-100">
+                                                <div class="d-flex">
+                                                    <div class="me-auto" id="pre-container{{ forloop.counter }}">{{ option }}</div>
+                                                </div>
+                                            </div>
+                                            <span class="display-6 text-muted option-label" id="option{{ forloop.counter }}Label">{{ option }}</span>
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                    
+                                    <!-- Hidden field for time taken -->
+                                    <input type="hidden" id="time-taken-input" name="time_taken" value="60">
                                 </form>
                             </div>
                         </div>
@@ -249,7 +264,7 @@
     <script src="../../../static/assets/vendor/libs/i18n/i18n.js"></script>
     <script src="../../../static/assets/vendor/libs/typeahead-js/typeahead.js"></script>
     <script src="../../../static/assets/vendor/js/menu.js"></script>
-    <script src="../../../static/assets/vendor/js/script.js"></script>
+    <script src="../../../static/assets/vendor/js/nonverbal-quiz.js"></script>
 
     <!-- endbuild -->
 
@@ -263,84 +278,6 @@
 
     <!-- Page JS -->
     <script src="../../../static/assets/js/dashboards-analytics.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            // Code blocks for each option
-            var codeBlockA = `
-            <pre class="mb-0 text-start">
-const element = React.createElement({
-    'h1',
-    { className: hello },
-    'Greetings!',
-    'h1'
-});
-            </pre>
-        `;
-
-            var codeBlockB = `
-            <pre class="mb-0 text-start">None of the above</pre>
-        `;
-
-            var codeBlockC = `
-            <pre class="mb-0 text-start">
-const element = React.createElement(
-    'h1',
-    { className: hello },
-    'Greetings',
-    'h1'
-);
-            </pre>
-        `;
-
-            var codeBlockD = `
-            <pre class="mb-0 text-start">
-const element = React.createElement(
-    'h1',
-    { className: 'hello' },
-    'Greetings!'
-);
-            </pre>
-        `;
-
-            // Append the <pre> elements to their respective containers
-            $('#pre-containerA').append(codeBlockA);
-            $('#pre-containerB').append(codeBlockB);
-            $('#pre-containerC').append(codeBlockC);
-            $('#pre-containerD').append(codeBlockD);
-        });
-
-        document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
-            radio.addEventListener('change', function () {
-                // Reset all the labels' colors to default (text-muted)
-                document.querySelectorAll('.option-label').forEach(function (label) {
-                    label.classList.remove('text-primary');
-                    label.classList.add('text-muted');
-                });
-
-                // Change the color of the selected label to primary
-                var selectedLabel = document.querySelector('label[for="' + this.id + '"] .option-label');
-                selectedLabel.classList.remove('text-muted');
-                selectedLabel.classList.add('text-primary');
-            });
-        });
-    </script>
-
-    <script>
-        // Timer Logic (15 seconds)
-        let time = 15;
-        const timerElement = document.getElementById('timer');
-        const interval = setInterval(() => {
-            time--;
-            timerElement.textContent = `00:${time < 10 ? '0' : ''}${time}`;
-            
-            // Display the message after time is up
-            if (time === 0) {
-                clearInterval(interval);
-                timerElement.textContent = 'Please Select';
-            }
-        }, 1000);
-    </script>
 </body>
 
 </html>
