@@ -91,7 +91,6 @@
                                     <strong>DISC ASSESSMENT</strong>
                                 </span>
                                 <span class="d-block text-black-50">
-                                    {% comment %} <strong>Question 1 of 15</strong> {% endcomment %}
                                     <strong>Question {{ current_question_number }} of {{ total_questions }}</strong>
                                 </span>
                             </div>
@@ -113,18 +112,9 @@
                                     <div class="me-md-8">
                                         <span id="timer" class="fs-4">00:30</span>
                                     </div>
-                                    {% comment %} {% if next_question_id %}
-                                    <a href="{% url 'disc_quiz' next_question_id %}" class="btn btn-primary">Next Question</a>
-                                    {% else %}
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#discCompletionModal">
-                                        Done
-                                    </button>
-                                    {% endif %} {% endcomment %}
                                     {% if next_question_id %}
                                     <button type="button" id="next-question-btn" class="btn btn-primary" disabled>Next Question</button>
                                     {% else %}
-                                        {% comment %} <button type="button" id="done-button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#discCompletionModal" disabled>Done</button> {% endcomment %}
                                         <button type="button" id="done-button" class="btn btn-primary" disabled>Done</button>
                                     {% endif %}
                                 </div>
@@ -225,7 +215,7 @@
                                 </label>
                             </div>
                         </div>
-                        <!-- Similarly define options B, C, D -->
+
                         <!-- Option B -->
                         <div class="col-md-6 col-12 mt-4  d-flex justify-content-center">
                             <div id="optionB-container" class="border rounded w-100">

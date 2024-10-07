@@ -89,12 +89,14 @@ urlpatterns = [
     path('non_verbal_quiz/<int:question_index>/', views.non_verbal_quiz, name='non_verbal_quiz'),
     path('non_verbal_quiz/', views.non_verbal_quiz_start_redirect, name='non_verbal_quiz_start_redirect'),
     path('phase_two_completed', views.phase_two_completed, name='phase_two_completed'),
+    path('non-verbal-completion/', views.non_verbal_completion, name='non_verbal_completion'),
     # -------------------------------------------------------------------------------------------------
 
     # ----------------------------[ VERBAL QUIZ ]--------------------------------------------------
     path('verbal_quiz/start/', views.verbal_quiz_start, name='verbal_quiz_start'),
     path('verbal_quiz/<int:question_index>/', views.verbal_quiz, name='verbal_quiz'),
     path('verbal_quiz/', views.verbal_quiz_start_redirect, name='verbal_quiz_start_redirect'),
+    path('verbal-completion/', views.verbal_quiz_completion, name='verbal_quiz_completion'),
     # -------------------------------------------------------------------------------------------------
 
 
@@ -103,6 +105,7 @@ urlpatterns = [
     path('technical_quiz/<int:question_index>/', views.technical_quiz, name='technical_quiz'),
     path('technical_quiz/', views.technical_quiz_start_redirect, name='technical_quiz_start_redirect'),
     path('phase_three_completed', views.phase_three_completed, name='phase_three_completed'),
+    path('technical-completion/', views.technical_quiz_completion, name='technical_quiz_completion'),
     # -------------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------------------------------------------
 ]

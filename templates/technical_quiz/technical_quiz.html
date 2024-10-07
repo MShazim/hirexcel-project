@@ -95,12 +95,6 @@
                                 </span>
                             </div>
                             <div class="mt-5 ms-md-12 me-md-12">
-                                <!-- <img src="../../static/assets/img/quiz/code.png" alt="" class="img-fluid"> -->
-                                <div class="row mt-4">
-                                    <div class="col-12">
-                                        <p class="fw-bold">{{ question.QUESTION }}</p>
-                                    </div>
-                                </div>
                                 <div class="row mt-2">
                                     <div class="col-12">
                                         <div class="code-box ">
@@ -128,19 +122,17 @@
                                 </div>
                                 <div class="col-md-6 col-12 d-flex justify-content-between align-items-center">
                                     <div class="me-md-8">
-                                        <span id="timer" class="fs-4">00:15:00</span>
+                                        <span id="timer" class="fs-4">00:60</span>
                                     </div>
                                     {% if next_question_index is not None %}
-                                    <a href="{% url 'technical_quiz' next_question_index %}" class="btn btn-primary">Next Question</a>
+                                        <button type="button" class="btn btn-primary" id="next-question-btn" disabled>Next Question</button>
                                     {% else %}
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#technicalCompletionModal">
-                                            Finish
-                                        </button>
+                                        <button type="button" class="btn btn-primary" id="done-button" disabled>Finish</button>
                                     {% endif %}
                                 </div>
                             </div>
                             <div class="mt-12 ms-md-12 me-md-12">
-                                <form>
+                                {% comment %} <form>
                                     <!-- Option A -->
                                     <div id="optionA-container" class="border rounded mb-2">
                                         <input class="form-check-input" type="radio" name="option" id="option1" value="A">
@@ -188,6 +180,63 @@
                                         <input class="form-check-input" type="radio" name="option" id="option4" value="D">
                                         <label class="form-check-label d-flex justify-content-between align-items-center"
                                             for="option4">
+                                            <div class="w-100">
+                                                <div class="d-flex">
+                                                    <div class="me-auto">{{ options.3 }}</div>
+                                                </div>
+                                            </div>
+                                            <span class="display-6 text-muted option-label">D</span>
+                                        </label>
+                                    </div>
+                                </form> {% endcomment %}
+                                <form id="technical-quiz-form" method="POST" >
+                                    {% csrf_token %}
+                                    <!-- Hidden field for storing time taken -->
+                                    <input type="hidden" id="question-time-input" name="time_taken" value="60">
+                                    
+                                    <!-- Option A -->
+                                    <div id="optionA-container" class="border rounded mb-2">
+                                        <input class="form-check-input" type="radio" name="option" id="option1" value="A">
+                                        <label class="form-check-label d-flex justify-content-between align-items-center" for="option1">
+                                            <div class="w-100">
+                                                <div class="d-flex">
+                                                    <div class="me-auto">{{ options.0 }}</div>
+                                                </div>
+                                            </div>
+                                            <span class="display-6 text-muted option-label">A</span>
+                                        </label>
+                                    </div>
+                                
+                                    <!-- Option B -->
+                                    <div id="optionB-container" class="border rounded mb-2">
+                                        <input class="form-check-input" type="radio" name="option" id="option2" value="B">
+                                        <label class="form-check-label d-flex justify-content-between align-items-center" for="option2">
+                                            <div class="w-100">
+                                                <div class="d-flex">
+                                                    <div class="me-auto">{{ options.1 }}</div>
+                                                </div>
+                                            </div>
+                                            <span class="display-6 text-muted option-label">B</span>
+                                        </label>
+                                    </div>
+                                
+                                    <!-- Option C -->
+                                    <div id="optionC-container" class="border rounded mb-2">
+                                        <input class="form-check-input" type="radio" name="option" id="option3" value="C">
+                                        <label class="form-check-label d-flex justify-content-between align-items-center" for="option3">
+                                            <div class="w-100">
+                                                <div class="d-flex">
+                                                    <div class="me-auto">{{ options.2 }}</div>
+                                                </div>
+                                            </div>
+                                            <span class="display-6 text-muted option-label">C</span>
+                                        </label>
+                                    </div>
+                                
+                                    <!-- Option D -->
+                                    <div id="optionD-container" class="border rounded mb-2">
+                                        <input class="form-check-input" type="radio" name="option" id="option4" value="D">
+                                        <label class="form-check-label d-flex justify-content-between align-items-center" for="option4">
                                             <div class="w-100">
                                                 <div class="d-flex">
                                                     <div class="me-auto">{{ options.3 }}</div>
@@ -282,7 +331,8 @@
     <script src="../../../static/assets/vendor/libs/i18n/i18n.js"></script>
     <script src="../../../static/assets/vendor/libs/typeahead-js/typeahead.js"></script>
     <script src="../../../static/assets/vendor/js/menu.js"></script>
-    <script src="../../../static/assets/vendor/js/script.js"></script>
+    <script src="../../../static/assets/vendor/js/technical-quiz.js?v=1.1"></script>
+    
 
     <!-- endbuild -->
 
@@ -296,83 +346,6 @@
 
     <!-- Page JS -->
     <script src="../../../static/assets/js/dashboards-analytics.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            // Code blocks for each option
-            var codeBlockA = `
-            <pre class="mb-0 text-start">
-const element = React.createElement({
-    'h1',
-    { className: hello },
-    'Greetings!',
-    'h1'
-});
-            </pre>
-        `;
-
-            var codeBlockB = `
-            <pre class="mb-0 text-start">None of the above</pre>
-        `;
-
-            var codeBlockC = `
-            <pre class="mb-0 text-start">
-const element = React.createElement(
-    'h1',
-    { className: hello },
-    'Greetings',
-    'h1'
-);
-            </pre>
-        `;
-
-            var codeBlockD = `
-            <pre class="mb-0 text-start">
-const element = React.createElement(
-    'h1',
-    { className: 'hello' },
-    'Greetings!'
-);
-            </pre>
-        `;
-
-            // Append the <pre> elements to their respective containers
-            $('#pre-containerA').append(codeBlockA);
-            $('#pre-containerB').append(codeBlockB);
-            $('#pre-containerC').append(codeBlockC);
-            $('#pre-containerD').append(codeBlockD);
-        });
-
-        document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
-            radio.addEventListener('change', function () {
-                // Reset all the labels' colors to default (text-muted)
-                document.querySelectorAll('.option-label').forEach(function (label) {
-                    label.classList.remove('text-primary');
-                    label.classList.add('text-muted');
-                });
-
-                // Change the color of the selected label to primary
-                var selectedLabel = document.querySelector('label[for="' + this.id + '"] .option-label');
-                selectedLabel.classList.remove('text-muted');
-                selectedLabel.classList.add('text-primary');
-            });
-        });
-    </script>
-    <script>
-        // Timer Logic (15 seconds)
-        let time = 15;
-        const timerElement = document.getElementById('timer');
-        const interval = setInterval(() => {
-            time--;
-            timerElement.textContent = `00:${time < 10 ? '0' : ''}${time}`;
-            
-            // Display the message after time is up
-            if (time === 0) {
-                clearInterval(interval);
-                timerElement.textContent = 'Please Select';
-            }
-        }, 1000);
-    </script>
 </body>
 
 </html>

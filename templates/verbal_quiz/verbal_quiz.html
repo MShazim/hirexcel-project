@@ -95,28 +95,11 @@
                                 </span>
                             </div>
                             <div class="mt-5 ms-md-12 me-md-12">
-                                <!-- <img src="../../static/assets/img/quiz/code.png" alt="" class="img-fluid"> -->
                                 <div class="row mt-4">
                                     <div class="col-12">
                                         <p class="fw-bold">Question: {{ question.QUESTION }}</p>
                                     </div>
                                 </div>
-                                {% comment %} <div class="question-image-container">
-                                    <img src="{{ question.IMAGE.url }}" alt="Question Image" class="img-fluid" />
-                                </div> {% endcomment %}
-                                {% comment %} <div class="row mt-2">
-                                    <div class="col-12">
-                                        <div class="code-box ">
-                                            <pre class="language-javascript text-start"><code class="language-javascript">
-                                const element = (
-                                  &lt;h1 className="hello"&gt;
-                                    Greetings!
-                                  &lt;/h1&gt;
-                                );
-                                        </code></pre>
-                                        </div>
-                                    </div>
-                                </div> {% endcomment %}
                             </div>
                         </div>
                     </div>
@@ -134,22 +117,21 @@
                                 <div class="col-md-6 col-12 d-flex justify-content-between align-items-center">
                                     <!-- Timer Display -->
                                     <div class="me-md-8">
-                                        <span id="timer" class="fs-4">00:15</span>
+                                        <span id="timer" class="fs-4">00:60</span>
                                     </div>
                                     {% comment %} <button class="btn btn-primary">Next question</button> {% endcomment %}
                                     <!-- Navigation Button for Next Question -->
                                     {% if next_question_index is not None %}
-                                        <a href="{% url 'verbal_quiz' next_question_index %}" class="btn btn-primary">Next Question</a>
+                                        <button type="button" class="btn btn-primary" id="next-question-btn" disabled>Next Question</button>
                                     {% else %}
-                                    <!-- If there are no more questions, show the "Done" button -->
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verbalCompletionModal">
-                                            Done
-                                        </button>
+                                        <!-- If there are no more questions, show the "Done" button -->
+                                        <button type="button" class="btn btn-primary" id="done-button" disabled>Done</button>
                                     {% endif %}
                                 </div>
                             </div>
                             <div class="mt-12 ms-md-12 me-md-12">
-                                <form>
+                                {% comment %} <form id="verbal-quiz-form" method="post">
+                                    {% csrf_token %}
                                     <!-- Options -->
                                     <!-- Loop through options dynamically -->
                                     {% for option in options %}
@@ -167,6 +149,163 @@
                                         </label>
                                     </div>
                                     {% endfor %}
+
+                                    <!-- Hidden field for time taken -->
+                                    <input type="hidden" id="time-taken-input" name="time_taken" value="60">
+                                </form> {% endcomment %}
+
+
+                                {% comment %} <form id="verbal-quiz-form" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="time_taken" id="time-taken-input" value="60">
+                                    <div class="row m-md-12">
+                                        <!-- Option A -->
+                                        {% if options|length > 0 %}
+                                        <div class="col-md-6 col-12 mt-4 d-flex justify-content-center">
+                                            <div id="optionA-container" class="border rounded w-100">
+                                                <input class="form-check-input" type="radio" name="option" id="optionA" value="A">
+                                                <label class="form-check-label d-flex justify-content-between align-items-center" for="optionA">
+                                                    <span class="display-6 text-muted option-label" id="optionALabel">A</span>
+                                                    <div class="w-100">
+                                                        <div class="d-flex">
+                                                            <div class="ms-8 fs-3" id="pre-containerA">{{ options.0 }}</div>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                            
+                                        <!-- Option B -->
+                                        {% if options|length > 1 %}
+                                        <div class="col-md-6 col-12 mt-4 d-flex justify-content-center">
+                                            <div id="optionB-container" class="border rounded w-100">
+                                                <input class="form-check-input" type="radio" name="option" id="optionB" value="B">
+                                                <label class="form-check-label d-flex justify-content-between align-items-center" for="optionB">
+                                                    <span class="display-6 text-muted option-label" id="optionBLabel">B</span>
+                                                    <div class="me-auto" id="pre-containerB">
+                                                        <div class="ms-8 fs-3" id="pre-containerB">{{ options.1 }}</div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                            
+                                        <!-- Option C -->
+                                        {% if options|length > 2 %}
+                                        <div class="col-md-6 col-12 mt-4 d-flex justify-content-center">
+                                            <div id="optionC-container" class="border rounded w-100">
+                                                <input class="form-check-input" type="radio" name="option" id="optionC" value="C">
+                                                <label class="form-check-label d-flex justify-content-between align-items-center" for="optionC">
+                                                    <span class="display-6 text-muted option-label" id="optionCLabel">C</span>
+                                                    <div class="w-100">
+                                                        <div class="d-flex">
+                                                            <div class="ms-8 fs-3" id="pre-containerC">{{ options.2 }}</div>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                            
+                                        <!-- Option D -->
+                                        {% if options|length > 3 %}
+                                        <div class="col-md-6 col-12 mt-4 d-flex justify-content-center">
+                                            <div id="optionD-container" class="border rounded w-100">
+                                                <input class="form-check-input" type="radio" name="option" id="optionD" value="D">
+                                                <label class="form-check-label d-flex justify-content-between align-items-center" for="optionD">
+                                                    <span class="display-6 text-muted option-label" id="optionDLabel">D</span>
+                                                    <div class="w-100">
+                                                        <div class="d-flex">
+                                                            <div class="ms-8 fs-3" id="pre-containerD">{{ options.3 }}</div>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                            
+                                        <!-- Add similar blocks for options E, F, G, and H as needed -->
+                                        <!-- Make sure to follow the same structure for each option -->
+                            
+                                    </div>
+                                </form> {% endcomment %}
+
+                                <form id="verbal-quiz-form" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="time_taken" id="time-taken-input" value="60">
+                                    
+                                    <!-- Option A -->
+                                    {% if options|length > 0 %}
+                                    <div class="col-12 mt-4">
+                                        <div id="optionA-container" class="border rounded w-100">
+                                            <input class="form-check-input" type="radio" name="option" id="optionA" value="A">
+                                            <label class="form-check-label d-flex justify-content-between align-items-center" for="optionA">
+                                                <span class="display-6 text-muted option-label" id="optionALabel">A</span>
+                                                <div class="w-100">
+                                                    <div class="d-flex">
+                                                        <div class="ms-8 fs-3" id="pre-containerA">{{ options.0 }}</div>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                            
+                                    <!-- Option B -->
+                                    {% if options|length > 1 %}
+                                    <div class="col-12 mt-4">
+                                        <div id="optionB-container" class="border rounded w-100">
+                                            <input class="form-check-input" type="radio" name="option" id="optionB" value="B">
+                                            <label class="form-check-label d-flex justify-content-between align-items-center" for="optionB">
+                                                <span class="display-6 text-muted option-label" id="optionBLabel">B</span>
+                                                <div class="w-100">
+                                                    <div class="d-flex">
+                                                        <div class="ms-8 fs-3" id="pre-containerB">{{ options.1 }}</div>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                            
+                                    <!-- Option C -->
+                                    {% if options|length > 2 %}
+                                    <div class="col-12 mt-4">
+                                        <div id="optionC-container" class="border rounded w-100">
+                                            <input class="form-check-input" type="radio" name="option" id="optionC" value="C">
+                                            <label class="form-check-label d-flex justify-content-between align-items-center" for="optionC">
+                                                <span class="display-6 text-muted option-label" id="optionCLabel">C</span>
+                                                <div class="w-100">
+                                                    <div class="d-flex">
+                                                        <div class="ms-8 fs-3" id="pre-containerC">{{ options.2 }}</div>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                            
+                                    <!-- Option D -->
+                                    {% if options|length > 3 %}
+                                    <div class="col-12 mt-4">
+                                        <div id="optionD-container" class="border rounded w-100">
+                                            <input class="form-check-input" type="radio" name="option" id="optionD" value="D">
+                                            <label class="form-check-label d-flex justify-content-between align-items-center" for="optionD">
+                                                <span class="display-6 text-muted option-label" id="optionDLabel">D</span>
+                                                <div class="w-100">
+                                                    <div class="d-flex">
+                                                        <div class="ms-8 fs-3" id="pre-containerD">{{ options.3 }}</div>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                            
+                                    <!-- Add similar blocks for options E, F, G, and H as needed, each in their own row -->
+                                    <!-- Ensure to add one option per row following the same structure -->
+                            
                                 </form>
                             </div>
                         </div>
@@ -246,7 +385,7 @@
     <script src="../../../static/assets/vendor/libs/i18n/i18n.js"></script>
     <script src="../../../static/assets/vendor/libs/typeahead-js/typeahead.js"></script>
     <script src="../../../static/assets/vendor/js/menu.js"></script>
-    <script src="../../../static/assets/vendor/js/script.js"></script>
+    <script src="../../../static/assets/vendor/js/verbal-quiz.js"></script>
 
     <!-- endbuild -->
 
@@ -261,83 +400,7 @@
     <!-- Page JS -->
     <script src="../../../static/assets/js/dashboards-analytics.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            // Code blocks for each option
-            var codeBlockA = `
-            <pre class="mb-0 text-start">
-const element = React.createElement({
-    'h1',
-    { className: hello },
-    'Greetings!',
-    'h1'
-});
-            </pre>
-        `;
 
-            var codeBlockB = `
-            <pre class="mb-0 text-start">None of the above</pre>
-        `;
-
-            var codeBlockC = `
-            <pre class="mb-0 text-start">
-const element = React.createElement(
-    'h1',
-    { className: hello },
-    'Greetings',
-    'h1'
-);
-            </pre>
-        `;
-
-            var codeBlockD = `
-            <pre class="mb-0 text-start">
-const element = React.createElement(
-    'h1',
-    { className: 'hello' },
-    'Greetings!'
-);
-            </pre>
-        `;
-
-            // Append the <pre> elements to their respective containers
-            $('#pre-containerA').append(codeBlockA);
-            $('#pre-containerB').append(codeBlockB);
-            $('#pre-containerC').append(codeBlockC);
-            $('#pre-containerD').append(codeBlockD);
-        });
-
-        document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
-            radio.addEventListener('change', function () {
-                // Reset all the labels' colors to default (text-muted)
-                document.querySelectorAll('.option-label').forEach(function (label) {
-                    label.classList.remove('text-primary');
-                    label.classList.add('text-muted');
-                });
-
-                // Change the color of the selected label to primary
-                var selectedLabel = document.querySelector('label[for="' + this.id + '"] .option-label');
-                selectedLabel.classList.remove('text-muted');
-                selectedLabel.classList.add('text-primary');
-            });
-        });
-    </script>
-
-    <script>
-        // Timer Logic (15 seconds)
-        let time = 15;
-        const timerElement = document.getElementById('timer');
-        const interval = setInterval(() => {
-            time--;
-            timerElement.textContent = `00:${time < 10 ? '0' : ''}${time}`;
-            
-            // Display the message after time is up
-            if (time === 0) {
-                clearInterval(interval);
-                timerElement.textContent = 'Please Select';
-            }
-        }, 1000);
-    </script>
 </body>
 
 </html>
