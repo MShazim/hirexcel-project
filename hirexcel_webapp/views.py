@@ -31,10 +31,8 @@ from datetime import timedelta
 import json
 import re
 # ---------------------------------[ for generating the evaluation summary using ChatGPT ]-----------------------------------------
-# from django.shortcuts import get_object_or_404
-# from .models import Personality_Assessment_Report, Evaluation_Summary, Job_Seeker, Job_Seeker_Assessment, Job_Posting, Technical_Assessment, Technical_Assessment_Result, Cognitive_Assessment, Cognitive_Assessment_Results
-# from .utils.chatgpt_integration import ChatGPTIntegration
-# from django.conf import settings
+from .utils.chatgpt_integration import ChatGPTIntegration
+from django.conf import settings
 # ---------------------------------[ end ]-----------------------------------------
 
 
@@ -1699,93 +1697,101 @@ def phase_three_completed(request):
 
 
 # ---------------------------------[ for generating the evaluation summary using ChatGPT ]-----------------------------------------
-# def process_assessment_and_generate_summary(report_id):
-#     # Step 1: Retrieve the Personality Assessment Report
-#     report = get_object_or_404(Personality_Assessment_Report, PERSONALITY_ASSESSMENT_REPORT_ID=report_id)
+# def process_assessment_and_generate_summary(request):
 
-#     # Step 2: Extract JOB_POST_ID from Job_Seeker_Assessment using JOB_SEEKER_ASSESSMENT_ID from Personality_Assessment_Report
-#     job_seeker_assessment = report.JOB_SEEKER_ASSESSMENT_ID  
-#     job_post_id = job_seeker_assessment.JOB_POST_ID  # Extract JOB_POST_ID from Job_Seeker_Assessment
+#     # Initializing the gpt variable first
+#     chatgpt = ChatGPTIntegration()
 
-#     # Step 3: Use JOB_POST_ID to extract COGNITIVE_WEIGHTAGE and TECHNICAL_WEIGHTAGE from Job_Posting
-#     job_post = Job_Posting.objects.get(JOB_POST_ID=job_post_id)  # Fetch the job post details
-#     cognitive_weightage = int(job_post.COGNITIVE_WEIGHTAGE)
-#     technical_weightage = int(job_post.TECHNICAL_WEIGHTAGE)
+#     # Getting all id available in the session
+#     user_id = request.session.get('user_id')
+#     job_seeker_id = request.session.get('JOB_SEEKER_ID')
+#     assessment_id = request.session.get('ASSESSMENT_ID')
+#     personality_assessment_id = request.session.get('PERSONALITY_ASSESSMENT_ID')
+#     cognitive_assessment_id = request.session.get('COGNITIVE_ASSESSMENT_ID')
+#     technical_assessment_id = request.session.get('TECHNICAL_ASSESSMENT_ID')
+
+
+#     # Step 1: Retrieve the Assessment Table
+#     assessment = Assessment.objects.get(ASSESSMENT_ID=assessment_id)
+#     cognitive_weightage = int(assessment.COGNITIVE_WEIGHTAGE)
+#     technical_weightage = int(assessment.TECHNICAL_WEIGHTAGE)
+#     job_post_id = assessment.JOB_POST_ID
     
-#     # Step 4: Extract USER_ID from Job_Seeker
-#     job_seeker_id = job_seeker_assessment.JOB_SEEKER_ID
-#     user_id = Job_Seeker.objects.get(JOB_SEEKER_ID=job_seeker_id).USER_ID
-
-#     # Step 5: Extract TECHNICAL_ASSESSMENT_RESULT_ID and COGNITIVE_ASSESSMENT_RESULT_ID
-#     technical_assessment_id = Technical_Assessment.objects.get(JOB_SEEKER_ASSESSMENT_ID=job_seeker_assessment).TECHNICAL_ASSESSMENT_ID
+#     # Step 2: Retrieve the Job_Posting Table
+#     job_post = Job_Posting.objects.get(JOB_POST_ID=job_post_id)  # Fetch the job post details
+    
+#     # Step 3: Retrieve the Personality Assessment Report Table
+#     personality_assessment_report = Personality_Assessment_Report.objects.get(PERSONALITY_ASSESSMENT_ID=personality_assessment_id)
+#     personality_assessment_report_id = personality_assessment_report.PERSONALITY_ASSESSMENT_REPORT_ID
+    
+#     # Step 4: Extract Technical_Assessment_Result and Cognitive_Assessment_Results Table
 #     technical_assessment_result = Technical_Assessment_Result.objects.get(TECHNICAL_ASSESSMENT_ID=technical_assessment_id)
-
-#     cognitive_assessment_id = Cognitive_Assessment.objects.get(JOB_SEEKER_ASSESSMENT_ID=job_seeker_assessment).COGNITIVE_ASSESSMENT_ID
+#     technical_assessment_result_id = technical_assessment_result.TECHNICAL_ASSESSMENT_RESULT_ID
+#     technical_score_percentage = int(technical_assessment_result.TECH_SCORE_PERCENTAGE)
+    
 #     cognitive_assessment_result = Cognitive_Assessment_Results.objects.get(COGNITIVE_ASSESSMENT_ID=cognitive_assessment_id)
-
-#     # Step 6: Check the Cognitive Test Criteria
+#     cognitive_assessment_result_id = cognitive_assessment_result.COGNITIVE_ASSESSMENT_ID
 #     cognitive_score_percentage = int(cognitive_assessment_result.COGNITIVE_SCORE_PERCENTAGE)
+    
 
 #     if cognitive_score_percentage < cognitive_weightage:
 #         # Candidate did not pass the cognitive test, so "Not Recommended"
 #         candidate_status = "Not Recommended"
 #     else:
-#         # Step 7: Check the Technical Test Criteria
-#         technical_score_percentage = int(technical_assessment_result.TECH_SCORE_PERCENTAGE)
 
 #         if technical_score_percentage < technical_weightage:
 #             # Candidate did not pass the technical test, so "Not Recommended"
 #             candidate_status = "Not Recommended"
 #         else:
-#             # Step 8: If both tests are passed, use ChatGPT to determine final recommendation
+#             # Step 5: If both tests are passed, use ChatGPT to determine final recommendation
 #             personality_report_fields = {
-#                 "DISC_CATEGORY": report.DISC_CATEGORY,
-#                 "DISC_PERSONALITY_TRAIT": report.DISC_PERSONALITY_TRAIT,
-#                 "DISC_COGNITIVE_ABILITY": report.DISC_COGNITIVE_ABILITY,
-#                 "DISC_EMOTIONAL_REGULATION": report.DISC_EMOTIONAL_REGULATION,
-#                 "DISC_TENDENCIES": report.DISC_TENDENCIES,
-#                 "DISC_WEAKNESSES": report.DISC_WEAKNESSES,
-#                 "DISC_BEHAVIOUR": report.DISC_BEHAVIOUR,
-#                 "DISC_MOTIVATED_BY": report.DISC_MOTIVATED_BY,
-#                 "BIGFIVE_OPENNESS_CATEGORY": report.BIGFIVE_OPENNESS_CATEGORY,
-#                 "BIGFIVE_OPENNESS_PERSONALITY": report.BIGFIVE_OPENNESS_PERSONALITY,
-#                 "BIGFIVE_OPENNESS_DESCRIPTION": report.BIGFIVE_OPENNESS_DESCRIPTION,
-#                 "BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR": report.BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR,
-#                 "BIGFIVE_CONCIENTIOUSNESS_CATEGORY": report.BIGFIVE_CONCIENTIOUSNESS_CATEGORY,
-#                 "BIGFIVE_CONCIENTIOUSNESS_PERSONALITY": report.BIGFIVE_CONCIENTIOUSNESS_PERSONALITY,
-#                 "BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION": report.BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION,
-#                 "BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR": report.BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR,
-#                 "BIGFIVE_EXTRAVERSION_CATEGORY": report.BIGFIVE_EXTRAVERSION_CATEGORY,
-#                 "BIGFIVE_EXTRAVERSION_PERSONALITY": report.BIGFIVE_EXTRAVERSION_PERSONALITY,
-#                 "BIGFIVE_EXTRAVERSION_DESCRIPTION": report.BIGFIVE_EXTRAVERSION_DESCRIPTION,
-#                 "BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR": report.BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR,
-#                 "BIGFIVE_AGREEABLENESS_CATEGORY": report.BIGFIVE_AGREEABLENESS_CATEGORY,
-#                 "BIGFIVE_AGREEABLENESS_PERSONALITY": report.BIGFIVE_AGREEABLENESS_PERSONALITY,
-#                 "BIGFIVE_AGREEABLENESS_DESCRIPTION": report.BIGFIVE_AGREEABLENESS_DESCRIPTION,
-#                 "BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR": report.BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR,
-#                 "BIGFIVE_NEUROTICISM_CATEGORY": report.BIGFIVE_NEUROTICISM_CATEGORY,
-#                 "BIGFIVE_NEUROTICISM_PERSONALITY": report.BIGFIVE_NEUROTICISM_PERSONALITY,
-#                 "BIGFIVE_NEUROTICISM_DESCRIPTION": report.BIGFIVE_NEUROTICISM_DESCRIPTION,
-#                 "BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR": report.BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR
+#                 "DISC_CATEGORY": personality_assessment_report.DISC_CATEGORY,
+#                 "DISC_PERSONALITY_TRAIT": personality_assessment_report.DISC_PERSONALITY_TRAIT,
+#                 "DISC_COGNITIVE_ABILITY": personality_assessment_report.DISC_COGNITIVE_ABILITY,
+#                 "DISC_EMOTIONAL_REGULATION": personality_assessment_report.DISC_EMOTIONAL_REGULATION,
+#                 "DISC_TENDENCIES": personality_assessment_report.DISC_TENDENCIES,
+#                 "DISC_WEAKNESSES": personality_assessment_report.DISC_WEAKNESSES,
+#                 "DISC_BEHAVIOUR": personality_assessment_report.DISC_BEHAVIOUR,
+#                 "DISC_MOTIVATED_BY": personality_assessment_report.DISC_MOTIVATED_BY,
+#                 "BIGFIVE_OPENNESS_CATEGORY": personality_assessment_report.BIGFIVE_OPENNESS_CATEGORY,
+#                 "BIGFIVE_OPENNESS_PERSONALITY": personality_assessment_report.BIGFIVE_OPENNESS_PERSONALITY,
+#                 "BIGFIVE_OPENNESS_DESCRIPTION": personality_assessment_report.BIGFIVE_OPENNESS_DESCRIPTION,
+#                 "BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR,
+#                 "BIGFIVE_CONCIENTIOUSNESS_CATEGORY": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_CATEGORY,
+#                 "BIGFIVE_CONCIENTIOUSNESS_PERSONALITY": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_PERSONALITY,
+#                 "BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION,
+#                 "BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR,
+#                 "BIGFIVE_EXTRAVERSION_CATEGORY": personality_assessment_report.BIGFIVE_EXTRAVERSION_CATEGORY,
+#                 "BIGFIVE_EXTRAVERSION_PERSONALITY": personality_assessment_report.BIGFIVE_EXTRAVERSION_PERSONALITY,
+#                 "BIGFIVE_EXTRAVERSION_DESCRIPTION": personality_assessment_report.BIGFIVE_EXTRAVERSION_DESCRIPTION,
+#                 "BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR,
+#                 "BIGFIVE_AGREEABLENESS_CATEGORY": personality_assessment_report.BIGFIVE_AGREEABLENESS_CATEGORY,
+#                 "BIGFIVE_AGREEABLENESS_PERSONALITY": personality_assessment_report.BIGFIVE_AGREEABLENESS_PERSONALITY,
+#                 "BIGFIVE_AGREEABLENESS_DESCRIPTION": personality_assessment_report.BIGFIVE_AGREEABLENESS_DESCRIPTION,
+#                 "BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR,
+#                 "BIGFIVE_NEUROTICISM_CATEGORY": personality_assessment_report.BIGFIVE_NEUROTICISM_CATEGORY,
+#                 "BIGFIVE_NEUROTICISM_PERSONALITY": personality_assessment_report.BIGFIVE_NEUROTICISM_PERSONALITY,
+#                 "BIGFIVE_NEUROTICISM_DESCRIPTION": personality_assessment_report.BIGFIVE_NEUROTICISM_DESCRIPTION,
+#                 "BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR
 #             }
 
 #             # Initialize ChatGPT Integration and use GPT-4-turbo to check candidate status
-#             chatgpt = ChatGPTIntegration(api_key=settings.OPENAI_API_KEY)
+            
 #             candidate_status = chatgpt.generate_candidate_status(personality_report_fields, job_post.JOB_POSITION)
 
-#     # Step 9: Generate profile synopsis and optimal job matches using ChatGPT
+#     # Step 6: Generate profile synopsis and optimal job matches using ChatGPT
 #     profile_synopsis = chatgpt.generate_profile_synopsis(personality_report_fields)
 #     optimal_job_matches = chatgpt.generate_optimal_job_matches(personality_report_fields)
 
-#     # Step 10: Save to Evaluation_Summary table
+#     # Step 7: Save to Evaluation_Summary table
 #     evaluation_summary = Evaluation_Summary.objects.create(
 #         USER_ID=user_id,
 #         JOB_SEEKER_ID=job_seeker_id,
 #         JOB_POST_ID=job_post_id,
-#         ASSESSMENT_ID=report.PERSONALITY_ASSESSMENT_ID,
-#         PERSONALITY_ASSESSMENT_REPORT_ID=report.PERSONALITY_ASSESSMENT_REPORT_ID,
-#         COGNITIVE_ASSESSMENT_RESULT_ID=cognitive_assessment_result.COGNITIVE_ASSESSMENT_RESULT_ID,
-#         TECHNICAL_ASSESSMENT_RESULT_ID=technical_assessment_result.TECHNICAL_ASSESSMENT_RESULT_ID,
+#         ASSESSMENT_ID=assessment_id,
+#         PERSONALITY_ASSESSMENT_REPORT_ID=personality_assessment_report_id,
+#         COGNITIVE_ASSESSMENT_RESULT_ID=cognitive_assessment_result_id,
+#         TECHNICAL_ASSESSMENT_RESULT_ID=technical_assessment_result_id,
 #         CANDIDATE_STATUS=candidate_status,
 #         PROFILE_SYNOPSIS=profile_synopsis,
 #         OPTIMAL_JOB_MATCHES=optimal_job_matches
@@ -1794,5 +1800,109 @@ def phase_three_completed(request):
 #     # Save the evaluation summary
 #     evaluation_summary.save()
 
-#     return "Evaluation summary generated and saved successfully."
+#     return render(request, 'report/report.html') 
+
+def process_assessment_and_generate_summary(request):
+    # Initialize the gpt variable first
+    chatgpt = ChatGPTIntegration()
+
+    # Getting all ids available in the session
+    user_id = request.session.get('user_id')
+    job_seeker_id = request.session.get('JOB_SEEKER_ID')
+    assessment_id = request.session.get('ASSESSMENT_ID')
+    personality_assessment_id = request.session.get('PERSONALITY_ASSESSMENT_ID')
+    cognitive_assessment_id = request.session.get('COGNITIVE_ASSESSMENT_ID')
+    technical_assessment_id = request.session.get('TECHNICAL_ASSESSMENT_ID')
+
+    # Step 1: Retrieve the Assessment Table
+    assessment = Assessment.objects.get(ASSESSMENT_ID=assessment_id)
+    cognitive_weightage = int(assessment.COGNITIVE_WEIGHTAGE)
+    technical_weightage = int(assessment.TECHNICAL_WEIGHTAGE)
+    job_post_id = assessment.JOB_POST_ID
+
+    # Step 2: Retrieve the Job_Posting Table
+    job_post = Job_Posting.objects.get(JOB_POST_ID=job_post_id)
+
+    # Step 3: Retrieve the Personality Assessment Report Table
+    personality_assessment_report = Personality_Assessment_Report.objects.get(PERSONALITY_ASSESSMENT_ID=personality_assessment_id)
+    personality_assessment_report_id = personality_assessment_report.PERSONALITY_ASSESSMENT_REPORT_ID
+
+    # Step 4: Extract Technical_Assessment_Result and Cognitive_Assessment_Results Table
+    technical_assessment_result = Technical_Assessment_Result.objects.get(TECHNICAL_ASSESSMENT_ID=technical_assessment_id)
+    technical_assessment_result_id = technical_assessment_result.TECHNICAL_ASSESSMENT_RESULT_ID
+    technical_score_percentage = int(technical_assessment_result.TECH_SCORE_PERCENTAGE)
+
+    cognitive_assessment_result = Cognitive_Assessment_Results.objects.get(COGNITIVE_ASSESSMENT_ID=cognitive_assessment_id)
+    cognitive_assessment_result_id = cognitive_assessment_result.COGNITIVE_ASSESSMENT_ID
+    cognitive_score_percentage = int(cognitive_assessment_result.COGNITIVE_SCORE_PERCENTAGE)
+
+    # Initialize an empty personality_report_fields in case conditions are not met
+    personality_report_fields = {}
+
+    if cognitive_score_percentage < cognitive_weightage:
+        # Candidate did not pass the cognitive test, so "Not Recommended"
+        candidate_status = "Not Recommended"
+    else:
+        if technical_score_percentage < technical_weightage:
+            # Candidate did not pass the technical test, so "Not Recommended"
+            candidate_status = "Not Recommended"
+        else:
+            # Step 5: If both tests are passed, use ChatGPT to determine final recommendation
+            personality_report_fields = {
+                "DISC_CATEGORY": personality_assessment_report.DISC_CATEGORY,
+                "DISC_PERSONALITY_TRAIT": personality_assessment_report.DISC_PERSONALITY_TRAIT,
+                "DISC_COGNITIVE_ABILITY": personality_assessment_report.DISC_COGNITIVE_ABILITY,
+                "DISC_EMOTIONAL_REGULATION": personality_assessment_report.DISC_EMOTIONAL_REGULATION,
+                "DISC_TENDENCIES": personality_assessment_report.DISC_TENDENCIES,
+                "DISC_WEAKNESSES": personality_assessment_report.DISC_WEAKNESSES,
+                "DISC_BEHAVIOUR": personality_assessment_report.DISC_BEHAVIOUR,
+                "DISC_MOTIVATED_BY": personality_assessment_report.DISC_MOTIVATED_BY,
+                "BIGFIVE_OPENNESS_CATEGORY": personality_assessment_report.BIGFIVE_OPENNESS_CATEGORY,
+                "BIGFIVE_OPENNESS_PERSONALITY": personality_assessment_report.BIGFIVE_OPENNESS_PERSONALITY,
+                "BIGFIVE_OPENNESS_DESCRIPTION": personality_assessment_report.BIGFIVE_OPENNESS_DESCRIPTION,
+                "BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR,
+                "BIGFIVE_CONCIENTIOUSNESS_CATEGORY": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_CATEGORY,
+                "BIGFIVE_CONCIENTIOUSNESS_PERSONALITY": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_PERSONALITY,
+                "BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION,
+                "BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR,
+                "BIGFIVE_EXTRAVERSION_CATEGORY": personality_assessment_report.BIGFIVE_EXTRAVERSION_CATEGORY,
+                "BIGFIVE_EXTRAVERSION_PERSONALITY": personality_assessment_report.BIGFIVE_EXTRAVERSION_PERSONALITY,
+                "BIGFIVE_EXTRAVERSION_DESCRIPTION": personality_assessment_report.BIGFIVE_EXTRAVERSION_DESCRIPTION,
+                "BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR,
+                "BIGFIVE_AGREEABLENESS_CATEGORY": personality_assessment_report.BIGFIVE_AGREEABLENESS_CATEGORY,
+                "BIGFIVE_AGREEABLENESS_PERSONALITY": personality_assessment_report.BIGFIVE_AGREEABLENESS_PERSONALITY,
+                "BIGFIVE_AGREEABLENESS_DESCRIPTION": personality_assessment_report.BIGFIVE_AGREEABLENESS_DESCRIPTION,
+                "BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR,
+                "BIGFIVE_NEUROTICISM_CATEGORY": personality_assessment_report.BIGFIVE_NEUROTICISM_CATEGORY,
+                "BIGFIVE_NEUROTICISM_PERSONALITY": personality_assessment_report.BIGFIVE_NEUROTICISM_PERSONALITY,
+                "BIGFIVE_NEUROTICISM_DESCRIPTION": personality_assessment_report.BIGFIVE_NEUROTICISM_DESCRIPTION,
+                "BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR
+            }
+
+            # Initialize ChatGPT Integration and use GPT-4-turbo to check candidate status
+            candidate_status = chatgpt.generate_candidate_status(personality_report_fields, job_post.JOB_POSITION)
+
+    # Step 6: Generate profile synopsis and optimal job matches using ChatGPT
+    profile_synopsis = chatgpt.generate_profile_synopsis(personality_report_fields)
+    optimal_job_matches = chatgpt.generate_optimal_job_matches(personality_report_fields)
+
+    # Step 7: Save to Evaluation_Summary table
+    evaluation_summary = Evaluation_Summary.objects.create(
+        USER_ID=user_id,
+        JOB_SEEKER_ID=job_seeker_id,
+        JOB_POST_ID=job_post_id,
+        ASSESSMENT_ID=assessment_id,
+        PERSONALITY_ASSESSMENT_REPORT_ID=personality_assessment_report_id,
+        COGNITIVE_ASSESSMENT_RESULT_ID=cognitive_assessment_result_id,
+        TECHNICAL_ASSESSMENT_RESULT_ID=technical_assessment_result_id,
+        CANDIDATE_STATUS=candidate_status,
+        PROFILE_SYNOPSIS=profile_synopsis,
+        OPTIMAL_JOB_MATCHES=optimal_job_matches
+    )
+
+    # Save the evaluation summary
+    evaluation_summary.save()
+
+    return render(request, 'report/report.html')
+
 # ---------------------------------[ END ]-----------------------------------------

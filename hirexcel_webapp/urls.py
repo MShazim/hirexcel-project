@@ -107,5 +107,9 @@ urlpatterns = [
     path('phase_three_completed', views.phase_three_completed, name='phase_three_completed'),
     path('technical-completion/', views.technical_quiz_completion, name='technical_quiz_completion'),
     # -------------------------------------------------------------------------------------------------
+
+    # -------------------------------[REPORT]--------------------------------------
+    path('process-assessment/', views.process_assessment_and_generate_summary, name='process_assessment_and_generate_summary'),
+    # ------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------------------------------------------
 ]
