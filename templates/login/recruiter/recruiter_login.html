@@ -8,7 +8,7 @@
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-  <title>Login Cover - Pages | Vuexy - Bootstrap Admin Template</title>
+  <title>Login | Recruiter</title>
 
   <meta name="description" content="" />
 
@@ -77,7 +77,7 @@
             fill="#7367F0" />
         </svg>
       </span>
-      <span class="app-brand-text demo text-heading fw-bold">Vuexy</span>
+      <span class="app-brand-text demo text-heading fw-bold">Hirexcel</span>
     </a>
     <!-- /Logo -->
     <div class="authentication-inner row m-0">
@@ -98,8 +98,8 @@
       <!-- Login -->
       <div class="d-flex col-12 col-lg-4 align-items-center authentication-bg p-sm-12 p-6">
         <div class="w-px-400 mx-auto mt-12 pt-5">
-          <h4 class="mb-1">Welcome to Vuexy! 👋</h4>
-          <p class="mb-6">Please sign-in to your account and start the adventure</p>
+          <h4 class="mb-1">Welcome to Hirexcel! 👋</h4>
+          <p class="mb-6">Please sign-in to your account and start the employee hunting</p>
 
           <form id="formAuthentication" class="mb-6" action="{% url 'recruiter_login' %}" method="POST">
             {% csrf_token %}
@@ -143,11 +143,11 @@
             </a>
           </p>
 
-          <div class="divider my-6">
+          {% comment %} <div class="divider my-6">
             <div class="divider-text">or</div>
-          </div>
+          </div> {% endcomment %}
 
-          <div class="d-flex justify-content-center">
+          {% comment %} <div class="d-flex justify-content-center">
             <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-facebook me-1_5">
               <i class="tf-icons ti ti-brand-facebook-filled"></i>
             </a>
@@ -163,7 +163,7 @@
             <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-google-plus">
               <i class="tf-icons ti ti-brand-google-filled"></i>
             </a>
-          </div>
+          </div> {% endcomment %}
         </div>
       </div>
       <!-- /Login -->
