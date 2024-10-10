@@ -30,6 +30,7 @@ from datetime import datetime
 from datetime import timedelta
 import json
 import re
+from django.views.decorators.csrf import csrf_exempt
 # ---------------------------------[ for generating the evaluation summary using ChatGPT ]-----------------------------------------
 from .utils.chatgpt_integration import ChatGPTIntegration
 from django.conf import settings
@@ -198,7 +199,7 @@ def recruiter_home(request):
         job_postings = Job_Posting.objects.filter(RECRUITER_ID=recruiter)
         formatted_job_postings = [format_job_posting_data(job) for job in job_postings]
 
-        return render(request, 'home/recruiter_home.html', {
+        return render(request, 'home/recruiter/index.html', {
             'user_info': user_info,
             'job_postings': formatted_job_postings
         })
@@ -231,59 +232,141 @@ def format_job_posting_data(job_posting):
     }
     return formatted_data
 
+# def post_job(request):
+#     if request.method == 'POST':
+#         # Debug: Print request.POST
+#         print(json.dumps(request.POST, indent=4))
+
+#         try:
+#             user_id = request.session.get('user_id')
+#             recruiter = Recruiter.objects.get(USER_ID__USER_ID=user_id)  # Get recruiter by user ID
+
+#             job_title = request.POST['jobTitle']
+#             company_name = request.POST['companyName']
+#             city = request.POST['city']
+#             country = request.POST['country']
+#             job_type = request.POST['jobType']
+#             job_position = request.POST['jobPosition']
+#             job_description = request.POST['jobDescription']
+#             contact_information = request.POST['contactInformation']
+            
+#             required_qualifications = ', '.join(request.POST.getlist('requiredQualifications[]'))
+#             required_skills = ', '.join(request.POST.getlist('requiredSkills[]'))
+#             experience_requirements = ', '.join(request.POST.getlist('experienceRequirements[]'))
+#             personality_traits = ', '.join(request.POST.getlist('personalityTraits'))
+            
+#             # Handling assessments
+#             assessments = []
+#             if request.POST.get('DISC'):
+#                 assessments.append('DISC')
+#             if request.POST.get('BigFive'):
+#                 assessments.append('Big Five')
+#             if request.POST.get('nonVerbal'):
+#                 assessments.append('Non-Verbal')
+#             if request.POST.get('verbal'):
+#                 assessments.append('Verbal')
+#             if request.POST.get('beginner'):
+#                 assessments.append('Beginner')
+#             if request.POST.get('intermediate'):
+#                 assessments.append('Intermediate')
+#             if request.POST.get('professional'):
+#                 assessments.append('Professional')
+#             required_assessments = ', '.join(assessments)
+            
+#             # JPC_ID is optional
+#             jpc_id = ''
+
+#             # Static Test Criteria defined
+#             test_criteria = "of the assessment weight is allocated to the Cognitive Assessment (Non-Verbal only). , of the assessment weight is allocated to the Technical Assessment (from the two chosen difficulty levels)"
+
+#             # Save to database
+#             job_posting = Job_Posting(
+#                 TITLE=job_title,
+#                 DESCRIPTION=job_description,
+#                 RECRUITER_ID=recruiter,
+#                 JPC_ID=jpc_id,
+#                 CITY=city,
+#                 COUNTRY=country,
+#                 JOB_TYPE=job_type,
+#                 JOB_POSITION=job_position,
+#                 PERSONALITY_TRAITS=personality_traits,
+#                 REQUIRED_SKILLS=required_skills,
+#                 REQUIRED_QUALIFICATIONS=required_qualifications,
+#                 EXPERIENCE_REQUIREMENTS=experience_requirements,
+#                 REQUIRED_ASSESSMENTS=required_assessments,
+#                 TEST_CRITERIA=test_criteria
+#             )
+#             job_posting.save()
+
+#             return redirect('recruiter_home')
+#         except KeyError as e:
+#             return HttpResponse(f"Missing key in POST data: {e}", status=400)
+#         except Recruiter.DoesNotExist:
+#             return HttpResponse("Recruiter not found", status=404)
+#         except Job_Position_Criteria.DoesNotExist:
+#             return HttpResponse("Job Position Criteria not found", status=404)
+
+#     job_positions = Job_Position_Criteria.objects.values_list('JOB_POSITION', flat=True).distinct()
+#     return render(request, './post_job/post_job.html', {'job_positions': job_positions})
+
+# def get_personality_traits(request):
+#     job_position = request.GET.get('job_position')
+#     print("Received job position:", job_position)
+#     for criteria in Job_Position_Criteria.objects.all():
+#         print('Checking the data of Job Positions: ',criteria.JOB_POSITION)
+#     if job_position:
+#         job_position = job_position + " "
+#         criteria = Job_Position_Criteria.objects.filter(JOB_POSITION=job_position)
+#         print("Matching criteria:", criteria)
+#         print("Matching criteria count:", criteria.count())
+#         if criteria.exists():
+#             personality_traits = set()
+#             for criterion in criteria:
+#                 if criterion.PERSONALITY_TRAITS and criterion.PERSONALITY_TRAITS.lower() != 'nan':
+#                     personality_traits.add(criterion.PERSONALITY_TRAITS)
+#                 if criterion.COGNITIVE_SKILLS and criterion.COGNITIVE_SKILLS.lower() != 'nan':
+#                     personality_traits.add(criterion.COGNITIVE_SKILLS)
+#                 if criterion.EMOTIONAL_INTELLIGENCE and criterion.EMOTIONAL_INTELLIGENCE.lower() != 'nan':
+#                     personality_traits.add(criterion.EMOTIONAL_INTELLIGENCE)
+#             print("Extracted personality traits:", personality_traits)
+#             return JsonResponse({'personality_traits': list(personality_traits)})
+#         else:
+#             print("No matching criteria found")
+#     else:
+#         print("No job position provided")
+#     return JsonResponse({'personality_traits': []})
+
+
 def post_job(request):
     if request.method == 'POST':
-        # Debug: Print request.POST
-        print(json.dumps(request.POST, indent=4))
-
         try:
+            # Fetch recruiter and form fields as usual
             user_id = request.session.get('user_id')
-            recruiter = Recruiter.objects.get(USER_ID__USER_ID=user_id)  # Get recruiter by user ID
-
+            recruiter = Recruiter.objects.get(USER_ID__USER_ID=user_id)
             job_title = request.POST['jobTitle']
-            company_name = request.POST['companyName']
             city = request.POST['city']
             country = request.POST['country']
             job_type = request.POST['jobType']
             job_position = request.POST['jobPosition']
             job_description = request.POST['jobDescription']
-            contact_information = request.POST['contactInformation']
-            
-            required_qualifications = ', '.join(request.POST.getlist('requiredQualifications[]'))
-            required_skills = ', '.join(request.POST.getlist('requiredSkills[]'))
-            experience_requirements = ', '.join(request.POST.getlist('experienceRequirements[]'))
+
+            # Combine personality traits
             personality_traits = ', '.join(request.POST.getlist('personalityTraits'))
-            
-            # Handling assessments
-            assessments = []
-            if request.POST.get('DISC'):
-                assessments.append('DISC')
-            if request.POST.get('BigFive'):
-                assessments.append('Big Five')
-            if request.POST.get('nonVerbal'):
-                assessments.append('Non-Verbal')
-            if request.POST.get('verbal'):
-                assessments.append('Verbal')
-            if request.POST.get('beginner'):
-                assessments.append('Beginner')
-            if request.POST.get('intermediate'):
-                assessments.append('Intermediate')
-            if request.POST.get('professional'):
-                assessments.append('Professional')
-            required_assessments = ', '.join(assessments)
-            
-            # JPC_ID is optional
-            jpc_id = ''
 
-            # Static Test Criteria defined
-            test_criteria = "of the assessment weight is allocated to the Cognitive Assessment (Non-Verbal only). , of the assessment weight is allocated to the Technical Assessment (from the two chosen difficulty levels)"
+            # Other fields (e.g., qualifications, skills)
+            required_qualifications = ', '.join(request.POST.getlist('requiredQualification'))
+            required_skills = ', '.join(request.POST.getlist('requiredSkills'))
+            experience_requirements = request.POST['experienceRequirements']
+            
+            # Fetching cognitive and technical weightage
+            cognitive_weightage = request.POST['cognitiveWeightage']
+            technical_weightage = request.POST['technicalWeightage']
 
-            # Save to database
+            # Save the job posting
             job_posting = Job_Posting(
                 TITLE=job_title,
                 DESCRIPTION=job_description,
                 RECRUITER_ID=recruiter,
-                JPC_ID=jpc_id,
                 CITY=city,
                 COUNTRY=country,
                 JOB_TYPE=job_type,
@@ -292,8 +375,8 @@ def post_job(request):
                 REQUIRED_SKILLS=required_skills,
                 REQUIRED_QUALIFICATIONS=required_qualifications,
                 EXPERIENCE_REQUIREMENTS=experience_requirements,
-                REQUIRED_ASSESSMENTS=required_assessments,
-                TEST_CRITERIA=test_criteria
+                COGNITIVE_WEIGHTAGE=cognitive_weightage,
+                TECHNICAL_WEIGHTAGE=technical_weightage,
             )
             job_posting.save()
 
@@ -308,33 +391,46 @@ def post_job(request):
     job_positions = Job_Position_Criteria.objects.values_list('JOB_POSITION', flat=True).distinct()
     return render(request, './post_job/post_job.html', {'job_positions': job_positions})
 
+@csrf_exempt
 def get_personality_traits(request):
     job_position = request.GET.get('job_position')
-    print("Received job position:", job_position)
-    for criteria in Job_Position_Criteria.objects.all():
-        print('Checking the data of Job Positions: ',criteria.JOB_POSITION)
+    print("Received job position:", job_position)  # Debugging
+
     if job_position:
-        job_position = job_position + " "
-        criteria = Job_Position_Criteria.objects.filter(JOB_POSITION=job_position)
-        print("Matching criteria:", criteria)
-        print("Matching criteria count:", criteria.count())
+        # Fetching the job position from the database
+        criteria = Job_Position_Criteria.objects.filter(JOB_POSITION=job_position + " ")
+
         if criteria.exists():
-            personality_traits = set()
+            personality_traits_set = set()  # Use a set to avoid duplicates
+            cognitive_weightage = None
+            technical_weightage = None
+
             for criterion in criteria:
+                # Add personality traits, cognitive skills, and emotional intelligence to the set
                 if criterion.PERSONALITY_TRAITS and criterion.PERSONALITY_TRAITS.lower() != 'nan':
-                    personality_traits.add(criterion.PERSONALITY_TRAITS)
+                    personality_traits_set.update(criterion.PERSONALITY_TRAITS.split(','))
                 if criterion.COGNITIVE_SKILLS and criterion.COGNITIVE_SKILLS.lower() != 'nan':
-                    personality_traits.add(criterion.COGNITIVE_SKILLS)
+                    personality_traits_set.update(criterion.COGNITIVE_SKILLS.split(','))
                 if criterion.EMOTIONAL_INTELLIGENCE and criterion.EMOTIONAL_INTELLIGENCE.lower() != 'nan':
-                    personality_traits.add(criterion.EMOTIONAL_INTELLIGENCE)
-            print("Extracted personality traits:", personality_traits)
-            return JsonResponse({'personality_traits': list(personality_traits)})
+                    personality_traits_set.update(criterion.EMOTIONAL_INTELLIGENCE.split(','))
+
+                # Fetch the weightage values (same for all criteria under the same job position)
+                cognitive_weightage = criterion.COGNITIVE_WEIGHTAGE
+                technical_weightage = criterion.TECHNICAL_WEIGHTAGE
+
+            # Return the combined personality traits and weightages in the response
+            return JsonResponse({
+                'personality_traits': list(personality_traits_set),  # Convert set to list for JSON serialization
+                'cognitive_weightage': cognitive_weightage,
+                'technical_weightage': technical_weightage,
+            })
         else:
-            print("No matching criteria found")
+            print("No matching criteria found for the job position")
+            return JsonResponse({'personality_traits': [], 'cognitive_weightage': "N/A", 'technical_weightage': "N/A"})
+
     else:
         print("No job position provided")
-    return JsonResponse({'personality_traits': []})
-
+        return JsonResponse({'personality_traits': [], 'cognitive_weightage': "N/A", 'technical_weightage': "N/A"})
 
 def apply_for_job(request, job_post_id):
     if request.method == 'POST':
@@ -1697,125 +1793,30 @@ def phase_three_completed(request):
 
 
 # ---------------------------------[ for generating the evaluation summary using ChatGPT ]-----------------------------------------
-# def process_assessment_and_generate_summary(request):
-
-#     # Initializing the gpt variable first
-#     chatgpt = ChatGPTIntegration()
-
-#     # Getting all id available in the session
-#     user_id = request.session.get('user_id')
-#     job_seeker_id = request.session.get('JOB_SEEKER_ID')
-#     assessment_id = request.session.get('ASSESSMENT_ID')
-#     personality_assessment_id = request.session.get('PERSONALITY_ASSESSMENT_ID')
-#     cognitive_assessment_id = request.session.get('COGNITIVE_ASSESSMENT_ID')
-#     technical_assessment_id = request.session.get('TECHNICAL_ASSESSMENT_ID')
-
-
-#     # Step 1: Retrieve the Assessment Table
-#     assessment = Assessment.objects.get(ASSESSMENT_ID=assessment_id)
-#     cognitive_weightage = int(assessment.COGNITIVE_WEIGHTAGE)
-#     technical_weightage = int(assessment.TECHNICAL_WEIGHTAGE)
-#     job_post_id = assessment.JOB_POST_ID
-    
-#     # Step 2: Retrieve the Job_Posting Table
-#     job_post = Job_Posting.objects.get(JOB_POST_ID=job_post_id)  # Fetch the job post details
-    
-#     # Step 3: Retrieve the Personality Assessment Report Table
-#     personality_assessment_report = Personality_Assessment_Report.objects.get(PERSONALITY_ASSESSMENT_ID=personality_assessment_id)
-#     personality_assessment_report_id = personality_assessment_report.PERSONALITY_ASSESSMENT_REPORT_ID
-    
-#     # Step 4: Extract Technical_Assessment_Result and Cognitive_Assessment_Results Table
-#     technical_assessment_result = Technical_Assessment_Result.objects.get(TECHNICAL_ASSESSMENT_ID=technical_assessment_id)
-#     technical_assessment_result_id = technical_assessment_result.TECHNICAL_ASSESSMENT_RESULT_ID
-#     technical_score_percentage = int(technical_assessment_result.TECH_SCORE_PERCENTAGE)
-    
-#     cognitive_assessment_result = Cognitive_Assessment_Results.objects.get(COGNITIVE_ASSESSMENT_ID=cognitive_assessment_id)
-#     cognitive_assessment_result_id = cognitive_assessment_result.COGNITIVE_ASSESSMENT_ID
-#     cognitive_score_percentage = int(cognitive_assessment_result.COGNITIVE_SCORE_PERCENTAGE)
-    
-
-#     if cognitive_score_percentage < cognitive_weightage:
-#         # Candidate did not pass the cognitive test, so "Not Recommended"
-#         candidate_status = "Not Recommended"
-#     else:
-
-#         if technical_score_percentage < technical_weightage:
-#             # Candidate did not pass the technical test, so "Not Recommended"
-#             candidate_status = "Not Recommended"
-#         else:
-#             # Step 5: If both tests are passed, use ChatGPT to determine final recommendation
-#             personality_report_fields = {
-#                 "DISC_CATEGORY": personality_assessment_report.DISC_CATEGORY,
-#                 "DISC_PERSONALITY_TRAIT": personality_assessment_report.DISC_PERSONALITY_TRAIT,
-#                 "DISC_COGNITIVE_ABILITY": personality_assessment_report.DISC_COGNITIVE_ABILITY,
-#                 "DISC_EMOTIONAL_REGULATION": personality_assessment_report.DISC_EMOTIONAL_REGULATION,
-#                 "DISC_TENDENCIES": personality_assessment_report.DISC_TENDENCIES,
-#                 "DISC_WEAKNESSES": personality_assessment_report.DISC_WEAKNESSES,
-#                 "DISC_BEHAVIOUR": personality_assessment_report.DISC_BEHAVIOUR,
-#                 "DISC_MOTIVATED_BY": personality_assessment_report.DISC_MOTIVATED_BY,
-#                 "BIGFIVE_OPENNESS_CATEGORY": personality_assessment_report.BIGFIVE_OPENNESS_CATEGORY,
-#                 "BIGFIVE_OPENNESS_PERSONALITY": personality_assessment_report.BIGFIVE_OPENNESS_PERSONALITY,
-#                 "BIGFIVE_OPENNESS_DESCRIPTION": personality_assessment_report.BIGFIVE_OPENNESS_DESCRIPTION,
-#                 "BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR,
-#                 "BIGFIVE_CONCIENTIOUSNESS_CATEGORY": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_CATEGORY,
-#                 "BIGFIVE_CONCIENTIOUSNESS_PERSONALITY": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_PERSONALITY,
-#                 "BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION,
-#                 "BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR,
-#                 "BIGFIVE_EXTRAVERSION_CATEGORY": personality_assessment_report.BIGFIVE_EXTRAVERSION_CATEGORY,
-#                 "BIGFIVE_EXTRAVERSION_PERSONALITY": personality_assessment_report.BIGFIVE_EXTRAVERSION_PERSONALITY,
-#                 "BIGFIVE_EXTRAVERSION_DESCRIPTION": personality_assessment_report.BIGFIVE_EXTRAVERSION_DESCRIPTION,
-#                 "BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR,
-#                 "BIGFIVE_AGREEABLENESS_CATEGORY": personality_assessment_report.BIGFIVE_AGREEABLENESS_CATEGORY,
-#                 "BIGFIVE_AGREEABLENESS_PERSONALITY": personality_assessment_report.BIGFIVE_AGREEABLENESS_PERSONALITY,
-#                 "BIGFIVE_AGREEABLENESS_DESCRIPTION": personality_assessment_report.BIGFIVE_AGREEABLENESS_DESCRIPTION,
-#                 "BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR,
-#                 "BIGFIVE_NEUROTICISM_CATEGORY": personality_assessment_report.BIGFIVE_NEUROTICISM_CATEGORY,
-#                 "BIGFIVE_NEUROTICISM_PERSONALITY": personality_assessment_report.BIGFIVE_NEUROTICISM_PERSONALITY,
-#                 "BIGFIVE_NEUROTICISM_DESCRIPTION": personality_assessment_report.BIGFIVE_NEUROTICISM_DESCRIPTION,
-#                 "BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR
-#             }
-
-#             # Initialize ChatGPT Integration and use GPT-4-turbo to check candidate status
-            
-#             candidate_status = chatgpt.generate_candidate_status(personality_report_fields, job_post.JOB_POSITION)
-
-#     # Step 6: Generate profile synopsis and optimal job matches using ChatGPT
-#     profile_synopsis = chatgpt.generate_profile_synopsis(personality_report_fields)
-#     optimal_job_matches = chatgpt.generate_optimal_job_matches(personality_report_fields)
-
-#     # Step 7: Save to Evaluation_Summary table
-#     evaluation_summary = Evaluation_Summary.objects.create(
-#         USER_ID=user_id,
-#         JOB_SEEKER_ID=job_seeker_id,
-#         JOB_POST_ID=job_post_id,
-#         ASSESSMENT_ID=assessment_id,
-#         PERSONALITY_ASSESSMENT_REPORT_ID=personality_assessment_report_id,
-#         COGNITIVE_ASSESSMENT_RESULT_ID=cognitive_assessment_result_id,
-#         TECHNICAL_ASSESSMENT_RESULT_ID=technical_assessment_result_id,
-#         CANDIDATE_STATUS=candidate_status,
-#         PROFILE_SYNOPSIS=profile_synopsis,
-#         OPTIMAL_JOB_MATCHES=optimal_job_matches
-#     )
-
-#     # Save the evaluation summary
-#     evaluation_summary.save()
-
-#     return render(request, 'report/report.html') 
-
 def process_assessment_and_generate_summary(request):
     # Initialize the gpt variable first
     chatgpt = ChatGPTIntegration()
 
     # Getting all ids available in the session
-    user_id = request.session.get('user_id')
+    user_id = request.session.get('user_id')  # The user ID from session
     job_seeker_id = request.session.get('JOB_SEEKER_ID')
     assessment_id = request.session.get('ASSESSMENT_ID')
     personality_assessment_id = request.session.get('PERSONALITY_ASSESSMENT_ID')
     cognitive_assessment_id = request.session.get('COGNITIVE_ASSESSMENT_ID')
     technical_assessment_id = request.session.get('TECHNICAL_ASSESSMENT_ID')
 
-    # Step 1: Retrieve the Assessment Table
-    assessment = Assessment.objects.get(ASSESSMENT_ID=assessment_id)
+    # Step 1: Retrieve the instances from each model using the IDs from the session
+    try:
+        user_info = User_Information.objects.get(USER_ID=user_id)  # Retrieve User_Information instance
+        job_seeker = Job_Seeker.objects.get(JOB_SEEKER_ID=job_seeker_id)  # Retrieve Job_Seeker instance
+        assessment = Assessment.objects.get(ASSESSMENT_ID=assessment_id)  # Retrieve Assessment instance
+        personality_assessment_report = Personality_Assessment_Report.objects.get(PERSONALITY_ASSESSMENT_ID=personality_assessment_id)  # Retrieve Personality Assessment Report instance
+        cognitive_assessment = Cognitive_Assessment_Results.objects.get(COGNITIVE_ASSESSMENT_ID=cognitive_assessment_id)  # Retrieve Cognitive Assessment Results instance
+        technical_assessment = Technical_Assessment_Result.objects.get(TECHNICAL_ASSESSMENT_ID=technical_assessment_id)  # Retrieve Technical Assessment Results instance
+    except (User_Information.DoesNotExist, Job_Seeker.DoesNotExist, Assessment.DoesNotExist, Personality_Assessment_Report.DoesNotExist, Cognitive_Assessment_Results.DoesNotExist, Technical_Assessment_Result.DoesNotExist) as e:
+        return HttpResponse(f"Error: {str(e)}", status=404)
+
+    # Continue with the rest of your logic...
     cognitive_weightage = int(assessment.COGNITIVE_WEIGHTAGE)
     technical_weightage = int(assessment.TECHNICAL_WEIGHTAGE)
     job_post_id = assessment.JOB_POST_ID
@@ -1823,86 +1824,71 @@ def process_assessment_and_generate_summary(request):
     # Step 2: Retrieve the Job_Posting Table
     job_post = Job_Posting.objects.get(JOB_POST_ID=job_post_id)
 
-    # Step 3: Retrieve the Personality Assessment Report Table
-    personality_assessment_report = Personality_Assessment_Report.objects.get(PERSONALITY_ASSESSMENT_ID=personality_assessment_id)
-    personality_assessment_report_id = personality_assessment_report.PERSONALITY_ASSESSMENT_REPORT_ID
-
-    # Step 4: Extract Technical_Assessment_Result and Cognitive_Assessment_Results Table
-    technical_assessment_result = Technical_Assessment_Result.objects.get(TECHNICAL_ASSESSMENT_ID=technical_assessment_id)
-    technical_assessment_result_id = technical_assessment_result.TECHNICAL_ASSESSMENT_RESULT_ID
-    technical_score_percentage = int(technical_assessment_result.TECH_SCORE_PERCENTAGE)
-
-    cognitive_assessment_result = Cognitive_Assessment_Results.objects.get(COGNITIVE_ASSESSMENT_ID=cognitive_assessment_id)
-    cognitive_assessment_result_id = cognitive_assessment_result.COGNITIVE_ASSESSMENT_ID
-    cognitive_score_percentage = int(cognitive_assessment_result.COGNITIVE_SCORE_PERCENTAGE)
-
     # Initialize an empty personality_report_fields in case conditions are not met
     personality_report_fields = {}
 
-    if cognitive_score_percentage < cognitive_weightage:
-        # Candidate did not pass the cognitive test, so "Not Recommended"
+    if cognitive_assessment.COGNITIVE_SCORE_PERCENTAGE < cognitive_weightage:
+        candidate_status = "Not Recommended"
+    elif technical_assessment.TECH_SCORE_PERCENTAGE < technical_weightage:
         candidate_status = "Not Recommended"
     else:
-        if technical_score_percentage < technical_weightage:
-            # Candidate did not pass the technical test, so "Not Recommended"
-            candidate_status = "Not Recommended"
-        else:
-            # Step 5: If both tests are passed, use ChatGPT to determine final recommendation
-            personality_report_fields = {
-                "DISC_CATEGORY": personality_assessment_report.DISC_CATEGORY,
-                "DISC_PERSONALITY_TRAIT": personality_assessment_report.DISC_PERSONALITY_TRAIT,
-                "DISC_COGNITIVE_ABILITY": personality_assessment_report.DISC_COGNITIVE_ABILITY,
-                "DISC_EMOTIONAL_REGULATION": personality_assessment_report.DISC_EMOTIONAL_REGULATION,
-                "DISC_TENDENCIES": personality_assessment_report.DISC_TENDENCIES,
-                "DISC_WEAKNESSES": personality_assessment_report.DISC_WEAKNESSES,
-                "DISC_BEHAVIOUR": personality_assessment_report.DISC_BEHAVIOUR,
-                "DISC_MOTIVATED_BY": personality_assessment_report.DISC_MOTIVATED_BY,
-                "BIGFIVE_OPENNESS_CATEGORY": personality_assessment_report.BIGFIVE_OPENNESS_CATEGORY,
-                "BIGFIVE_OPENNESS_PERSONALITY": personality_assessment_report.BIGFIVE_OPENNESS_PERSONALITY,
-                "BIGFIVE_OPENNESS_DESCRIPTION": personality_assessment_report.BIGFIVE_OPENNESS_DESCRIPTION,
-                "BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR,
-                "BIGFIVE_CONCIENTIOUSNESS_CATEGORY": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_CATEGORY,
-                "BIGFIVE_CONCIENTIOUSNESS_PERSONALITY": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_PERSONALITY,
-                "BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION,
-                "BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR,
-                "BIGFIVE_EXTRAVERSION_CATEGORY": personality_assessment_report.BIGFIVE_EXTRAVERSION_CATEGORY,
-                "BIGFIVE_EXTRAVERSION_PERSONALITY": personality_assessment_report.BIGFIVE_EXTRAVERSION_PERSONALITY,
-                "BIGFIVE_EXTRAVERSION_DESCRIPTION": personality_assessment_report.BIGFIVE_EXTRAVERSION_DESCRIPTION,
-                "BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR,
-                "BIGFIVE_AGREEABLENESS_CATEGORY": personality_assessment_report.BIGFIVE_AGREEABLENESS_CATEGORY,
-                "BIGFIVE_AGREEABLENESS_PERSONALITY": personality_assessment_report.BIGFIVE_AGREEABLENESS_PERSONALITY,
-                "BIGFIVE_AGREEABLENESS_DESCRIPTION": personality_assessment_report.BIGFIVE_AGREEABLENESS_DESCRIPTION,
-                "BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR,
-                "BIGFIVE_NEUROTICISM_CATEGORY": personality_assessment_report.BIGFIVE_NEUROTICISM_CATEGORY,
-                "BIGFIVE_NEUROTICISM_PERSONALITY": personality_assessment_report.BIGFIVE_NEUROTICISM_PERSONALITY,
-                "BIGFIVE_NEUROTICISM_DESCRIPTION": personality_assessment_report.BIGFIVE_NEUROTICISM_DESCRIPTION,
-                "BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR
-            }
-
-            # Initialize ChatGPT Integration and use GPT-4-turbo to check candidate status
+        personality_report_fields = {
+            "DISC_CATEGORY": personality_assessment_report.DISC_CATEGORY,
+            "DISC_PERSONALITY_TRAIT": personality_assessment_report.DISC_PERSONALITY_TRAIT,
+            "DISC_COGNITIVE_ABILITY": personality_assessment_report.DISC_COGNITIVE_ABILITY,
+            "DISC_EMOTIONAL_REGULATION": personality_assessment_report.DISC_EMOTIONAL_REGULATION,
+            "DISC_TENDENCIES": personality_assessment_report.DISC_TENDENCIES,
+            "DISC_WEAKNESSES": personality_assessment_report.DISC_WEAKNESSES,
+            "DISC_BEHAVIOUR": personality_assessment_report.DISC_BEHAVIOUR,
+            "DISC_MOTIVATED_BY": personality_assessment_report.DISC_MOTIVATED_BY,
+            "BIGFIVE_OPENNESS_CATEGORY": personality_assessment_report.BIGFIVE_OPENNESS_CATEGORY,
+            "BIGFIVE_OPENNESS_PERSONALITY": personality_assessment_report.BIGFIVE_OPENNESS_PERSONALITY,
+            "BIGFIVE_OPENNESS_DESCRIPTION": personality_assessment_report.BIGFIVE_OPENNESS_DESCRIPTION,
+            "BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_OPENNESS_WORKPLACE_BEHAVIOUR,
+            "BIGFIVE_CONCIENTIOUSNESS_CATEGORY": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_CATEGORY,
+            "BIGFIVE_CONCIENTIOUSNESS_PERSONALITY": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_PERSONALITY,
+            "BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_DESCRIPTION,
+            "BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_CONCIENTIOUSNESS_WORKPLACE_BEHAVIOUR,
+            "BIGFIVE_EXTRAVERSION_CATEGORY": personality_assessment_report.BIGFIVE_EXTRAVERSION_CATEGORY,
+            "BIGFIVE_EXTRAVERSION_PERSONALITY": personality_assessment_report.BIGFIVE_EXTRAVERSION_PERSONALITY,
+            "BIGFIVE_EXTRAVERSION_DESCRIPTION": personality_assessment_report.BIGFIVE_EXTRAVERSION_DESCRIPTION,
+            "BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_EXTRAVERSION_WORKPLACE_BEHAVIOUR,
+            "BIGFIVE_AGREEABLENESS_CATEGORY": personality_assessment_report.BIGFIVE_AGREEABLENESS_CATEGORY,
+            "BIGFIVE_AGREEABLENESS_PERSONALITY": personality_assessment_report.BIGFIVE_AGREEABLENESS_PERSONALITY,
+            "BIGFIVE_AGREEABLENESS_DESCRIPTION": personality_assessment_report.BIGFIVE_AGREEABLENESS_DESCRIPTION,
+            "BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_AGREEABLENESS_WORKPLACE_BEHAVIOUR,
+            "BIGFIVE_NEUROTICISM_CATEGORY": personality_assessment_report.BIGFIVE_NEUROTICISM_CATEGORY,
+            "BIGFIVE_NEUROTICISM_PERSONALITY": personality_assessment_report.BIGFIVE_NEUROTICISM_PERSONALITY,
+            "BIGFIVE_NEUROTICISM_DESCRIPTION": personality_assessment_report.BIGFIVE_NEUROTICISM_DESCRIPTION,
+            "BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR
+        }
+        try:
             candidate_status = chatgpt.generate_candidate_status(personality_report_fields, job_post.JOB_POSITION)
+        except Exception as e:
+            candidate_status = "unknown"
 
-    # Step 6: Generate profile synopsis and optimal job matches using ChatGPT
-    profile_synopsis = chatgpt.generate_profile_synopsis(personality_report_fields)
-    optimal_job_matches = chatgpt.generate_optimal_job_matches(personality_report_fields)
+    try:
+        profile_synopsis = chatgpt.generate_profile_synopsis(personality_report_fields)
+        optimal_job_matches = chatgpt.generate_optimal_job_matches(personality_report_fields)
+    except Exception as e:
+        profile_synopsis = "unknown"
+        optimal_job_matches = "unknown"
 
-    # Step 7: Save to Evaluation_Summary table
+    # Step 7: Save to Evaluation_Summary table by assigning only the IDs (foreign keys)
     evaluation_summary = Evaluation_Summary.objects.create(
-        USER_ID=user_id,
-        JOB_SEEKER_ID=job_seeker_id,
-        JOB_POST_ID=job_post_id,
-        ASSESSMENT_ID=assessment_id,
-        PERSONALITY_ASSESSMENT_REPORT_ID=personality_assessment_report_id,
-        COGNITIVE_ASSESSMENT_RESULT_ID=cognitive_assessment_result_id,
-        TECHNICAL_ASSESSMENT_RESULT_ID=technical_assessment_result_id,
+        USER_ID=user_info,  # Assign the instance of User_Information, not just the ID
+        JOB_SEEKER_ID=job_seeker,  # Assign the instance of Job_Seeker
+        JOB_POST_ID=job_post,  # Assign the instance of Job_Posting
+        ASSESSMENT_ID=assessment,  # Assign the instance of Assessment
+        PERSONALITY_ASSESSMENT_REPORT_ID=personality_assessment_report,  # Assign the instance of Personality Assessment Report
+        COGNITIVE_ASSESSMENT_RESULT_ID=cognitive_assessment,  # Assign the instance of Cognitive Assessment Results
+        TECHNICAL_ASSESSMENT_RESULT_ID=technical_assessment,  # Assign the instance of Technical Assessment Result
         CANDIDATE_STATUS=candidate_status,
         PROFILE_SYNOPSIS=profile_synopsis,
         OPTIMAL_JOB_MATCHES=optimal_job_matches
     )
 
-    # Save the evaluation summary
     evaluation_summary.save()
 
     return render(request, 'report/report.html')
-
 # ---------------------------------[ END ]-----------------------------------------

@@ -1,0 +1,1111 @@
+<!doctype html>
+
+<html lang="en" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default"
+    data-assets-path="../../static/assets/" data-template="horizontal-menu-template" data-style="light">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <title>Job Post</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../../static/assets/img/favicon/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../../static/assets/vendor/fonts/fontawesome.css" />
+    <link rel="stylesheet" href="../../static/assets/vendor/fonts/tabler-icons.css" />
+    <link rel="stylesheet" href="../../static/assets/vendor/fonts/flag-icons.css" />
+
+    <!-- Core CSS -->
+
+    <link rel="stylesheet" href="../../static/assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="../../static/assets/vendor/css/rtl/theme-default.css"
+        class="template-customizer-theme-css" />
+
+    <link rel="stylesheet" href="../../static/assets/css/demo.css" />
+    <link rel="stylesheet" href="../../static/assets/css/style.css " />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="../../static/assets/vendor/libs/node-waves/node-waves.css" />
+
+    <link rel="stylesheet" href="../../static/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="../../static/assets/vendor/libs/typeahead-js/typeahead.css" />
+    <link rel="stylesheet" href="../../static/assets/vendor/libs/apex-charts/apex-charts.css" />
+    <link rel="stylesheet" href="../../static/assets/vendor/libs/swiper/swiper.css" />
+    <link rel="stylesheet" href="../../static/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
+    <link rel="stylesheet" href="../../static/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
+    <link rel="stylesheet"
+        href="../../static/assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css" />
+    <link rel="stylesheet" href="../../static/assets/vendor/libs/flatpickr/flatpickr.css" />
+    <link rel="stylesheet" href="../../static/assets/vendor/libs/select2/select2.css" />
+    <link rel="stylesheet" href="../../static/assets/vendor/libs/tagify/tagify.css" />
+    <link rel="stylesheet" href="../../static/assets/vendor/libs/bootstrap-select/bootstrap-select.css" />
+
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="../../static/assets/vendor/css/pages/cards-advance.css" />
+
+    <!-- Helpers -->
+    <script src="../../static/assets/vendor/js/helpers.js"></script>
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+
+    <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
+    <script src="../../static/assets/vendor/js/template-customizer.js"></script>
+
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="../../static/assets/js/config.js"></script>
+</head>
+
+<body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+        <div class="layout-container">
+            <!-- Navbar -->
+
+            <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
+                <div class="container-xxl">
+                    <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
+                        <a href="recruiter_home" class="app-brand-link">
+                            <span class="app-brand-logo demo">
+                                <svg width="32" height="22" viewBox="0 0 32 22" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M0.00172773 0V6.85398C0.00172773 6.85398 -0.133178 9.01207 1.98092 10.8388L13.6912 21.9964L19.7809 21.9181L18.8042 9.88248L16.4951 7.17289L9.23799 0H0.00172773Z"
+                                        fill="#7367F0" />
+                                    <path opacity="0.06" fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M7.69824 16.4364L12.5199 3.23696L16.5541 7.25596L7.69824 16.4364Z"
+                                        fill="#161616" />
+                                    <path opacity="0.06" fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M8.07751 15.9175L13.9419 4.63989L16.5849 7.28475L8.07751 15.9175Z"
+                                        fill="#161616" />
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z"
+                                        fill="#7367F0" />
+                                </svg>
+                            </span>
+                            <span class="app-brand-text demo menu-text fw-bold">Hirexcel</span>
+                        </a>
+
+                        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
+                            <i class="ti ti-x ti-md align-middle"></i>
+                        </a>
+                    </div>
+
+                    <aside id="layout-menu"
+                        class="layout-menu-horizontal menu-horizontal menu bg-menu-theme no-shadow flex-grow-1">
+                        <div class="container-xxl d-flex h-100">
+                            <ul class="menu-inner pb-2 pb-xl-0">
+                                <li class="menu-item">
+                                    <a href="recruiter_home" class="menu-link">
+                                        <div data-i18n="Home">Home</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                <li class="menu-item bg-primary-subtle rounded active">
+                                    <a href="post_job" class="menu-link text-black">
+                                        <div data-i18n="Post Job">Post Job</div>
+                                    </a>
+                                </li>
+                                {% comment %} <li class="menu-item">
+                                    <a href="javascript:void(0)" class="menu-link text-black disabled" tabindex="-1"
+                                        aria-disabled="true">
+                                        <div data-i18n="Challenges">Challenges</div>
+                                        <i class="menu-icon tf-icons ti ti-lock"></i>
+                                    </a>
+                                </li> {% endcomment %}
+                                {% comment %} <li class="menu-item">
+                                    <a href="javascript:void(0)" class="menu-link text-black">
+                                        <div data-i18n="Profile">Profile</div>
+                                    </a>
+                                </li> {% endcomment %}
+
+                            </ul>
+                        </div>
+                    </aside>
+
+                    <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+                        <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                            <i class="ti ti-menu-2 ti-md"></i>
+                        </a>
+                    </div>
+
+                    <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                        <ul class="navbar-nav flex-row align-items-center ms-auto">
+                          <!-- Search -->
+                          {% comment %} <li class="nav-item navbar-search-wrapper">
+                            <a class="nav-link btn btn-text-secondary btn-icon rounded-pill search-toggler"
+                              href="javascript:void(0);">
+                              <i class="ti ti-search ti-md"></i>
+                            </a>
+                          </li> {% endcomment %}
+                          <!-- /Search -->
+            
+                          <!-- Language -->
+                          {% comment %} <li class="nav-item dropdown-language dropdown">
+                            <a class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow"
+                              href="javascript:void(0);" data-bs-toggle="dropdown">
+                              <i class="ti ti-language rounded-circle ti-md"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                              <li>
+                                <a class="dropdown-item" href="javascript:void(0);" data-language="en" data-text-direction="ltr">
+                                  <span>English</span>
+                                </a>
+                              </li>
+                              <li>
+                                <a class="dropdown-item" href="javascript:void(0);" data-language="fr" data-text-direction="ltr">
+                                  <span>French</span>
+                                </a>
+                              </li>
+                              <li>
+                                <a class="dropdown-item" href="javascript:void(0);" data-language="ar" data-text-direction="rtl">
+                                  <span>Arabic</span>
+                                </a>
+                              </li>
+                              <li>
+                                <a class="dropdown-item" href="javascript:void(0);" data-language="de" data-text-direction="ltr">
+                                  <span>German</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </li> {% endcomment %}
+                          <!--/ Language -->
+            
+                          <!-- Style Switcher -->
+                          <li class="nav-item dropdown-style-switcher dropdown">
+                            <a class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow"
+                              href="javascript:void(0);" data-bs-toggle="dropdown">
+                              <i class="ti ti-md"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-styles">
+                              <li>
+                                <a class="dropdown-item" href="javascript:void(0);" data-theme="light">
+                                  <span class="align-middle"><i class="ti ti-sun ti-md me-3"></i>Light</span>
+                                </a>
+                              </li>
+                              <li>
+                                <a class="dropdown-item" href="javascript:void(0);" data-theme="dark">
+                                  <span class="align-middle"><i class="ti ti-moon-stars ti-md me-3"></i>Dark</span>
+                                </a>
+                              </li>
+                              {% comment %} <li>
+                                <a class="dropdown-item" href="javascript:void(0);" data-theme="system">
+                                  <span class="align-middle"><i class="ti ti-device-desktop-analytics ti-md me-3"></i>System</span>
+                                </a>
+                              </li> {% endcomment %}
+                            </ul>
+                          </li>
+                          <!-- / Style Switcher-->
+            
+                          <!-- Quick links  -->
+                          {% comment %} <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown">
+                            <a class="nav-link btn btn-text-secondary btn-icon rounded-pill btn-icon dropdown-toggle hide-arrow"
+                              href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                              aria-expanded="false">
+                              <i class="ti ti-layout-grid-add ti-md"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end p-0">
+                              <div class="dropdown-menu-header border-bottom">
+                                <div class="dropdown-header d-flex align-items-center py-3">
+                                  <h6 class="mb-0 me-auto">Shortcuts</h6>
+                                  <a href="javascript:void(0)"
+                                    class="btn btn-text-secondary rounded-pill btn-icon dropdown-shortcuts-add"
+                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Add shortcuts"><i
+                                      class="ti ti-plus text-heading"></i></a>
+                                </div>
+                              </div>
+                              <div class="dropdown-shortcuts-list scrollable-container">
+                                <div class="row row-bordered overflow-visible g-0">
+                                  <div class="dropdown-shortcuts-item col">
+                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
+                                      <i class="ti ti-calendar ti-26px text-heading"></i>
+                                    </span>
+                                    <a href="app-calendar.html" class="stretched-link">Calendar</a>
+                                    <small>Appointments</small>
+                                  </div>
+                                  <div class="dropdown-shortcuts-item col">
+                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
+                                      <i class="ti ti-file-dollar ti-26px text-heading"></i>
+                                    </span>
+                                    <a href="app-invoice-list.html" class="stretched-link">Invoice App</a>
+                                    <small>Manage Accounts</small>
+                                  </div>
+                                </div>
+                                <div class="row row-bordered overflow-visible g-0">
+                                  <div class="dropdown-shortcuts-item col">
+                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
+                                      <i class="ti ti-user ti-26px text-heading"></i>
+                                    </span>
+                                    <a href="app-user-list.html" class="stretched-link">User App</a>
+                                    <small>Manage Users</small>
+                                  </div>
+                                  <div class="dropdown-shortcuts-item col">
+                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
+                                      <i class="ti ti-users ti-26px text-heading"></i>
+                                    </span>
+                                    <a href="app-access-roles.html" class="stretched-link">Role Management</a>
+                                    <small>Permission</small>
+                                  </div>
+                                </div>
+                                <div class="row row-bordered overflow-visible g-0">
+                                  <div class="dropdown-shortcuts-item col">
+                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
+                                      <i class="ti ti-device-desktop-analytics ti-26px text-heading"></i>
+                                    </span>
+                                    <a href="index.html" class="stretched-link">Dashboard</a>
+                                    <small>User Dashboard</small>
+                                  </div>
+                                  <div class="dropdown-shortcuts-item col">
+                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
+                                      <i class="ti ti-settings ti-26px text-heading"></i>
+                                    </span>
+                                    <a href="pages-account-settings-account.html" class="stretched-link">Setting</a>
+                                    <small>Account Settings</small>
+                                  </div>
+                                </div>
+                                <div class="row row-bordered overflow-visible g-0">
+                                  <div class="dropdown-shortcuts-item col">
+                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
+                                      <i class="ti ti-help ti-26px text-heading"></i>
+                                    </span>
+                                    <a href="pages-faq.html" class="stretched-link">FAQs</a>
+                                    <small>FAQs & Articles</small>
+                                  </div>
+                                  <div class="dropdown-shortcuts-item col">
+                                    <span class="dropdown-shortcuts-icon rounded-circle mb-3">
+                                      <i class="ti ti-square ti-26px text-heading"></i>
+                                    </span>
+                                    <a href="modal-examples.html" class="stretched-link">Modals</a>
+                                    <small>Useful Popups</small>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </li> {% endcomment %}
+                          <!-- Quick links -->
+            
+                          <!-- Notification -->
+                          {% comment %} <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-2">
+                            <a class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow"
+                              href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                              aria-expanded="false">
+                              <span class="position-relative">
+                                <i class="ti ti-bell ti-md"></i>
+                                <span class="badge rounded-pill bg-danger badge-dot badge-notifications border"></span>
+                              </span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end p-0">
+                              <li class="dropdown-menu-header border-bottom">
+                                <div class="dropdown-header d-flex align-items-center py-3">
+                                  <h6 class="mb-0 me-auto">Notification</h6>
+                                  <div class="d-flex align-items-center h6 mb-0">
+                                    <span class="badge bg-label-primary me-2">8 New</span>
+                                    <a href="javascript:void(0)"
+                                      class="btn btn-text-secondary rounded-pill btn-icon dropdown-notifications-all"
+                                      data-bs-toggle="tooltip" data-bs-placement="top" title="Mark all as read"><i
+                                        class="ti ti-mail-opened text-heading"></i></a>
+                                  </div>
+                                </div>
+                              </li>
+                              <li class="dropdown-notifications-list scrollable-container">
+                                <ul class="list-group list-group-flush">
+                                  <li class="list-group-item list-group-item-action dropdown-notifications-item">
+                                    <div class="d-flex">
+                                      <div class="flex-shrink-0 me-3">
+                                        <div class="avatar">
+                                          <img src="../../../static/assets/img/avatars/1.png" alt class="rounded-circle" />
+                                        </div>
+                                      </div>
+                                      <div class="flex-grow-1">
+                                        <h6 class="small mb-1">Congratulation Lettie 🎉</h6>
+                                        <small class="mb-1 d-block text-body">Won the monthly best seller gold badge</small>
+                                        <small class="text-muted">1h ago</small>
+                                      </div>
+                                      <div class="flex-shrink-0 dropdown-notifications-actions">
+                                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                                            class="badge badge-dot"></span></a>
+                                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                                            class="ti ti-x"></span></a>
+                                      </div>
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item list-group-item-action dropdown-notifications-item">
+                                    <div class="d-flex">
+                                      <div class="flex-shrink-0 me-3">
+                                        <div class="avatar">
+                                          <span class="avatar-initial rounded-circle bg-label-danger">CF</span>
+                                        </div>
+                                      </div>
+                                      <div class="flex-grow-1">
+                                        <h6 class="mb-1 small">Charles Franklin</h6>
+                                        <small class="mb-1 d-block text-body">Accepted your connection</small>
+                                        <small class="text-muted">12hr ago</small>
+                                      </div>
+                                      <div class="flex-shrink-0 dropdown-notifications-actions">
+                                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                                            class="badge badge-dot"></span></a>
+                                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                                            class="ti ti-x"></span></a>
+                                      </div>
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
+                                    <div class="d-flex">
+                                      <div class="flex-shrink-0 me-3">
+                                        <div class="avatar">
+                                          <img src="../../../static/assets/img/avatars/2.png" alt class="rounded-circle" />
+                                        </div>
+                                      </div>
+                                      <div class="flex-grow-1">
+                                        <h6 class="mb-1 small">New Message ✉️</h6>
+                                        <small class="mb-1 d-block text-body">You have new message from Natalie</small>
+                                        <small class="text-muted">1h ago</small>
+                                      </div>
+                                      <div class="flex-shrink-0 dropdown-notifications-actions">
+                                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                                            class="badge badge-dot"></span></a>
+                                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                                            class="ti ti-x"></span></a>
+                                      </div>
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item list-group-item-action dropdown-notifications-item">
+                                    <div class="d-flex">
+                                      <div class="flex-shrink-0 me-3">
+                                        <div class="avatar">
+                                          <span class="avatar-initial rounded-circle bg-label-success"><i
+                                              class="ti ti-shopping-cart"></i></span>
+                                        </div>
+                                      </div>
+                                      <div class="flex-grow-1">
+                                        <h6 class="mb-1 small">Whoo! You have new order 🛒</h6>
+                                        <small class="mb-1 d-block text-body">ACME Inc. made new order $1,154</small>
+                                        <small class="text-muted">1 day ago</small>
+                                      </div>
+                                      <div class="flex-shrink-0 dropdown-notifications-actions">
+                                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                                            class="badge badge-dot"></span></a>
+                                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                                            class="ti ti-x"></span></a>
+                                      </div>
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
+                                    <div class="d-flex">
+                                      <div class="flex-shrink-0 me-3">
+                                        <div class="avatar">
+                                          <img src="../../../static/assets/img/avatars/9.png" alt class="rounded-circle" />
+                                        </div>
+                                      </div>
+                                      <div class="flex-grow-1">
+                                        <h6 class="mb-1 small">Application has been approved 🚀</h6>
+                                        <small class="mb-1 d-block text-body">Your ABC project application has been
+                                          approved.</small>
+                                        <small class="text-muted">2 days ago</small>
+                                      </div>
+                                      <div class="flex-shrink-0 dropdown-notifications-actions">
+                                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                                            class="badge badge-dot"></span></a>
+                                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                                            class="ti ti-x"></span></a>
+                                      </div>
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
+                                    <div class="d-flex">
+                                      <div class="flex-shrink-0 me-3">
+                                        <div class="avatar">
+                                          <span class="avatar-initial rounded-circle bg-label-success"><i
+                                              class="ti ti-chart-pie"></i></span>
+                                        </div>
+                                      </div>
+                                      <div class="flex-grow-1">
+                                        <h6 class="mb-1 small">Monthly report is generated</h6>
+                                        <small class="mb-1 d-block text-body">July monthly financial report is generated </small>
+                                        <small class="text-muted">3 days ago</small>
+                                      </div>
+                                      <div class="flex-shrink-0 dropdown-notifications-actions">
+                                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                                            class="badge badge-dot"></span></a>
+                                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                                            class="ti ti-x"></span></a>
+                                      </div>
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
+                                    <div class="d-flex">
+                                      <div class="flex-shrink-0 me-3">
+                                        <div class="avatar">
+                                          <img src="../../../static/assets/img/avatars/5.png" alt class="rounded-circle" />
+                                        </div>
+                                      </div>
+                                      <div class="flex-grow-1">
+                                        <h6 class="mb-1 small">Send connection request</h6>
+                                        <small class="mb-1 d-block text-body">Peter sent you connection request</small>
+                                        <small class="text-muted">4 days ago</small>
+                                      </div>
+                                      <div class="flex-shrink-0 dropdown-notifications-actions">
+                                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                                            class="badge badge-dot"></span></a>
+                                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                                            class="ti ti-x"></span></a>
+                                      </div>
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item list-group-item-action dropdown-notifications-item">
+                                    <div class="d-flex">
+                                      <div class="flex-shrink-0 me-3">
+                                        <div class="avatar">
+                                          <img src="../../../static/assets/img/avatars/6.png" alt class="rounded-circle" />
+                                        </div>
+                                      </div>
+                                      <div class="flex-grow-1">
+                                        <h6 class="mb-1 small">New message from Jane</h6>
+                                        <small class="mb-1 d-block text-body">Your have new message from Jane</small>
+                                        <small class="text-muted">5 days ago</small>
+                                      </div>
+                                      <div class="flex-shrink-0 dropdown-notifications-actions">
+                                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                                            class="badge badge-dot"></span></a>
+                                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                                            class="ti ti-x"></span></a>
+                                      </div>
+                                    </div>
+                                  </li>
+                                  <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
+                                    <div class="d-flex">
+                                      <div class="flex-shrink-0 me-3">
+                                        <div class="avatar">
+                                          <span class="avatar-initial rounded-circle bg-label-warning"><i
+                                              class="ti ti-alert-triangle"></i></span>
+                                        </div>
+                                      </div>
+                                      <div class="flex-grow-1">
+                                        <h6 class="mb-1 small">CPU is running high</h6>
+                                        <small class="mb-1 d-block text-body">CPU Utilization Percent is currently at
+                                          88.63%,</small>
+                                        <small class="text-muted">5 days ago</small>
+                                      </div>
+                                      <div class="flex-shrink-0 dropdown-notifications-actions">
+                                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span
+                                            class="badge badge-dot"></span></a>
+                                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
+                                            class="ti ti-x"></span></a>
+                                      </div>
+                                    </div>
+                                  </li>
+                                </ul>
+                              </li>
+                              <li class="border-top">
+                                <div class="d-grid p-4">
+                                  <a class="btn btn-primary btn-sm d-flex" href="javascript:void(0);">
+                                    <small class="align-middle">View all notifications</small>
+                                  </a>
+                                </div>
+                              </li>
+                            </ul>
+                          </li> {% endcomment %}
+                          <!--/ Notification -->
+            
+                          <!-- User -->
+                          <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                            <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
+                              <div class="avatar avatar-online">
+                                <img src="../../../static/assets/img/avatars/1.png" alt class="rounded-circle" />
+                              </div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                              <li>
+                                <a class="dropdown-item mt-0" href="#">
+                                  <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0 me-2">
+                                      <div class="avatar avatar-online">
+                                        <img src="../../../static/assets/img/avatars/1.png" alt class="rounded-circle" />
+                                      </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                      <h6 class="mb-0">{{ user_info.FIRST_NAME }} {{ user_info.LAST_NAME }}</h6>
+                                      <small class="text-muted">Recruiter</small>
+                                    </div>
+                                  </div>
+                                </a>
+                              </li>
+                              <li>
+                                <div class="dropdown-divider my-1 mx-n2"></div>
+                              </li>
+                              <li>
+                                <a class="dropdown-item" href="javascript:void(0);">
+                                  <i class="ti ti-user me-3 ti-md"></i><span class="align-middle">My Profile</span>
+                                </a>
+                              </li>
+                              <li>
+                                <a class="dropdown-item" href="javascript:void(0);">
+                                  <i class="ti ti-settings me-3 ti-md"></i><span class="align-middle">Settings</span>
+                                </a>
+                              </li>
+                              {% comment %} <li>
+                                <a class="dropdown-item" href="pages-account-settings-billing.html">
+                                  <span class="d-flex align-items-center align-middle">
+                                    <i class="flex-shrink-0 ti ti-file-dollar me-3 ti-md"></i><span
+                                      class="flex-grow-1 align-middle">Billing</span>
+                                    <span
+                                      class="flex-shrink-0 badge bg-danger d-flex align-items-center justify-content-center">4</span>
+                                  </span>
+                                </a>
+                              </li> {% endcomment %}
+                              <li>
+                                <div class="dropdown-divider my-1 mx-n2"></div>
+                              </li>
+                              {% comment %} <li>
+                                <a class="dropdown-item" href="pages-pricing.html">
+                                  <i class="ti ti-currency-dollar me-3 ti-md"></i><span class="align-middle">Pricing</span>
+                                </a>
+                              </li>
+                              <li>
+                                <a class="dropdown-item" href="pages-faq.html">
+                                  <i class="ti ti-question-mark me-3 ti-md"></i><span class="align-middle">FAQ</span>
+                                </a>
+                              </li> {% endcomment %}
+                              <li>
+                                <div class="d-grid px-2 pt-2 pb-1">
+                                  <a class="btn btn-sm btn-danger d-flex" href="{% url 'recruiter_logout' %}" target="_blank">
+                                    <small class="align-middle">Logout</small>
+                                    <i class="ti ti-logout ms-2 ti-14px"></i>
+                                  </a>
+                                </div>
+                              </li>
+                            </ul>
+                          </li>
+                          <!--/ User -->
+                        </ul>
+                      </div>
+
+                    <!-- Search Small Screens -->
+                    {% comment %} <div class="navbar-search-wrapper search-input-wrapper container-xxl d-none">
+                        <input type="text" class="form-control search-input border-0" placeholder="Search..."
+                            aria-label="Search..." />
+                        <i class="ti ti-x search-toggler cursor-pointer"></i>
+                    </div> {% endcomment %}
+                </div>
+            </nav>
+
+            <!-- / Navbar -->
+
+            <!-- Layout container -->
+            <div class="layout-page">
+                <!-- Content wrapper -->
+                <div class="content-wrapper">
+
+                    <!-- Content -->
+                    <div class="container-xxl flex-grow-1 container-p-y">
+
+                        <div class="d-flex align-content-center justify-content-left mb-2">
+                            <h2 class="fw-normal">Post a Job</h2>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-sm-8">
+                                <h4 class="fw-bold">Job Details</h4>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="row g-6">
+                                        <div class="col-sm-6">
+                                            <label class="form-label">Job Title</label>
+                                            <input type="text" class="form-control" name="jobTitle" placeholder="Enter job title" required />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label">Company Name</label>
+                                            {% comment %} <input type="text" class="form-control" placeholder="Enter company name" /> {% endcomment %}
+                                            <input type="text" class="form-control" name="companyName" placeholder="Enter company name" required />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label">City</label>
+                                            {% comment %} <input type="text" class="form-control" placeholder="Karachi" /> {% endcomment %}
+                                            <input type="text" class="form-control" name="city" placeholder="Enter city" required />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label">Country</label>
+                                            <select class="select2 form-select" name="country" required>
+                                                <option value="">Select Country</option>
+                                                <option value="Germany">Germany</option>
+                                                <option value="United States">United States</option>
+                                                <option value="France">France</option>
+                                                <option value="Italy">Italy</option>
+                                                <option value="United Kingdom">United Kingdom</option>
+                                                <option value="China">China</option>
+                                                <option value="Pakistan">Pakistan</option>
+                                                <option value="Russia">Russia</option>
+                                                <option value="Spain">Spain</option>
+                                                <option value="Canada">Canada</option>
+                                                <option value="India">India</option>
+                                                <option value="Netherlands">Netherlands</option>
+                                                <option value="Portugal">Portugal</option>
+                                                <option value="Finland">Finland</option>
+                                            </select>
+                                        </div>
+                                        {% comment %} <div class="col-sm-6">
+                                            <label class="form-label">Mobile</label>
+                                            <div class="input-group input-group-merge">
+                                                <input type="text" class="form-control multi-steps-mobile" placeholder="202 555 0111" />
+                                            </div>
+                                        </div> {% endcomment %}
+                                        <div class="col-sm-12">
+                                            <label class="form-label">Job Type</label>
+                                            <select class="select2 form-select" name="jobType" required>
+                                                <option value="">Select job type</option>
+                                                <option value="Full Time">Full Time</option>
+                                                <option value="Part Time">Part Time</option>
+                                                <option value="Remote">Remote</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <label class="form-label">Job Position</label>
+                                            <select class="select2 form-select" id="jobPosition" name="jobPosition" required>
+                                                <option value="">Select job Position</option>
+                                                {% for position in job_positions %}
+                                                <option value="{{ position }}">{{ position }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-12 mb-5">
+                                            <label class="form-label">Job Descripiton</label>
+                                            <textarea class="form-control" name="jobDescription" rows="3" required></textarea>
+                                        </div>
+                                    </div>
+
+
+                                    <h4 class="fw-bold">Requirements</h4>
+                                    <div class="row g-6">
+                                        <div class="col-sm-12">
+                                            <label class="form-label">Required Qualification</label>
+                                            {% comment %} <select class="select2 form-select" name="requiredQualification" required> {% endcomment %}
+                                            <select class="select2 form-select" name="requiredQualification" required>
+                                                <option value="">Select Qualification</option>
+                                                <option value="Undergraduate">Undergraduate</option>
+                                                <option value="Graduate">Graduate</option>
+                                                <option value="Master">Master</option>
+                                            </select>
+                                        </div>
+                                        {% comment %} <div class="col-sm-12">
+                                            <label class="form-label">Required Skills</label>
+                                            <div class="select2-primary">
+                                                <select id="skills" class="select2 form-select" name="requiredSkills" multiple="multiple" required>
+                                                    <option value="HTML">HTML</option>
+                                                    <option value="CSS">CSS</option>
+                                                    <option value="JavaScript">JavaScript</option>
+                                                    <option value="Python">Python</option>
+                                                    <option value="Java">Java</option>
+                                                    <option value="C++">C++</option>
+                                                    <option value="Node.js">Node.js</option>
+                                                    <option value="React">React</option>
+                                                    <option value="Angular">Angular</option>
+                                                    <option value="SQL">SQL</option>
+                                                    <option value="Django">Django</option>
+                                                    <option value="Flask">Flask</option>
+                                                    <option value="AWS">AWS</option>
+                                                    <option value="Docker">Docker</option>
+                                                    <option value="Kubernetes">Kubernetes</option>
+                                                    <option value="MongoDB">MongoDB</option>
+                                                    <option value="DevOps">DevOps</option>
+                                                </select>
+                                            </div>
+                                        </div> {% endcomment %}
+                                        <div class="col-sm-12">
+                                            <label for="TagifyBasic" class="form-label">Required Skills</label>
+                                            {% comment %} <input id="TagifyBasic" class="form-control" name="TagifyBasic" value="Python, HTML, CSS" /> {% endcomment %}
+                                            <input id="TagifyBasic" class="form-control" name="requiredSkills" value="Python, HTML, CSS" />
+                                          </div>
+                                        <div class="col-sm-12">
+                                            <label class="form-label">Experience Requirements</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="experienceRequirements" placeholder="Enter experience range (e.g. 0-1, 1-2)" required />
+                                                <span class="input-group-text" id="basic-addon13">Years</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <h4 class="fw-bold mt-5">Assessments</h4>
+                                    <h5 class="mb-1">Personality Traits</h5>
+                                    <div class="row g-6">
+                                        <div class="col-sm-12">
+                                            <label class="form-label">Following are the personality traits for the selected Job positions:</label>
+                                            <div class="select2-primary">
+                                                <select id="personalityTraitsDropdown" class="select2 form-select" name="personalityTraits" multiple="multiple" required>
+                                                    <!-- Options will be dynamically populated here via JavaScript -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <!-- <div class="card"> -->
+                                            <h5 class="card-header fw-bold">Personality Assessment</h5>
+                                            <!-- <div class="card-body"> -->
+                                            <div class="row">
+                                                <div class="col-md mb-md-0 mb-5">
+                                                    <div class="form-check custom-option custom-option-icon">
+                                                        <label class="form-check-label custom-option-content"
+                                                            for="customCheckboxIcon1">
+                                                            <span class="custom-option-body">
+                                                                <i class="ti ti-book-2"></i>
+                                                                <span class="custom-option-title"> DISC
+                                                                </span>
+                                                                <small> DISC quiz. </small>
+                                                            </span>
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                id="customCheckboxIcon1" />
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md">
+                                                    <div class="form-check custom-option custom-option-icon">
+                                                        <label class="form-check-label custom-option-content"
+                                                            for="customCheckboxIcon2">
+                                                            <span class="custom-option-body">
+                                                                <i class="ti ti-circle-number-5"></i>
+                                                                <span class="custom-option-title"> BIG FIVE
+                                                                </span>
+                                                                <small>Big Five quiz </small>
+                                                            </span>
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                id="customCheckboxIcon2" />
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- </div> -->
+                                            <!-- </div> -->
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <!-- <div class="card"> -->
+                                            <h5 class="card-header fw-bold">Cognitive Assessment</h5>
+                                            <!-- <div class="card-body"> -->
+                                            <div class="row">
+                                                <div class="col-md mb-md-0 mb-5">
+                                                    <div class="form-check custom-option custom-option-icon">
+                                                        <label class="form-check-label custom-option-content"
+                                                            for="customCheckboxIcon3">
+                                                            <span class="custom-option-body">
+                                                                <i class="ti ti-blockquote"></i>
+                                                                <span class="custom-option-title"> VERBAL
+                                                                </span>
+                                                                <small> You will perform verbal quiz. </small>
+                                                            </span>
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                id="customCheckboxIcon3" />
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md mb-5">
+                                                    <div class="form-check custom-option custom-option-icon">
+                                                        <label class="form-check-label custom-option-content"
+                                                            for="customCheckboxIcon4">
+                                                            <span class="custom-option-body">
+                                                                <i class="ti ti-icons"></i>
+                                                                <span class="custom-option-title"> NON-VERBAL
+                                                                </span>
+                                                                <small> You will perform non verbal quiz </small>
+                                                            </span>
+                                                            <input class="form-check-input" type="checkbox" value=""
+                                                                id="customCheckboxIcon4" />
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-3">
+                                                    <label class="form-label">Cognitive Weightage</label>
+                                                    <input type="number" class="form-control" name="cognitiveWeightage" value="0" min="0" max="99" />
+                                                </div>
+                                                <div class="col-md-9 alert alert-warning mt-5">
+                                                    Recommended Cognitive Weightage: <span id="recommendedCognitiveWeightage"></span>
+                                                </div>
+                                            </div>
+                                            <!-- </div> -->
+                                            <!-- </div> -->
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <!-- <div class="card"> -->
+                                            <h5 class="card-header fw-bold">Technical Assessment</h5>
+                                            <!-- <div class="card-body"> -->
+                                            <div class="row">
+                                                <small class="mt-3 mb-2">Choose a maximum of 2 levels</small>
+                                                <div class="col-md mb-md-0 mb-5">
+                                                    <div class="form-check custom-option custom-option-icon">
+                                                        <label class="form-check-label custom-option-content" for="Beginner">
+                                                            <span class="custom-option-body">
+                                                                <span class="custom-option-title"> Beginner</span>
+                                                            </span>
+                                                            {% comment %} <input class="form-check-input" type="checkbox" value="" id="customCheckboxIcon5" /> {% endcomment %}
+                                                            <input class="form-check-input" type="checkbox" name="technicalAssessment[]" value="Beginner" id="Beginner">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md mb-md-0 mb-5">
+                                                    <div class="form-check custom-option custom-option-icon">
+                                                        <label class="form-check-label custom-option-content" for="Intermediate">
+                                                            <span class="custom-option-body">
+                                                                <span class="custom-option-title"> Intermediate</span>
+                                                            </span>
+                                                            {% comment %} <input class="form-check-input" type="checkbox" value="" id="customCheckboxIcon6" /> {% endcomment %}
+                                                            <input class="form-check-input" type="checkbox" name="technicalAssessment[]" value="Intermediate" id="Intermediate">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md mb-md-0 mb-5">
+                                                    <div class="form-check custom-option custom-option-icon">
+                                                        <label class="form-check-label custom-option-content" for="Professional">
+                                                            <span class="custom-option-body">
+                                                                <span class="custom-option-title"> Professional</span>
+                                                            </span>
+                                                            {% comment %} <input class="form-check-input" type="checkbox" value="" id="customCheckboxIcon7" /> {% endcomment %}
+                                                            <input class="form-check-input" type="checkbox" name="technicalAssessment[]" value="Professional" id="Professional">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <!-- Technical Weightage -->
+                                                <div class="row mt-5">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Technical Weightage</label>
+                                                        <input type="number" class="form-control" name="technicalWeightage" value="0" min="0" max="99" />
+                                                    </div>
+                                                    <div class="col-md-9 alert alert-warning mt-5">
+                                                        Recommended Technical Weightage: <span id="recommendedTechnicalWeightage"></span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <!-- </div> -->
+                                            <!-- </div> -->
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mt-5">Submit Job Posting</button>
+                                </form>
+                            </div>
+
+                            <!-- Side Content -->
+                            {% comment %} <div class="col-sm-4">
+                                <div class="accordion mt-4" id="suggested_actions_accordion">
+                                    <div class="card accordion-item active suggested_actions_item" id="">
+                                        <h2 class="accordion-header" id="headingOne">
+                                            <button type="button" class="accordion-button suggested_actions_collapse"
+                                                data-bs-toggle="collapse" data-bs-target="#suggested_actions"
+                                                aria-expanded="true" aria-controls="suggested_actions">
+                                                Suggested actions
+                                            </button>
+                                        </h2>
+
+                                        <div id="suggested_actions" class="accordion-collapse collapse show"
+                                            data-bs-parent="#suggested_actions_accordion">
+                                            <div class="accordion-body pt-4">
+                                                <div class="d-flex gap-2">
+                                                    <i class="ti ti-bulb-filled ti-28px" style="color: #66CC80;"></i>
+                                                    <div>
+                                                        <h6 class="mb-0">Mismatch in years of declared experience in
+                                                            profile
+                                                            section & project
+                                                            durations for the following skills</h6>
+                                                        <ul class="mt-2 mb-4 ms-4">
+                                                            <li><b>CSS3: </b>Add 1 Year</li>
+                                                            <li><b>HTML/CSS: </b>Add 1 Year</li>
+                                                            <li><b>Bootstrap: </b>Add 1 Year</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> {% endcomment %}
+                            <!--/ Side Content-->
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--/ Content -->
+
+    <!-- Footer -->
+    <footer class="content-footer footer bg-footer-theme">
+        <div class="container-xxl">
+            <div
+                class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
+                <div class="text-body">
+                    ©
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
+                    , made with ❤️ by <a href="https://pixinvent.com" target="_blank" class="footer-link">Pixinvent</a>
+                </div>
+                <div class="d-none d-lg-inline-block">
+                    <a href="https://themeforest.net/licenses/standard" class="footer-link me-4"
+                        target="_blank">License</a>
+                    <a href="https://1.envato.market/pixinvent_portfolio" target="_blank" class="footer-link me-4">More
+                        Themes</a>
+
+                    <a href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/" target="_blank"
+                        class="footer-link me-4">Documentation</a>
+
+                    <a href="https://pixinvent.ticksy.com/" target="_blank"
+                        class="footer-link d-none d-sm-inline-block">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- / Footer -->
+
+    <div class="content-backdrop fade"></div>
+    </div>
+    <!--/ Content wrapper -->
+    </div>
+
+    <!--/ Layout container -->
+    </div>
+
+    <!-- Overlay -->
+    <!-- <div class="layout-overlay layout-menu-toggle"></div> -->
+
+    <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+    <div class="drag-target"></div>
+
+    <!--/ Layout wrapper -->
+
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            $('#jobPosition').select2(); // Initialize select2
+            $('#jobPosition').on('select2:select', function (e) {
+                const jobPosition = e.params.data.id; // Get the selected value
+        
+                console.log("Selected job position:", jobPosition); // Log the selected value
+        
+                if (jobPosition) {
+                    fetch(`/get_personality_traits/?job_position=${jobPosition}`)
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log("Received data:", data); // Confirm the data from the backend
+        
+                            // Clear existing options in the dropdown
+                            const personalityTraitsDropdown = document.getElementById("personalityTraitsDropdown");
+                            personalityTraitsDropdown.innerHTML = "";
+        
+                            // Combine data only if it exists
+                            const combinedTraits = [...new Set([
+                                ...data.personality_traits,
+                                ...(data.cognitive_skills || []),  // Add cognitive_skills if present
+                                ...(data.emotional_intelligence || [])  // Add emotional_intelligence if present
+                            ])];
+        
+                            // Populate dropdown with combined data
+                            combinedTraits.forEach((trait) => {
+                                const option = document.createElement("option");
+                                option.value = trait;
+                                option.textContent = trait;
+                                personalityTraitsDropdown.appendChild(option);
+                            });
+        
+                            // Set recommended weightage values
+                            document.getElementById("recommendedCognitiveWeightage").textContent = data.cognitive_weightage || "N/A";
+                            document.getElementById("recommendedTechnicalWeightage").textContent = data.technical_weightage || "N/A";
+                        })
+                        .catch((error) => console.error("Error fetching data:", error));
+                }
+            });
+        });
+        
+    </script>
+
+    <script src="../../static/assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="../../static/assets/vendor/libs/popper/popper.js"></script>
+    <script src="../../static/assets/vendor/js/bootstrap.js"></script>
+    <script src="../../static/assets/vendor/libs/node-waves/node-waves.js"></script>
+    <script src="../../static/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="../../static/assets/vendor/libs/hammer/hammer.js"></script>
+    <script src="../../static/assets/vendor/libs/i18n/i18n.js"></script>
+    <script src="../../static/assets/vendor/libs/typeahead-js/typeahead.js"></script>
+    <script src="../../static/assets/vendor/js/menu.js"></script>
+    {% comment %} <script src="../../static/assets/vendor/js/job-post.js"></script> {% endcomment %}
+
+    
+
+    {% comment %} <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Listen for changes on the job position dropdown
+            document.getElementById("jobPosition").addEventListener("change", function () {
+                const jobPosition = this.value;
+        
+                if (jobPosition) {
+                    // Fetch personality traits based on job position
+                    fetch(`/get_personality_traits/?job_position=${jobPosition}`)
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log("Received personality traits:", data.personality_traits);
+        
+                            // Clear existing options in the dropdown
+                            const personalityTraitsDropdown = document.getElementById("personalityTraitsDropdown");
+                            personalityTraitsDropdown.innerHTML = "";
+        
+                            // Populate dropdown with new personality traits
+                            data.personality_traits.forEach((trait) => {
+                                const option = document.createElement("option");
+                                option.value = trait;
+                                option.name = "personalityTraits";
+                                option.textContent = trait;
+                                personalityTraitsDropdown.appendChild(option);
+                            });
+                        })
+                        .catch((error) =>
+                            console.error("Error fetching personality traits:", error)
+                        );
+                }
+            });
+        });
+    </script> {% endcomment %}
+
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+    <script src="../../static/assets/vendor/libs/apex-charts/apexcharts.js"></script>
+    <script src="../../static/assets/vendor/libs/swiper/swiper.js"></script>
+    <script src="../../static/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+    <script src="../../static/assets/vendor/libs/cleavejs/cleave.js"></script>
+    <script src="../../static/assets/vendor/libs/cleavejs/cleave-phone.js"></script>
+    <script src="../../static/assets/vendor/libs/moment/moment.js"></script>
+    <script src="../../static/assets/vendor/libs/flatpickr/flatpickr.js"></script>
+    <script src="../../static/assets/vendor/libs/select2/select2.js"></script>
+    {% comment %} <script src="../../static/assets/vendor/libs/tagify/tagify.js"></script> {% endcomment %}
+    <script src="../../static/assets/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
+    <script src="../../static/assets/vendor/libs/typeahead-js/typeahead.js"></script>
+    <script src="../../static/assets/vendor/libs/bloodhound/bloodhound.js"></script>
+
+    <!-- Main JS -->
+    <script src="../../static/assets/js/main.js"></script>
+
+    <!-- Page JS -->
+    {% comment %} <script src="../../static/assets/js/pages-account-settings-account.js"></script> {% endcomment %}
+    <script src="../../static/assets/js/form-layouts.js"></script>
+    <script src="../../static/assets/js/forms-selects.js"></script>
+    {% comment %} <script src="../../static/assets/js/forms-tagify.js"></script> {% endcomment %}
+    <script src="../../static/assets/js/forms-typeahead.js"></script>
+
+</body>
+
+</html>
