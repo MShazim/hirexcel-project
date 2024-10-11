@@ -336,10 +336,10 @@ def format_job_posting_data(job_posting):
 #         print("No job position provided")
 #     return JsonResponse({'personality_traits': []})
 
-
 def post_job(request):
     if request.method == 'POST':
         try:
+            print(request.POST)
             # Fetch recruiter and form fields as usual
             user_id = request.session.get('user_id')
             recruiter = Recruiter.objects.get(USER_ID__USER_ID=user_id)
@@ -353,11 +353,30 @@ def post_job(request):
             # Combine personality traits
             personality_traits = ', '.join(request.POST.getlist('personalityTraits'))
 
+            # Fetch assessments
+            # personality_assessments = ['DISC', 'BIG FIVE']  # Pre-selected personality assessments
+            # cognitive_assessments = ['VERBAL', 'NON-VERBAL']  # Pre-selected cognitive assessments
+            # required_assessments = ', '.join(personality_assessments + cognitive_assessments + [technical_assessments])
+
+            # Combine into REQUIRED_ASSESSMENTS
+            required_assessments = 'Personality Assessment, Cognitive Assessment, Technical Assessment'
+
+            # Combine technical assessments
+            technical_assessments = request.POST.getlist('technicalAssessment[]')
+            technical_assessment_level = ', '.join(technical_assessments) 
+
+            # Log for debugging
+            print(f"Technical Assessments received: {technical_assessment_level}")
+
             # Other fields (e.g., qualifications, skills)
             required_qualifications = ', '.join(request.POST.getlist('requiredQualification'))
-            required_skills = ', '.join(request.POST.getlist('requiredSkills'))
             experience_requirements = request.POST['experienceRequirements']
-            
+
+            # Parse the JSON returned by Tagify and extract the 'value' field
+            raw_required_skills = request.POST['requiredSkills']
+            skills_list = json.loads(raw_required_skills)
+            required_skills = ', '.join([skill['value'] for skill in skills_list])
+
             # Fetching cognitive and technical weightage
             cognitive_weightage = request.POST['cognitiveWeightage']
             technical_weightage = request.POST['technicalWeightage']
@@ -377,6 +396,8 @@ def post_job(request):
                 EXPERIENCE_REQUIREMENTS=experience_requirements,
                 COGNITIVE_WEIGHTAGE=cognitive_weightage,
                 TECHNICAL_WEIGHTAGE=technical_weightage,
+                REQUIRED_ASSESSMENTS=required_assessments,
+                TECHNICAL_ASSESSMENT_LEVEL=technical_assessment_level
             )
             job_posting.save()
 
