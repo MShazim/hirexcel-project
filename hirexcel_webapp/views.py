@@ -1886,7 +1886,9 @@ def process_assessment_and_generate_summary(request):
         try:
             candidate_status = chatgpt.generate_candidate_status(personality_report_fields, job_post.JOB_POSITION)
         except Exception as e:
+            print(f"Error with OpenAI API call for candidate status: {str(e)}")
             candidate_status = "unknown"
+
 
     try:
         profile_synopsis = chatgpt.generate_profile_synopsis(personality_report_fields)

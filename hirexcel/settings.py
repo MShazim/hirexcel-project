@@ -135,4 +135,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, ' media')
 MEDIA_URL = '/media/'
 
 # OpenAI API Key for GPT-4-turbo Model
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = "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"
