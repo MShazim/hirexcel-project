@@ -1,0 +1,767 @@
+<!doctype html>
+
+<html lang="en" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default"
+    data-assets-path="../../../static/assets/" data-template="horizontal-menu-template" data-style="light">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <title>Evaluation Report</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../../../static/assets/img/favicon/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../../../static/assets/vendor/fonts/fontawesome.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/fonts/tabler-icons.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/fonts/flag-icons.css" />
+
+    <!-- Core CSS -->
+
+    <link rel="stylesheet" href="../../../static/assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/css/rtl/theme-default.css"
+        class="template-customizer-theme-css" />
+
+    <link rel="stylesheet" href="../../../static/assets/css/demo.css" />
+    <link rel="stylesheet" href="../../../static/assets/css/style.css " />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/node-waves/node-waves.css" />
+
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/typeahead-js/typeahead.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/apex-charts/apex-charts.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/swiper/swiper.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
+    <link rel="stylesheet"
+        href="../../../static/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
+    <link rel="stylesheet"
+        href="../../../static/assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css" />
+
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="../../../static/assets/vendor/css/pages/cards-advance.css" />
+
+    <!-- Helpers -->
+    <script src="../../../static/assets/vendor/js/helpers.js"></script>
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+
+    <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
+    <script src="../../../static/assets/vendor/js/template-customizer.js"></script>
+
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="../../../static/assets/js/config.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+
+<body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+        <div class="layout-container">
+
+            <!-- Layout container -->
+            <div class="layout-page">
+                <!-- Content wrapper -->
+                <div class="content-wrapper">
+
+                    <!-- Content -->
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <div class="row invoice-preview">
+                            <!-- Report -->
+                            <div class="col-xl-9 col-md-8 col-12 mb-md-0 mb-6">
+                                <div class="card invoice-preview-card p-sm-12 p-6">
+                                    <div class="card-body invoice-preview-header rounded">
+                                        <div class="d-flex justify-content-center">
+                                            <div class="mb-xl-0 mb-6 text-heading">
+                                                <div class="d-flex svg-illustration mb-6 gap-2 align-items-center">
+                                                    <div class="app-brand-logo demo">
+                                                        {% comment %} <svg width="32" height="22" viewBox="0 0 32 22" fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg">
+                                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                d="M0.00172773 0V6.85398C0.00172773 6.85398 -0.133178 9.01207 1.98092 10.8388L13.6912 21.9964L19.7809 21.9181L18.8042 9.88248L16.4951 7.17289L9.23799 0H0.00172773Z"
+                                                                fill="#7367F0" />
+                                                            <path opacity="0.06" fill-rule="evenodd" clip-rule="evenodd"
+                                                                d="M7.69824 16.4364L12.5199 3.23696L16.5541 7.25596L7.69824 16.4364Z"
+                                                                fill="#161616" />
+                                                            <path opacity="0.06" fill-rule="evenodd" clip-rule="evenodd"
+                                                                d="M8.07751 15.9175L13.9419 4.63989L16.5849 7.28475L8.07751 15.9175Z"
+                                                                fill="#161616" />
+                                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                d="M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z"
+                                                                fill="#7367F0" />
+                                                        </svg> {% endcomment %}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 182.16 251">
+                                                            <g style="isolation: isolate;">
+                                                              <g id="Layer_2" data-name="Layer 2">
+                                                                <g id="OBJECTS">
+                                                                  <g>
+                                                                    <g>
+                                                                      <path d="m182.16,67.55v91.83c-11.56-23.06-63-38.57-63-38.57v-60.53c0-36.53,52.52-43.24,61.2-7.75,1.18,4.81,1.8,9.84,1.8,15.02Z" style="fill: #7367f0;"/>
+                                                                      <path d="m0,188.71v-91.83c11.56,23.06,63,38.57,63,38.57v54.92c0,40.24-60.14,42.8-62.85,2.65-.1-1.43-.15-2.86-.15-4.31Z" style="fill: #7367f0;"/>
+                                                                    </g>
+                                                                    <path d="m182.16,127.58v24.5c-11.56-23.06-63-38.57-63-38.57v-27.26h.42c27.89,0,52.17,16.82,62.58,41.33Z" style="fill: #1f1e21; mix-blend-mode: overlay; opacity: .2;"/>
+                                                                    <path d="m0,123.42v-24.5c11.56,23.06,63,38.57,63,38.57v27.26h-.42c-27.89,0-52.17-16.82-62.58-41.33Z" style="fill: #1f1e21; mix-blend-mode: overlay; opacity: .2;"/>
+                                                                    <g>
+                                                                      <path d="m182.16,149.77v38.23c0,7.91-1.46,15.49-4.13,22.46-10.37-30.66-39.13-52.84-73.16-53.4-.44-.04-.88-.06-1.33-.06h-40.62c-33.71,0-61.23-26.47-62.92-59.76v-34.24c0-7.91,1.46-15.47,4.12-22.44,3.91,11.58,10.45,21.95,18.91,30.41,14.23,14.23,33.89,23.03,55.6,23.03h40.95c32.34,0,59,24.38,62.58,55.77Z" style="fill: #00b5e8;"/>
+                                                                      <path d="m182.16,149.77v38.23c0,7.91-1.46,15.49-4.13,22.46-10.37-30.66-39.13-52.84-73.16-53.4-.44-.04-.88-.06-1.33-.06h-40.62c-33.71,0-61.23-26.47-62.92-59.76v-34.24c0-7.91,1.46-15.47,4.12-22.44,3.91,11.58,10.45,21.95,18.91,30.41,14.23,14.23,33.89,23.03,55.6,23.03h40.95c32.34,0,59,24.38,62.58,55.77Z" style="fill: #7367f0;"/>
+                                                                      <path d="m182.16,149.77v7.29c-3.63-31.85-30.68-56.59-63.5-56.59h-41.55c-22.03,0-41.81-9.1-56.42-23.37C4.08,60.88,3.39,42.47,4.12,40.56c3.91,11.58,10.45,21.95,18.91,30.41,14.23,14.23,33.89,23.03,55.6,23.03h40.95c32.34,0,59,24.38,62.58,55.77Z" style="fill: #fff; mix-blend-mode: overlay; opacity: .5;"/>
+                                                                      <path d="m178.03,210.46c-3.74,9.82-9.87,18.46-17.68,25.21-11.04,9.55-25.44,15.33-41.19,15.33v-78.38c0-8.18-6.28-14.89-14.29-15.56,34.03.56,62.79,22.74,73.16,53.4Z" style="fill: #017dc0;"/>
+                                                                    </g>
+                                                                    <g>
+                                                                      <path d="m78.63,94c-21.71,0-41.37-8.8-55.6-23.03-8.46-8.46-15-18.83-18.91-30.41,3.73-9.8,9.84-18.43,17.63-25.18C32.8,5.8,47.22,0,63,0v78.38c0,8.63,7,15.62,15.63,15.62Z" style="fill: #7367f0;"/>
+                                                                      <path d="m78.63,94c-21.71,0-41.37-8.8-55.6-23.03-8.46-8.46-15-18.83-18.91-30.41,1.19-3.14,2.63-6.16,4.29-9.03,3.25,11.42,10.45,25.32,17.32,33.78,11.88,14.66,29,25.06,48.89,28.17h.01c1.27.34,2.62.52,4,.52Z" style="fill: #7367f0; mix-blend-mode: overlay; opacity: .7;"/>
+                                                                    </g>
+                                                                    <g>
+                                                                      <path d="m103.53,157c21.71,0,41.37,8.8,55.6,23.03,8.46,8.46,15,18.83,18.91,30.41-3.73,9.8-9.84,18.43-17.63,25.18-11.05,9.58-25.47,15.38-41.25,15.38v-78.38c0-8.63-7-15.62-15.63-15.62Z" style="fill: #7367f0;"/>
+                                                                      <path d="m103.53,157c21.71,0,41.37,8.8,55.6,23.03,8.46,8.46,15,18.83,18.91,30.41-1.19,3.14-2.63,6.16-4.29,9.03-3.25-11.42-10.45-25.32-17.32-33.78-11.88-14.66-29-25.06-48.89-28.17h0c-1.27-.34-2.62-.52-4-.52Z" style="fill: #7367f0; mix-blend-mode: overlay; opacity: .7;"/>
+                                                                      <path d="m103.53,157c24.71-.99,49.23,11.36,63.6,31.41,4.78,6.64,8.52,14.05,10.86,21.88-1.49-3.79-3.14-7.51-5.15-11.04-13.57-25.1-40.84-41.52-69.31-42.25h0Z" style="fill: #f5f6f6;"/>
+                                                                    </g>
+                                                                    <path d="m78.63,94c-24.71.99-49.23-11.36-63.6-31.41-4.78-6.64-8.52-14.05-10.86-21.88,1.49,3.79,3.14,7.51,5.15,11.04,13.57,25.1,40.84,41.52,69.31,42.25h0Z" style="fill: #f5f6f6;"/>
+                                                                  </g>
+                                                                </g>
+                                                              </g>
+                                                            </g>
+                                                          </svg>
+                                                    </div>
+                                                    <span class="app-brand-text fw-bold fs-4 ms-50"> Hirexcel </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <h3 class="fw-bold">Evaluation Summary Report</h3>
+                                        </div>
+                                    </div>
+                                    <div class="card-body px-0">
+                                        <h5 class="fw-bold mt-6">Candidate Information</h5>
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="pe-4"><p class="fw-bold mb-0">First Name</p></td>
+                                                    <td >{{ user_info.FIRST_NAME }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="pe-4"><p class="fw-bold mb-0">Last Name</p></td>
+                                                    <td>{{ user_info.LAST_NAME }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="pe-4"><p class="fw-bold mb-0">City</p></td>
+                                                    <td>{{ user_info.CITY }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="pe-4"><p class="fw-bold mb-0">Country</p></td>
+                                                    <td>{{ user_info.COUNTRY }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="pe-4"><p class="fw-bold mb-0">Phone Number</p></td>
+                                                    <td>{{ user_info.PHONE_NUMBER }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h5 class="fw-bold mt-6">Job Information</h5>
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="mx-auto"><p class="fw-bold mb-0">Job Title</p></td>
+                                                    <td >{{ job_post.TITLE }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="mx-auto"><p class="fw-bold mb-0">Job Type</p></td>
+                                                    <td>{{ job_post.JOB_TYPE }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="mx-auto"><p class="fw-bold mb-0">Job Position</p></td>
+                                                    <td>{{ job_post.JOB_POSITION }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="mx-auto"><p class="fw-bold mb-0">Job Personality Traits</p></td>
+                                                    {% comment %} <td>{{ job_post.PERSONALITY_TRAITS }}</td> {% endcomment %}
+                                                    <td>
+                                                        <div class="d-flex flex-row flex-wrap overflow-auto mb-0">
+                                                            {% for trait in personality_traits_list %}
+                                                            <span class="badge bg-primary-subtle text-primary me-1 mb-1">{{ trait }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                        {% comment %} <ul>
+                                                            {% for trait in personality_traits_list %}
+                                                                <li>{{ trait }}</li>
+                                                            {% endfor %}
+                                                        </ul> {% endcomment %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="mx-auto"><p class="fw-bold mb-0">Cognitive Weightage</p></td>
+                                                    <td>{{ job_post.COGNITIVE_WEIGHTAGE }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="mx-auto"><p class="fw-bold mb-0">Technical Weightage</p></td>
+                                                    <td>{{ job_post.TECHNICAL_WEIGHTAGE }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="mx-auto"><p class="fw-bold mb-0">Technical Assessment Level</p></td>
+                                                    {% comment %} <td>{{ job_post.TECHNICAL_ASSESSMENT_LEVEL }}</td> {% endcomment %}
+                                                    <td>
+                                                        <div class="d-flex flex-row flex-nowrap overflow-auto mb-0">
+                                                            {% for level in tech_assessment_level_list %}
+                                                            <span class="badge bg-info-subtle text-info me-1">{{ level }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h5 class="fw-bold mt-6">Assessment Insights</h5>
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <td class=""><p class="fw-bold mb-0">Candidate Status</p></td>
+                                                    <td colspan="1" rowspan="1">
+                                                        {% if  candidate_status == "Not Recommended"%}
+                                                        <span class='badge bg-danger-subtle text-danger me-1 mt-2'>{{ evaluation_summary.CANDIDATE_STATUS }}</span>
+                                                        {% else %}
+                                                        <span class='badge bg-success-subtle text-success me-1 mt-5'>{{ evaluation_summary.CANDIDATE_STATUS }}</span>
+                                                        {% endif %}
+                                                        {% comment %} <small>
+                                                            <div class="alert alert-warning d-flex align-items-center mt-2 mb-0">
+                                                                <i class="ti ti-info-circle me-2"></i>
+                                                                Here the note will be placed.
+                                                            </div>
+                                                        </small> {% endcomment %}
+                                                    </td>
+                                                    <td colspan="2" rowspan="1">
+                                                        <small>
+                                                            <div class="alert alert-warning d-flex align-items-center mt-2 mb-0">
+                                                                <i class="ti ti-info-circle me-2"></i>
+                                                                Here the note will be placed.
+                                                            </div>
+                                                        </small>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class=""><p class="fw-bold mb-0">Profile Synopsis</p></td>
+                                                    <td colspan="3" rowspan="1" >{{ evaluation_summary.PROFILE_SYNOPSIS }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class=""><p class="fw-bold mb-0">Optimal Job Matches</p></td>
+                                                    {% comment %} <td>{{ evaluation_summary.OPTIMAL_JOB_MATCHES }} (this job matches are AI generated)</td> {% endcomment %}
+                                                    <td colspan="1" rowspan="1">
+                                                        <ol class="mb-0">
+                                                            {% for match in optimal_job_matches_list %}
+                                                                <li>{{ match }}</li>
+                                                            {% endfor %}
+                                                        </ol>
+                                                        {% comment %} <div class="alert alert-warning d-flex align-items-center mb-0">
+                                                            <i class="ti ti-info-circle me-2"></i>
+                                                            These job matches are AI generated.
+                                                        </div> {% endcomment %}
+                                                    </td>
+                                                    <td colspan="2" rowspan="1">
+                                                        <small>
+                                                            <div class="alert alert-warning d-flex align-items-center mt-2 mb-0">
+                                                                <i class="ti ti-info-circle me-2"></i>
+                                                                Here the note will be placed.
+                                                            </div>
+                                                        </small>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h5 class="fw-bold mt-6">Holistic Evaluation Summary</h5>
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                {% comment %} <tr>
+                                                    <td colspan="3" rowspan="1">
+                                                        <p class="mb-0 fw-bold">COGNITIVE</p>
+                                                    </td>
+                                                </tr> {% endcomment %}
+                                                <tr>
+                                                    <td class=" fw-bold">Cognitive Score Percentage</td>
+                                                    <td class="fw-medium ">{{ cognitive_assessment.COGNITIVE_SCORE_PERCENTAGE }} &#37;
+                                                    </td>
+                                                    <td>
+                                                        {%if cognitive_result == "Passed" %}
+                                                        <span class="badge bg-success-subtle text-success me-1">Passed</span>
+                                                        {% else %}
+                                                        <span class="badge bg-danger-subtle text-danger me-1">Failed</span>
+                                                        {% endif %}
+
+                                                    </td>
+                                                </tr>
+
+                                                {% comment %} <tr>
+                                                    <td colspan="3" rowspan="1">
+                                                        <div class="alert alert-warning d-flex align-items-center ">
+                                                            <i class="ti ti-info-circle me-2"></i>
+                                                            Here the note will be placed.
+                                                        </div>
+                                                    </td>
+                                                </tr> {% endcomment %}
+
+                                                {% comment %} <tr>
+                                                    <td colspan="3" rowspan="1">
+                                                        <p class="mb-0 mt-4 fw-bold">TECHNICAL</p>
+                                                    </td>
+                                                </tr> {% endcomment %}
+
+                                                <tr>
+                                                    <td class=" fw-bold">Technical Score Percentage</td>
+                                                    <td class="fw-medium">{{ technical_assessment.TECH_SCORE_PERCENTAGE }} &#37;
+                                                    </td>
+                                                    <td>
+                                                        {%if technical_result == "Passed" %}
+                                                        <span class="badge bg-success-subtle text-success me-1">Passed</span>
+                                                        {% else %}
+                                                        <span class="badge bg-danger-subtle text-danger me-1">Failed</span>
+                                                        {% endif %}
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" rowspan="1">
+                                                        <div class="alert alert-warning d-flex align-items-center m-0">
+                                                            <i class="ti ti-info-circle me-2"></i>
+                                                            Here the note will be placed.
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h5 class="mt-6 fw-bold">Detailed Characteristics</h5>
+                                        <table >
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <p class="text-light fw-bold mb-0">Category</p>
+                                                    </td>
+                                                </tr>
+                                                <tr >
+                                                    {% comment %} <td class="pe-4">Disc Category:</td> {% endcomment %}
+                                                    <td class="fw-bold display-6 ">{{ personality_report.DISC_CATEGORY }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <p class="text-light mt-2 mb-0 fw-bold">Personality Traits</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    {% comment %} <td class="pe-4">Disc Personality Traits:</td> {% endcomment %}
+                                                    {% comment %} <td class="fw-medium">{{ personality_report.DISC_PERSONALITY_TRAIT }}</td> {% endcomment %}
+                                                    
+                                                    {% comment %} ----- DISC_PERSONALITY_TRAIT -------- {% endcomment %}
+                                                    <td>
+                                                        <div class="d-flex flex-row flex-wrap overflow-auto py-1">
+                                                            {% comment %} ----- DISC_PERSONALITY_TRAIT -------- {% endcomment %}
+                                                            {% for trait in disc_personality_trait_list %}
+                                                            <span class="badge bg-primary-subtle text-primary me-1 mb-1">{{ trait }}</span>
+                                                            {% endfor %}
+
+                                                            {% comment %} ----- BIGFIVE_OPENNESS_PERSONALITY -------- {% endcomment %}
+                                                            {% for personality in bigf_openness_personality_list %}
+                                                            <span class="badge bg-primary-subtle text-primary me-1 mb-1">{{ personality }}</span>
+                                                            {% endfor %}
+
+                                                            {% comment %} ----- BIGFIVE_CONCIENTIOUSNESS_PERSONALITY -------- {% endcomment %}
+                                                            {% for personality in bigf_concientiousness_personality_list %}
+                                                            <span class="badge bg-primary-subtle text-primary me-1 mb-1">{{ personality }}</span>
+                                                            {% endfor %}
+
+                                                            {% comment %} ----- BIGFIVE_EXTRAVERSION_PERSONALITY -------- {% endcomment %}
+                                                            {% for personality in bigf_extraversion_personality_list %}
+                                                            <span class="badge bg-primary-subtle text-primary me-1 mb-1">{{ personality }}</span>
+                                                            {% endfor %}
+
+                                                            {% comment %} ----- BIGFIVE_AGREEABLENESS_PERSONALITY -------- {% endcomment %}
+                                                            {% for personality in bigf_agreeableness_personality_list %}
+                                                            <span class="badge bg-primary-subtle text-primary me-1 mb-1">{{ personality }}</span>
+                                                            {% endfor %}
+
+                                                            {% comment %} ----- BIGFIVE_NEUROTICISM_PERSONALITY -------- {% endcomment %}
+                                                            {% for personality in bigf_neuroticism_personality_list %}
+                                                            <span class="badge bg-primary-subtle text-primary me-1 mb-1">{{ personality }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% comment %} <tr>
+                                                    <td>
+                                                        <div class="d-flex flex-row flex-wrap overflow-auto py-1">
+                                                            {% for personality in bigf_openness_personality_list %}
+                                                            <span class="badge bg-primary-subtle text-primary me-1 mb-1">{{ personality }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex flex-row flex-wrap overflow-auto py-1">
+                                                            {% for personality in bigf_concientiousness_personality_list %}
+                                                            <span class="badge bg-primary-subtle text-primary me-1 mb-1">{{ personality }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex flex-row flex-wrap overflow-auto py-1">
+                                                            {% for personality in bigf_extraversion_personality_list %}
+                                                            <span class="badge bg-primary-subtle text-primary me-1 mb-1">{{ personality }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex flex-row flex-wrap overflow-auto py-1">
+                                                            {% for personality in bigf_agreeableness_personality_list %}
+                                                            <span class="badge bg-primary-subtle text-primary me-1 mb-1">{{ personality }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex flex-row flex-wrap overflow-auto py-1">
+                                                            {% for personality in bigf_neuroticism_personality_list %}
+                                                            <span class="badge bg-primary-subtle text-primary me-1 mb-1">{{ personality }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </td>
+
+                                                </tr> {% endcomment %}
+                                                <tr>
+                                                    <td>
+                                                        <p class="text-light mt-2 mb-0 fw-bold">Cognitive Abilities</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    {% comment %} <td class="pe-4">Disc Cognitive Ability:</td> {% endcomment %}
+                                                    {% comment %} <td class="fw-medium">{{ personality_report.DISC_COGNITIVE_ABILITY }}</td> {% endcomment %}
+
+                                                    {% comment %} ----- DISC_COGNITIVE_ABILITY -------- {% endcomment %}
+                                                    <td>
+                                                        <div class="d-flex flex-row flex-wrap overflow-auto py-1">
+                                                            {% for ability in disc_cognitive_abilities_list %}
+                                                            <span class="badge bg-info-subtle text-info me-1 mb-1">{{ ability }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <p class="text-light mt-2 mb-0 fw-bold">Tendencies</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    {% comment %} <td class="pe-4">Disc Tendencies:</td> {% endcomment %}
+                                                    {% comment %} <td class="fw-medium">{{ personality_report.DISC_TENDENCIES }}</td> {% endcomment %}
+
+                                                    {% comment %} ----- DISC_TENDENCIES -------- {% endcomment %}
+                                                    <td>
+                                                        <div class="d-flex flex-row flex-wrap overflow-auto py-1">
+                                                            {% for tendency in disc_tendencies_list %}
+                                                            <span class="badge bg-info-subtle text-info me-1 mb-1">{{ tendency }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <p class="text-light mt-2 mb-0 fw-bold">Weaknesses</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    {% comment %} <td class="pe-4">Disc Weaknesses:</td> {% endcomment %}
+                                                    {% comment %} <td class="fw-medium">{{ personality_report.DISC_WEAKNESSES }}</td> {% endcomment %}
+
+                                                    {% comment %} ----- DISC_WEAKNESSES -------- {% endcomment %}
+                                                    <td>
+                                                        <div class="d-flex flex-row flex-wrap overflow-auto py-1">
+                                                            {% for weakness in disc_weaknesses_list %}
+                                                            <span class="badge bg-danger-subtle text-danger me-1 mb-1">{{ weakness }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <p class="text-light mt-2 mb-0 fw-bold">Behaviour</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    {% comment %} <td class="pe-4">Disc Behaviour:</td> {% endcomment %}
+                                                    {% comment %} <td class="fw-medium">{{ personality_report.DISC_BEHAVIOUR }}</td> {% endcomment %}
+
+                                                    {% comment %} ----- DISC_BEHAVIOUR -------- {% endcomment %}
+                                                    <td>
+                                                        <div class="d-flex flex-row flex-wrap overflow-auto py-1">
+                                                            {% for behaviour in disc_behaviour_list %}
+                                                            <span class="badge bg-success-subtle text-success me-1 mb-1">{{ behaviour }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <p class="text-light mt-2 mb-0 fw-bold">Motivated By</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    {% comment %} <td class="pe-4">Disc Motivated By:</td> {% endcomment %}
+                                                    {% comment %} <td class="fw-medium">{{ personality_report.DISC_MOTIVATED_BY }}</td> {% endcomment %}
+
+                                                    {% comment %} ----- DISC_MOTIVATED_BY -------- {% endcomment %}
+                                                    <td>
+                                                        <div class="d-flex flex-row flex-wrap overflow-auto py-1">
+                                                            {% for motivate in disc_motivated_list %}
+                                                            <span class="badge bg-success-subtle text-success me-1 mb-1">{{ motivate }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <p class="text-light mt-2 mb-0 fw-bold">Emotional Characteristics</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    {% comment %} <td class="pe-4">Disc Emotional:</td> {% endcomment %}
+                                                    {% comment %} <td class="fw-medium">{{ personality_report.DISC_EMOTIONAL_REGULATION }}</td> {% endcomment %}
+
+                                                    {% comment %} ----- DISC_EMOTIONAL_REGULATION -------- {% endcomment %}
+                                                    <td>
+                                                        <div class="d-flex flex-row flex-wrap overflow-auto py-1">
+                                                            {% for emotion in disc_emotional_list %}
+                                                            <span class="badge bg-success-subtle text-success me-1 mb-1">{{ emotion }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <hr class="mt-0 mb-6" />
+                                    <div class="card-body p-0">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <span class="fw-medium text-heading">Note:</span>
+                                                <span>This is a system generated report. Thank You!</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Report -->
+
+                            <!-- Invoice Actions -->
+                            <div class="col-xl-3 col-md-4 col-12 invoice-actions">
+                                <div class="card">
+                                    <div class="card-body">
+                                        {% comment %} <button class="btn btn-primary d-grid w-100 mb-4" data-bs-toggle="offcanvas"
+                                            data-bs-target="#sendInvoiceOffcanvas">
+                                            <span
+                                                class="d-flex align-items-center justify-content-center text-nowrap"><i
+                                                    class="ti ti-send ti-xs me-2"></i>Send Invoice</span>
+                                        </button> {% endcomment %}
+                                        <button id="download-invoice"
+                                            class="btn btn-label-secondary d-grid w-100 mb-4">Download</button>
+                                        <a href="{% url 'go_home_jobseeker' %}"
+                                            class="btn btn-success d-grid w-100 mb-4">Go Home</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Invoice Actions -->
+                        </div>
+
+                        <!-- Offcanvas -->
+                        <!-- Send Invoice Sidebar -->
+                        <div class="offcanvas offcanvas-end" id="sendInvoiceOffcanvas" aria-hidden="true">
+                            <div class="offcanvas-header mb-6 border-bottom">
+                                <h5 class="offcanvas-title">Send Invoice</h5>
+                                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body pt-0 flex-grow-1">
+                                <form>
+                                    <div class="mb-6">
+                                        <label for="invoice-from" class="form-label">From</label>
+                                        <input type="text" class="form-control" id="invoice-from"
+                                            value="shelbyComapny@email.com" placeholder="company@email.com" />
+                                    </div>
+                                    <div class="mb-6">
+                                        <label for="invoice-to" class="form-label">To</label>
+                                        <input type="text" class="form-control" id="invoice-to"
+                                            value="qConsolidated@email.com" placeholder="company@email.com" />
+                                    </div>
+                                    <div class="mb-6">
+                                        <label for="invoice-subject" class="form-label">Subject</label>
+                                        <input type="text" class="form-control" id="invoice-subject"
+                                            value="Invoice of purchased Admin Templates"
+                                            placeholder="Invoice regarding goods" />
+                                    </div>
+                                    <div class="mb-6">
+                                        <label for="invoice-message" class="form-label">Message</label>
+                                        <textarea class="form-control" name="invoice-message" id="invoice-message"
+                                            cols="3" rows="8">
+                                        Dear Queen Consolidated,
+                                        Thank you for your business, always a pleasure to work with you!
+                                        We have generated a new invoice in the amount of $95.59
+                                        We would appreciate payment of this invoice by 05/11/2021</textarea>
+                                    </div>
+                                    <div class="mb-6">
+                                        <span class="badge bg-label-primary">
+                                            <i class="ti ti-link ti-xs"></i>
+                                            <span class="align-middle">Invoice Attached</span>
+                                        </span>
+                                    </div>
+                                    <div class="mb-6 d-flex flex-wrap">
+                                        <button type="button" class="btn btn-primary me-4"
+                                            data-bs-dismiss="offcanvas">Send</button>
+                                        <button type="button" class="btn btn-label-secondary"
+                                            data-bs-dismiss="offcanvas">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- /Send Invoice Sidebar -->
+                        <!-- /Offcanvas -->
+                    </div>
+                    <!--/ Content -->
+
+                    <div class="content-backdrop fade"></div>
+
+                </div>
+                <!--/ Content wrapper -->
+            </div>
+            <!--/ Layout container -->
+
+        </div>
+    </div>
+
+
+    <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+    <div class="drag-target"></div>
+
+    <!--/ Layout wrapper -->
+
+    <script>
+        document.querySelector('#download-invoice').addEventListener('click', function () {
+            // Reference the section to be downloaded
+            const invoiceCard = document.querySelector('.invoice-preview-card');
+    
+            // Use a higher scale to increase resolution and improve readability
+            html2canvas(invoiceCard, { scale: 3 }).then((canvas) => {
+                // Get the canvas image data
+                const imgData = canvas.toDataURL('image/png');
+    
+                // Initialize jsPDF
+                const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+    
+                // Calculate the width and height of the image in the PDF
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const imgWidth = pdfWidth;
+                const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+    
+                let position = 0;
+    
+                // If content fits on one page, add the image
+                if (imgHeight <= pdfHeight) {
+                    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                } else {
+                    // Split content across multiple pages if it exceeds one page
+                    while (position < imgHeight) {
+                        // Calculate the portion height to be rendered on the current page
+                        const remainingHeight = imgHeight - position;
+                        const renderHeight = Math.min(pdfHeight, remainingHeight);
+    
+                        // Crop the canvas image for the current portion
+                        const canvasPortion = document.createElement('canvas');
+                        canvasPortion.width = canvas.width;
+                        canvasPortion.height = (renderHeight * canvas.width) / imgWidth;
+                        const ctx = canvasPortion.getContext('2d');
+                        ctx.drawImage(
+                            canvas,
+                            0,
+                            position * (canvas.height / imgHeight),
+                            canvas.width,
+                            canvasPortion.height,
+                            0,
+                            0,
+                            canvas.width,
+                            canvasPortion.height
+                        );
+    
+                        // Convert the cropped canvas to image data
+                        const croppedImgData = canvasPortion.toDataURL('image/png');
+    
+                        // Add the cropped image to the current page
+                        pdf.addImage(croppedImgData, 'PNG', 0, 0, imgWidth, renderHeight);
+    
+                        // Update the position for the next portion
+                        position += renderHeight;
+    
+                        // If there is still remaining content, add a new page
+                        if (position < imgHeight) {
+                            pdf.addPage();
+                        }
+                    }
+                }
+    
+                // Save the PDF
+                pdf.save('invoice.pdf');
+            });
+        });
+    </script>
+
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+
+    <script src="../../../static/assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="../../../static/assets/vendor/libs/popper/popper.js"></script>
+    <script src="../../../static/assets/vendor/js/bootstrap.js"></script>
+    <script src="../../../static/assets/vendor/libs/node-waves/node-waves.js"></script>
+    <script src="../../../static/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="../../../static/assets/vendor/libs/hammer/hammer.js"></script>
+    <script src="../../../static/assets/vendor/libs/i18n/i18n.js"></script>
+    <script src="../../../static/assets/vendor/libs/typeahead-js/typeahead.js"></script>
+    <script src="../../../static/assets/vendor/js/menu.js"></script>
+    <script src="../../../static/assets/vendor/js/script.js"></script>
+
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+    <script src="../../../static/assets/vendor/libs/apex-charts/apexcharts.js"></script>
+    <script src="../../../static/assets/vendor/libs/swiper/swiper.js"></script>
+    <script src="../../../static/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+    <script src="../../../static/assets/vendor/libs/moment/moment.js"></script>
+    <script src="../../../static/assets/vendor/libs/flatpickr/flatpickr.js"></script>
+    <script src="../../../static/assets/vendor/libs/cleavejs/cleave.js"></script>
+    <script src="../../../static/assets/vendor/libs/cleavejs/cleave-phone.js"></script>
+
+    <!-- Main JS -->
+    <script src="../../../static/assets/js/main.js"></script>
+
+    <!-- Page JS -->
+    <script src="../../../static/assets/js/dashboards-analytics.js"></script>
+    <script src="../../../static/assets/js/form-basic-inputs.js"></script>
+    <script src="../../../static/assets/js/offcanvas-send-invoice.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+
+</body>
+
+</html>
