@@ -1654,11 +1654,11 @@ def technical_quiz_completion(request):
     total_technical_completion_time = request.session.get('tech_time')
     
     # If the total time is zero, prevent further processing
-    if total_technical_completion_time == 0:
-        # Render a message or simply redirect to prevent duplicate entry
-        return render(request, 'technical_quiz/technical_completion.html', {
-            'message': "Assessment already completed."
-        })
+    # if total_technical_completion_time == 0:
+    #     # Render a message or simply redirect to prevent duplicate entry
+    #     return render(request, 'technical_quiz/technical_completion.html', {
+    #         'message': "Assessment already completed."
+    #     })
 
     # Calculate the total correct answers (Total Tech Score)
     total_correct_answers = Technical_Answers_Dataset.objects.filter(
@@ -1678,6 +1678,8 @@ def technical_quiz_completion(request):
         TECH_SCORE_PERCENTAGE=tech_score_percentage,
         TOTAL_TECHNICAL_COMPLETION_TIME=total_technical_completion_time
     )
+
+    request.session['tech_time'] = 0
 
 
     # List of session keys related to assessments to be cleared
@@ -1708,6 +1710,7 @@ def technical_quiz_completion(request):
 
     # Render the completion template or redirect as necessary
     return render(request, 'technical_quiz/technical_completion.html')
+    # return redirect('process_assessment_and_generate_summary')
 #* ------------------------------------------------------------------------------------------
 #* -------------------------------[ ENDS ]---------------------------------------------------
 #* ------------------------------------------------------------------------------------------
@@ -1848,12 +1851,7 @@ def process_assessment_and_generate_summary(request):
     # Initialize an empty personality_report_fields in case conditions are not met
     personality_report_fields = {}
 
-    if cognitive_assessment.COGNITIVE_SCORE_PERCENTAGE < cognitive_weightage:
-        candidate_status = "Not Recommended"
-    elif technical_assessment.TECH_SCORE_PERCENTAGE < technical_weightage:
-        candidate_status = "Not Recommended"
-    else:
-        personality_report_fields = {
+    personality_report_fields = {
             "DISC_CATEGORY": personality_assessment_report.DISC_CATEGORY,
             "DISC_PERSONALITY_TRAIT": personality_assessment_report.DISC_PERSONALITY_TRAIT,
             "DISC_COGNITIVE_ABILITY": personality_assessment_report.DISC_COGNITIVE_ABILITY,
@@ -1883,8 +1881,15 @@ def process_assessment_and_generate_summary(request):
             "BIGFIVE_NEUROTICISM_DESCRIPTION": personality_assessment_report.BIGFIVE_NEUROTICISM_DESCRIPTION,
             "BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR": personality_assessment_report.BIGFIVE_NEUROTICISM_WORKPLACE_BEHAVIOUR
         }
+
+    if cognitive_assessment.COGNITIVE_SCORE_PERCENTAGE < cognitive_weightage:
+        candidate_status = "Not Recommended"
+    elif technical_assessment.TECH_SCORE_PERCENTAGE < technical_weightage:
+        candidate_status = "Not Recommended"
+    else:
         try:
             candidate_status = chatgpt.generate_candidate_status(personality_report_fields, job_post.JOB_POSITION)
+            print(f'CHECKING THE PERSONALITY REPORT-----------{personality_report_fields}-------------')
         except Exception as e:
             print(f"Error with OpenAI API call for candidate status: {str(e)}")
             candidate_status = "unknown"
@@ -1913,5 +1918,131 @@ def process_assessment_and_generate_summary(request):
 
     evaluation_summary.save()
 
-    return render(request, 'report/report.html')
+    request.session['EVALUATION_SUMMARY_ID'] = evaluation_summary.EVALUATION_SUMMARY_ID
+
+    # return render(request, 'report/report.html')
+    return redirect('job_seeker_report')
+
+
+# def job_seeker_report(request):
+#     evaluation_summary_id = request.session.get('EVALUATION_SUMMARY_ID')
+#     print(f'------------The Id got on this page is this: {evaluation_summary_id}-------------')
+#     return render(request, 'report/job_seeker/report.html')
+
+def job_seeker_report(request):
+    evaluation_summary_id = request.session.get('EVALUATION_SUMMARY_ID')
+    print(f'------------The Id got on this page is this: {evaluation_summary_id}-------------')
+    try:
+        # Retrieve the Evaluation_Summary instance using the ID
+        evaluation_summary = Evaluation_Summary.objects.get(EVALUATION_SUMMARY_ID=evaluation_summary_id)
+        
+        # Extract related information using the foreign keys
+        user_info = evaluation_summary.USER_ID
+        job_post = evaluation_summary.JOB_POST_ID
+        personality_report = evaluation_summary.PERSONALITY_ASSESSMENT_REPORT_ID
+        cognitive_assessment = evaluation_summary.COGNITIVE_ASSESSMENT_RESULT_ID
+        technical_assessment = evaluation_summary.TECHNICAL_ASSESSMENT_RESULT_ID
+
+
+        # All Data that are in commas will be comma seperated here
+        # -- From Job Post ----
+        personality_traits_list = [trait.strip() for trait in job_post.PERSONALITY_TRAITS.split(",")]
+        technical_assessment_level_list = [level.strip() for level in job_post.TECHNICAL_ASSESSMENT_LEVEL.split(",")]
+        
+        # -- From PERSONALITY REPORT ----
+        disc_personality_trait_list = [trait.strip() for trait in personality_report.DISC_PERSONALITY_TRAIT.split(",")]
+        bigf_openness_personality_list = [personality.strip() for personality in personality_report.BIGFIVE_OPENNESS_PERSONALITY.split(",")]
+        bigf_concientiousness_personality_list = [personality.strip() for personality in personality_report.BIGFIVE_CONCIENTIOUSNESS_PERSONALITY.split(",")]
+        bigf_extraversion_personality_list = [personality.strip() for personality in personality_report.BIGFIVE_EXTRAVERSION_PERSONALITY.split(",")]
+        bigf_agreeableness_personality_list = [personality.strip() for personality in personality_report.BIGFIVE_AGREEABLENESS_PERSONALITY.split(",")]
+        bigf_neuroticism_personality_list = [personality.strip() for personality in personality_report.BIGFIVE_NEUROTICISM_PERSONALITY.split(",")]
+        disc_cognitive_abilities_list = [ability.strip() for ability in personality_report.DISC_COGNITIVE_ABILITY.split(",")]
+        disc_tendencies_list = [tendency.strip() for tendency in personality_report.DISC_TENDENCIES.split(",")]
+        disc_weaknesses_list = [weakness.strip() for weakness in personality_report.DISC_WEAKNESSES.split(",")]
+        disc_behaviour_list = [behaviour.strip() for behaviour in personality_report.DISC_BEHAVIOUR.split(",")]
+        disc_motivated_list = [motivate.strip() for motivate in personality_report.DISC_MOTIVATED_BY.split(",")]
+        disc_emotional_list = [emotion.strip() for emotion in personality_report.DISC_EMOTIONAL_REGULATION.split(",")]
+        
+
+        #  -- From Cognitive Assessment
+        if int(cognitive_assessment.COGNITIVE_SCORE_PERCENTAGE) >= int(job_post.COGNITIVE_WEIGHTAGE):
+            cognitive_result = "Passed"
+        else:
+            cognitive_result = "Failed"
+
+        if int(technical_assessment.TECH_SCORE_PERCENTAGE) >= int(job_post.TECHNICAL_WEIGHTAGE):
+            technical_result = "Passed"
+        else:
+            technical_result = "Failed"
+
+        # -- From Evaluation Summary
+        # optimal_job_matches_list = [match.strip() for match in evaluation_summary.OPTIMAL_JOB_MATCHES.split(". ")]
+        optimal_job_matches_list = [match.strip() for match in re.split(r'\d+\.\s+', evaluation_summary.OPTIMAL_JOB_MATCHES) if match.strip()]
+        if evaluation_summary.CANDIDATE_STATUS == "Not Recommended":
+            candidate_status = "Not Recommended"
+        else:
+            candidate_status = "Recommended"
+
+        # Prepare the context to send to the template
+        context = {
+            'evaluation_summary': evaluation_summary,
+            'user_info': user_info,
+            'job_post': job_post,
+            'personality_traits_list': personality_traits_list,
+            'tech_assessment_level_list': technical_assessment_level_list,
+            'disc_personality_trait_list': disc_personality_trait_list,
+            'bigf_openness_personality_list': bigf_openness_personality_list,
+            'bigf_concientiousness_personality_list': bigf_concientiousness_personality_list,
+            'bigf_extraversion_personality_list': bigf_extraversion_personality_list,
+            'bigf_agreeableness_personality_list': bigf_agreeableness_personality_list,
+            'bigf_neuroticism_personality_list': bigf_neuroticism_personality_list,
+            'disc_cognitive_abilities_list': disc_cognitive_abilities_list,
+            'disc_tendencies_list': disc_tendencies_list,
+            'disc_weaknesses_list': disc_weaknesses_list,
+            'disc_behaviour_list': disc_behaviour_list,
+            'disc_motivated_list': disc_motivated_list,
+            'disc_emotional_list': disc_emotional_list,
+            'personality_report': personality_report,
+            'cognitive_assessment': cognitive_assessment,
+            'cognitive_result': cognitive_result,
+            'technical_result': technical_result,
+            'technical_assessment': technical_assessment,
+            'candidate_status': candidate_status,
+            'optimal_job_matches_list': optimal_job_matches_list,
+        }
+    except Evaluation_Summary.DoesNotExist:
+        # If no evaluation summary found, show an error or redirect
+        return HttpResponse("Evaluation Summary not found", status=404)
+    
+    return render(request, 'report/job_seeker/report.html', context)
+
+def go_home_jobseeker(request):
+    # List of session keys related to assessments to be cleared
+    keys_to_clear = [
+        'JOB_POST_ID',
+        'JOB_SEEKER_ID',
+        'ASSESSMENT_ID',
+        'JOB_SEEKER_ASSESSMENT_ID',
+        'PERSONALITY_ASSESSMENT_ID',
+        'DISC_ASSESSMENT_ID',
+        'total_time',
+        'BIGFIVE_ASSESSMENT_ID',
+        'COGNITIVE_ASSESSMENT_ID',
+        'time_taken',
+        'cog_vi_time',
+        'cog_nvi_time',
+        'TECHNICAL_ASSESSMENT_ID',
+        'verbal_selected_questions',
+        'selected_questions',
+        'selected_technical_questions',
+        'tech_time',
+        'EVALUATION_SUMMARY_ID'
+    ]
+
+    # Delete each key from the session if it exists
+    for key in keys_to_clear:
+        if key in request.session:
+            del request.session[key]
+
+    return redirect('jobseeker_home')
 # ---------------------------------[ END ]-----------------------------------------

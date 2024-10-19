@@ -110,6 +110,8 @@ urlpatterns = [
 
     # -------------------------------[REPORT]--------------------------------------
     path('process-assessment/', views.process_assessment_and_generate_summary, name='process_assessment_and_generate_summary'),
+    path('job-seeker-report/', views.job_seeker_report, name='job_seeker_report'),
+    path('go-home-jobseeker/', views.go_home_jobseeker, name='go_home_jobseeker'),
     # ------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------------------------------------------
 ]
