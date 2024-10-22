@@ -1,0 +1,228 @@
+<!doctype html>
+
+<html lang="en" class="light-style layout-wide customizer-hide" dir="ltr" data-theme="theme-default"
+    data-assets-path="../../../static/assets/" data-template="horizontal-menu-template" data-style="light">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <title>Create Account | Recruiter</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../../../static/assets/img/favicon/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&ampdisplay=swap"
+        rel="stylesheet" />
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../../../static/assets/vendor/fonts/fontawesome.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/fonts/tabler-icons.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/fonts/flag-icons.css" />
+
+    <!-- Core CSS -->
+
+    <link rel="stylesheet" href="../../../static/assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/css/rtl/theme-default.css"
+        class="template-customizer-theme-css" />
+
+    <link rel="stylesheet" href="../../../static/assets/css/demo.css" />
+    <link rel="stylesheet" href="../assets/css/style.css" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/node-waves/node-waves.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/typeahead-js/typeahead.css" />
+    <!-- Vendor -->
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/bs-stepper/bs-stepper.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/bootstrap-select/bootstrap-select.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/select2/select2.css" />
+    <link rel="stylesheet" href="../../../static/assets/vendor/libs/@form-validation/form-validation.css" />
+
+    <!-- Page CSS -->
+
+    <!-- Page -->
+    <link rel="stylesheet" href="../../../static/assets/vendor/css/pages/page-auth.css" />
+
+    <!-- Helpers -->
+    <script src="../../../static/assets/vendor/js/helpers.js"></script>
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+
+    <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
+    <script src="../../../static/assets/vendor/js/template-customizer.js"></script>
+
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="../../../static/assets/js/config.js"></script>
+</head>
+
+<body>
+    <!-- Content -->
+
+    <div class="authentication-wrapper authentication-cover authentication-bg">
+
+         <!-- Logo -->
+        <a href="index.html" class="app-brand auth-cover-brand">
+            <span class="app-brand-logo demo">
+                <svg width="32" height="22" viewBox="0 0 32 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M0.00172773 0V6.85398C0.00172773 6.85398 -0.133178 9.01207 1.98092 10.8388L13.6912 21.9964L19.7809 21.9181L18.8042 9.88248L16.4951 7.17289L9.23799 0H0.00172773Z"
+                        fill="#7367F0" />
+                    <path opacity="0.06" fill-rule="evenodd" clip-rule="evenodd"
+                        d="M7.69824 16.4364L12.5199 3.23696L16.5541 7.25596L7.69824 16.4364Z" fill="#161616" />
+                    <path opacity="0.06" fill-rule="evenodd" clip-rule="evenodd"
+                        d="M8.07751 15.9175L13.9419 4.63989L16.5849 7.28475L8.07751 15.9175Z" fill="#161616" />
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z"
+                        fill="#7367F0" />
+                </svg>
+            </span>
+            <span class="app-brand-text demo text-heading fw-bold">Hirexcel</span>
+        </a>
+        <!-- /Logo -->
+
+        <div class="authentication-inner row">
+            <!-- Left Text -->
+            <div class="d-none d-lg-flex col-lg-4 align-items-center justify-content-center p-5 auth-cover-bg-color position-relative auth-multisteps-bg-height">
+                <img src="../../../static/assets/img/illustrations/auth-register-multisteps-illustration.png" alt="auth-register-multisteps" class="img-fluid" width="280" />
+
+                <img src="../../../static/assets/img/illustrations/auth-register-multisteps-shape-light.png" alt="auth-register-multisteps" class="platform-bg" data-app-light-img="illustrations/auth-register-multisteps-shape-light.png" data-app-dark-img="illustrations/auth-register-multisteps-shape-dark.png"
+                />
+            </div>
+            <!-- /Left Text -->
+
+            <div class="d-flex col-lg-8 align-items-center justify-content-center authentication-bg p-5">
+                <div class="w-px-800">
+                    <div class="bs-stepper border-none shadow-none mt-5">
+                        <!-- Step Counter -->
+                        <div class="bs-stepper-header border-none pt-12 px-0">
+                            <div class="step {% if step == 1 %}active{% endif %}">
+                                <button type="button" class="step-trigger" {% if step != 1 %}disabled{% endif %}>
+                                    <span class="bs-stepper-circle"><i class="ti ti-user ti-md"></i></span>
+                                    <span class="bs-stepper-label">
+                                        <span class="bs-stepper-title">Personal</span>
+                                        <span class="bs-stepper-subtitle">Enter Information</span>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="line"><i class="ti ti-chevron-right"></i></div>
+                            <div class="step {% if step == 2 %}active{% endif %}">
+                                <button type="button" class="step-trigger" {% if step != 2 %}disabled{% endif %}>
+                                    <span class="bs-stepper-circle"><i class="ti ti-ballpen ti-md"></i></span>
+                                    <span class="bs-stepper-label">
+                                        <span class="bs-stepper-title">Company</span>
+                                        <span class="bs-stepper-subtitle">Company Information</span>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Form Content -->
+                        <div class="bs-stepper-content px-0">
+                            <!-- Company Info Form -->
+                            <form method="POST" action="{% url 'recruiter_create_account' 2 %}">
+                                {% csrf_token %}
+                                <div id="companyInfoValidation" class="content" style="display: block;">
+                                    <div class="content-header mb-6">
+                                        <h4 class="mb-0">Company</h4>
+                                        <p class="mb-0">Comapny Information</p>
+                                    </div>
+                                    <div class="row g-6">
+                                        <div class="col-md-12">
+                                            <label class="form-label" for="company_name">Company Name</label>
+                                            <input type="text" id="company_name" name="COMPANY_NAME" class="form-control" placeholder="Black Rock" required />
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label" for="company_website">Company Website</label>
+                                            <input type="url" id="company_website" name="COMPANY_WEBSITE" class="form-control" placeholder="https://blackrock.com" required />
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label" for="company_industry">Company Industry</label>
+                                            <select id="company_industry" name="INDUSTRY" class="select2 form-select" data-allow-clear="true" required>
+                                                <option value="">Select</option>
+                                                <option value="Information Technology">Information Technology</option>
+                                                <option value="Financial Services">Financial Services</option>
+                                                <option value="Healthcare">Healthcare</option>
+                                                <option value="Manufacturing">Manufacturing</option>
+                                                <option value="Education">Education</option>
+                                                <option value="Entertainment">Entertainment</option>
+                                                <option value="Energy">Energy</option>
+                                                <option value="Retail">Retail</option>
+                                                <option value="Construction">Construction</option>
+                                                <option value="Transportation">Transportation</option>
+                                                <!-- Add more industries as needed -->
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label" for="company_size">Company Size</label>
+                                            <select id="company_size" name="COMPANY_SIZE" class="select2 form-select" data-allow-clear="true" required>
+                                                <option value="">Select</option>
+                                                <option value="1-10">1-10 employees</option>
+                                                <option value="11-50">11-50 employees</option>
+                                                <option value="51-200">51-200 employees</option>
+                                                <option value="201-500">201-500 employees</option>
+                                                <option value="501-1000">501-1000 employees</option>
+                                                <option value="1001-5000">1001-5000 employees</option>
+                                                <option value="5001-10000">5001-10000 employees</option>
+                                                <option value="10000+">10000+ employees</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-end">
+                                            <button type="submit" class="btn btn-success">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check selected custom option
+        window.Helpers.initCustomOptionCheck();
+    </script>
+
+    <!-- / Content -->
+
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+
+    <script src="../../../static/assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="../../../static/assets/vendor/libs/popper/popper.js"></script>
+    <script src="../../../static/assets/vendor/js/bootstrap.js"></script>
+    <script src="../../../static/assets/vendor/libs/node-waves/node-waves.js"></script>
+    <script src="../../../static/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="../../../static/assets/vendor/libs/hammer/hammer.js"></script>
+    <script src="../../../static/assets/vendor/libs/i18n/i18n.js"></script>
+    <script src="../../../static/assets/vendor/libs/typeahead-js/typeahead.js"></script>
+    <script src="../../../static/assets/vendor/js/menu.js"></script>
+
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+    <script src="../../../static/assets/vendor/libs/cleavejs/cleave.js"></script>
+    <script src="../../../static/assets/vendor/libs/cleavejs/cleave-phone.js"></script>
+    <script src="../../../static/assets/vendor/libs/bs-stepper/bs-stepper.js"></script>
+    <script src="../../../static/assets/vendor/libs/select2/select2.js"></script>
+    <script src="../../../static/assets/vendor/libs/@form-validation/popular.js"></script>
+    <script src="../../../static/assets/vendor/libs/@form-validation/bootstrap5.js"></script>
+    <script src="../../../static/assets/vendor/libs/@form-validation/auto-focus.js"></script>
+
+    <!-- Main JS -->
+    <script src="../../../static/assets/js/main.js"></script>
+
+    <!-- Page JS -->
+    {% comment %} <script src="../../../static/assets/js/template_js/job_seeker_create_account.js"></script> {% endcomment %}
+    <script src="../../../static/assets/js/dashboards-analytics.js"></script>
+    {% comment %} <script src="../../../static/assets/js/template_js/job_seeker_create_account.js"></script> {% endcomment %}
+</body>
+
+</html>
