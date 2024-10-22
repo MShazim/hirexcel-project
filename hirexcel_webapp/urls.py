@@ -45,26 +45,32 @@ urlpatterns = [
     # path('success/', views.success_page, name='success_page'),
 
 
-     # Create account with specific steps
-    path('create_account/job_seeker/<int:step>/', views.job_seeker_create_account, name='create_account_step'),
+    # # Create account with specific steps
+    # path('create_account/job_seeker/<int:step>/', views.job_seeker_create_account, name='create_account_step'),
     
-    # Success page
-    path('success/', views.success_page, name='success_page'),
+    # # Success page
+    # path('success/', views.success_page, name='success_page'),
 
-    # Login view
-    # path('jobseeker_login/', views.jobseeker_login, name='jobseeker_login'),
+    # # Redirect to step 1 by default
+    # path('create_account/job_seeker/', lambda request: redirect('create_account_step', step=1), name='job_seeker_create_account'),
 
-    # Redirect to step 1 by default
-    path('create_account/job_seeker/', lambda request: redirect('create_account_step', step=1), name='job_seeker_create_account'),
+    path('job_seeker_create_account/<int:step>/', views.job_seeker_create_account, name='job_seeker_create_account'),
+    path('job_seeker_success/', views.success_page, name='success_page'),
+
+
     # -----------------------------------------------------------------------------------------------------------------------------------
 
     # -------------------------------------------------- [ CREATE ACCOUNT R] ------------------------------------------------------------
     # path('create-account/recruiter-step1/', views.recruiter_create_account_step1, name='recruiter_create_account_step1'),
     # path('create-account/recruiter-step2/', views.recruiter_create_account_step2, name='recruiter_create_account_step2'),
     # path('create-account/recruiter_success/', views.recruiter_success_page, name='recruiter_success_page'),
-    path('create-account/recruiter-step1/', views.recruiter_create_account_step1, name='recruiter_create_account_step1'),
-    path('create-account/recruiter-step2/', views.recruiter_create_account_step2, name='recruiter_create_account_step2'),
-    path('create-account/recruiter_success/', views.recruiter_success_page, name='recruiter_success_page'),
+
+    # path('create-account/recruiter-step1/', views.recruiter_create_account_step1, name='recruiter_create_account_step1'),
+    # path('create-account/recruiter-step2/', views.recruiter_create_account_step2, name='recruiter_create_account_step2'),
+    # path('create-account/recruiter_success/', views.recruiter_success_page, name='recruiter_success_page'),
+
+    path('recruiter_create_account/<int:step>/', views.recruiter_create_account, name='recruiter_create_account'),
+    path('recruiter_success/', views.recruiter_success_page, name='recruiter_success_page'),
     # -----------------------------------------------------------------------------------------------------------------------------------
 
     # -------------------------------------------------- [ QUIZ START] ------------------------------------------------------------------
