@@ -540,7 +540,7 @@
                                 <div class="dropdown-divider my-1 mx-n2"></div>
                               </li>
                               <li>
-                                <a class="dropdown-item" href="javascript:void(0);">
+                                <a class="dropdown-item" href="recruiter_view_profile">
                                   <i class="ti ti-user me-3 ti-md"></i><span class="align-middle">My Profile</span>
                                 </a>
                               </li>
@@ -848,13 +848,13 @@
                                 <div class="nav-align-top">
                                     <ul class="nav nav-pills flex-column flex-sm-row mb-6 gap-2 gap-lg-0">
                                         <li class="nav-item">
-                                            <a class="nav-link active " href="#" id="your-jobs-tab"><i
-                                                    class="ti ti-briefcase ti-sm me-1_5"></i> Your Jobs</a>
+                                            <a class="nav-link active " href="javascript:void(0);" id="your-jobs-tab"><i
+                                                    class="ti ti-briefcase ti-sm me-1_5"></i>Posted Jobs</a>
                                         </li>
-                                        <li class="nav-item">
+                                        {% comment %} <li class="nav-item">
                                             <a class="nav-link" href="#" id="applied-tab"><i
                                                     class="ti ti-users ti-sm me-1_5"></i> Applied</a>
-                                        </li>
+                                        </li> {% endcomment %}
                                     </ul>
                                 </div>
                             </div>
@@ -979,9 +979,9 @@
 
 
                                         <h6 class="mb-0 personality-traits">Personality Traits</h6>
-                                        <div class="d-flex flex-row flex-nowrap overflow-auto py-2">
+                                        <div class="d-flex flex-row flex-wrap overflow-auto py-2">
                                         {% for trait in job.personality_traits %}
-                                        <span class="badge bg-primary-subtle text-primary me-1">{{ trait }}</span>
+                                        <span class="badge bg-primary-subtle text-primary me-1 mb-1">{{ trait }}</span>
                                         {% endfor %}
                                         </div>
 
@@ -1054,7 +1054,7 @@
                             </div>
                         </div>
 
-                        <div class="row g-6 d-none" id="applied">
+                        {% comment %} <div class="row g-6 d-none" id="applied">
                             <div id="applied-tab">
 
                                 <div class="card mb-6">
@@ -1124,7 +1124,7 @@
                                 </div>
 
                             </div>
-                        </div>
+                        </div> {% endcomment %}
 
                     </div>
                     <!--/ Content -->
@@ -1266,25 +1266,14 @@
 
     <script>
         const yourJobsTab = document.getElementById('your-jobs-tab');
-        const appliedTab = document.getElementById('applied-tab');
         const yourJobsSection = document.getElementById('your_jobs');
-        const appliedSection = document.getElementById('applied');
 
         yourJobsTab.addEventListener('click', function (e) {
             e.preventDefault();
             yourJobsTab.classList.add('active');
-            appliedTab.classList.remove('active');
             yourJobsSection.classList.remove('d-none');
-            appliedSection.classList.add('d-none');
         });
 
-        appliedTab.addEventListener('click', function (e) {
-            e.preventDefault();
-            appliedTab.classList.add('active');
-            yourJobsTab.classList.remove('active');
-            appliedSection.classList.remove('d-none');
-            yourJobsSection.classList.add('d-none');
-        });
     </script>
 </body>
 

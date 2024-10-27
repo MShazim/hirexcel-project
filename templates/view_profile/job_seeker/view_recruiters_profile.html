@@ -1,0 +1,670 @@
+<!doctype html>
+
+<html lang="en" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default"
+    data-assets-path="../../../../static/assets/" data-template="horizontal-menu-template" data-style="light">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <title>Recruiter Profile | Job Seeker</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../../../../static/assets/img/favicon/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&ampdisplay=swap"
+        rel="stylesheet" />
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../../../../static/assets/vendor/fonts/fontawesome.css" />
+    <link rel="stylesheet" href="../../../../static/assets/vendor/fonts/tabler-icons.css" />
+    <link rel="stylesheet" href="../../../../static/assets/vendor/fonts/flag-icons.css" />
+
+    <!-- Core CSS -->
+
+    <link rel="stylesheet" href="../../../../static/assets/vendor/css/rtl/core.css"
+        class="template-customizer-core-css" />
+    <link rel="stylesheet" href="../../../../static/assets/vendor/css/rtl/theme-default.css"
+        class="template-customizer-theme-css" />
+
+    <link rel="stylesheet" href="../../../../static/assets/css/demo.css" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="../../../../static/assets/vendor/libs/node-waves/node-waves.css" />
+
+    <link rel="stylesheet" href="../../../../static/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="../../../../static/assets/vendor/libs/typeahead-js/typeahead.css" />
+    <link rel="stylesheet" href="../../../../static/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
+    <link rel="stylesheet"
+        href="../../../../static/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
+    <link rel="stylesheet"
+        href="../../../../static/assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css" />
+
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="../../../../static/assets/vendor/css/pages/page-profile.css" />
+
+    <!-- Helpers -->
+    <script src="../../../../static/assets/vendor/js/helpers.js"></script>
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+
+    <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
+    <script src="../../../../static/assets/vendor/js/template-customizer.js"></script>
+
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="../../../../static/assets/js/config.js"></script>
+</head>
+
+<body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+        <div class="layout-container">
+            <!-- Navbar -->
+
+            <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
+                <div class="container-xxl">
+                  <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
+                    <a href="{% url 'jobseeker_home' %}" class="app-brand-link">
+                      <span class="app-brand-logo demo">
+                        <svg width="32" height="22" viewBox="0 0 32 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M0.00172773 0V6.85398C0.00172773 6.85398 -0.133178 9.01207 1.98092 10.8388L13.6912 21.9964L19.7809 21.9181L18.8042 9.88248L16.4951 7.17289L9.23799 0H0.00172773Z"
+                            fill="#7367F0" />
+                          <path opacity="0.06" fill-rule="evenodd" clip-rule="evenodd"
+                            d="M7.69824 16.4364L12.5199 3.23696L16.5541 7.25596L7.69824 16.4364Z" fill="#161616" />
+                          <path opacity="0.06" fill-rule="evenodd" clip-rule="evenodd"
+                            d="M8.07751 15.9175L13.9419 4.63989L16.5849 7.28475L8.07751 15.9175Z" fill="#161616" />
+                          <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z"
+                            fill="#7367F0" />
+                        </svg>
+                      </span>
+                      <span class="app-brand-text demo menu-text fw-bold">Hirexcel</span>
+                    </a>
+        
+                    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
+                      <i class="ti ti-x ti-md align-middle"></i>
+                    </a>
+                  </div>
+        
+                  <aside id="layout-menu"
+                    class="layout-menu-horizontal menu-horizontal menu bg-menu-theme no-shadow flex-grow-1">
+                    <div class="container-xxl d-flex h-100">
+                      <ul class="menu-inner pb-2 pb-xl-0">
+                        <li class="menu-item bg-primary-subtle rounded active">
+                          <a href="jobseeker_home" class="menu-link">
+                            <div data-i18n="Home">Home</div>
+                          </a>
+                        </li>
+                        {% comment %} <li class="menu-item">
+                          <a href="javascript:void(0)" class="menu-link text-black">
+                            <div data-i18n="Quizes">Quizzes</div>
+                          </a>
+                        </li>
+                        <li class="menu-item">
+                          <a href="javascript:void(0)" class="menu-link text-black disabled" tabindex="-1" aria-disabled="true">
+                            <div data-i18n="Challenges">Challenges</div>
+                            <i class="menu-icon tf-icons ti ti-lock"></i>
+                          </a>
+                        </li> {% endcomment %}
+                        <li class="menu-item">
+                          <a href="javascript:void(0)" class="menu-link text-black">
+                            <div data-i18n="Profile">Profile</div>
+                          </a>
+                        </li>
+        
+                      </ul>
+                    </div>
+                  </aside>
+        
+                  <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+                    <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                      <i class="ti ti-menu-2 ti-md"></i>
+                    </a>
+                  </div>
+        
+                  <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+                    <ul class="navbar-nav flex-row align-items-center ms-auto">
+                      <!-- Search -->
+                      {% comment %} <li class="nav-item navbar-search-wrapper">
+                        <a class="nav-link btn btn-text-secondary btn-icon rounded-pill search-toggler"
+                          href="javascript:void(0);">
+                          <i class="ti ti-search ti-md"></i>
+                        </a>
+                      </li> {% endcomment %}
+                      <!-- /Search -->
+        
+        
+                      <!-- Style Switcher -->
+                      <li class="nav-item dropdown-style-switcher dropdown">
+                        <a class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow"
+                          href="javascript:void(0);" data-bs-toggle="dropdown">
+                          <i class="ti ti-md"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-styles">
+                          <li>
+                            <a class="dropdown-item" href="javascript:void(0);" data-theme="light">
+                              <span class="align-middle"><i class="ti ti-sun ti-md me-3"></i>Light</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a class="dropdown-item" href="javascript:void(0);" data-theme="dark">
+                              <span class="align-middle"><i class="ti ti-moon-stars ti-md me-3"></i>Dark</span>
+                            </a>
+                          </li>
+                          {% comment %} <li>
+                            <a class="dropdown-item" href="javascript:void(0);" data-theme="system">
+                              <span class="align-middle"><i class="ti ti-device-desktop-analytics ti-md me-3"></i>System</span>
+                            </a>
+                          </li> {% endcomment %}
+                        </ul>
+                      </li>
+                      <!-- / Style Switcher-->
+        
+        
+                      <!-- User -->
+                      <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                        <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
+                          <div class="avatar avatar-online">
+                            <img src="../../../static/assets/img/avatars/1.png" alt class="rounded-circle" />
+                          </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                          <li>
+                            <a class="dropdown-item mt-0" href="#">
+                              <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0 me-2">
+                                  <div class="avatar avatar-online">
+                                    <img src="../../../static/assets/img/avatars/1.png" alt class="rounded-circle" />
+                                  </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                  <h6 class="mb-0">{{ user_info.FIRST_NAME }} {{ user_info.LAST_NAME }}</h6>
+                                  <small class="text-muted">Job Seeker</small>
+                                </div>
+                              </div>
+                            </a>
+                          </li>
+                          <li>
+                            <div class="dropdown-divider my-1 mx-n2"></div>
+                          </li>
+                          <li>
+                            <a class="dropdown-item" href="#">
+                              <i class="ti ti-user me-3 ti-md"></i><span class="align-middle">My Profile</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a class="dropdown-item" href="#">
+                              <i class="ti ti-settings me-3 ti-md"></i><span class="align-middle">Settings</span>
+                            </a>
+                          </li>
+                          {% comment %} <li>
+                            <a class="dropdown-item" href="pages-account-settings-billing.html">
+                              <span class="d-flex align-items-center align-middle">
+                                <i class="flex-shrink-0 ti ti-file-dollar me-3 ti-md"></i><span
+                                  class="flex-grow-1 align-middle">Billing</span>
+                                <span
+                                  class="flex-shrink-0 badge bg-danger d-flex align-items-center justify-content-center">4</span>
+                              </span>
+                            </a>
+                          </li> {% endcomment %}
+                          <li>
+                            <div class="dropdown-divider my-1 mx-n2"></div>
+                          </li>
+                          {% comment %} <li>
+                            <a class="dropdown-item" href="pages-pricing.html">
+                              <i class="ti ti-currency-dollar me-3 ti-md"></i><span class="align-middle">Pricing</span>
+                            </a>
+                          </li>
+                          <li>
+                            <a class="dropdown-item" href="pages-faq.html">
+                              <i class="ti ti-question-mark me-3 ti-md"></i><span class="align-middle">FAQ</span>
+                            </a>
+                          </li> {% endcomment %}
+                          <li>
+                            <div class="d-grid px-2 pt-2 pb-1">
+                              <a class="btn btn-sm btn-danger d-flex" href="{% url 'jobseeker_logout' %}" target="_blank">
+                                <small class="align-middle">Logout</small>
+                                <i class="ti ti-logout ms-2 ti-14px"></i>
+                              </a>
+                            </div>
+                          </li>
+                        </ul>
+                      </li>
+                      <!--/ User -->
+                    </ul>
+                  </div>
+        
+                  <!-- Search Small Screens -->
+                  {% comment %} <div class="navbar-search-wrapper search-input-wrapper container-xxl d-none">
+                    <input type="text" class="form-control search-input border-0" placeholder="Search..."
+                      aria-label="Search..." />
+                    <i class="ti ti-x search-toggler cursor-pointer"></i>
+                  </div> {% endcomment %}
+                </div>
+              </nav>
+
+            <!-- / Navbar -->
+
+            <!-- Layout container -->
+            <div class="layout-page">
+                <!-- Content wrapper -->
+                <div class="content-wrapper">
+
+                    <!-- Content -->
+
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <!-- Header -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card mb-6">
+                                    <div class="user-profile-header-banner">
+                                        <img src="../../../../static/assets/img/pages/profile-banner.png"
+                                            alt="Banner image" class="rounded-top" />
+                                    </div>
+                                    <div
+                                        class="user-profile-header d-flex flex-column flex-lg-row text-sm-start text-center mb-5">
+                                        <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
+                                            <img src="../../../../static/assets/img/avatars/no-dp.png" alt="user image"
+                                                class="d-block h-auto ms-0 ms-sm-6 rounded user-profile-img" />
+                                        </div>
+                                        <div class="flex-grow-1 mt-3 mt-lg-5">
+                                            <div
+                                                class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-5 flex-md-row flex-column gap-4">
+                                                <div class="user-profile-info">
+                                                    <h4 class="mb-2 mt-lg-6">{{ recruiter_user_info.FIRST_NAME }} {{ recruiter_user_info.LAST_NAME }}</h4>
+                                                    <ul
+                                                        class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-4 my-2">
+                                                        <li class="list-inline-item d-flex gap-2 align-items-center">
+                                                            <i class="ti ti-users ti-lg"></i><span
+                                                                class="fw-medium">Recruiter</span>
+                                                        </li>
+                                                        {% comment %} <li class="list-inline-item d-flex gap-2 align-items-center">
+                                                            <i class="ti ti-map-pin ti-lg"></i><span
+                                                                class="fw-medium">Vatican City</span>
+                                                        </li>
+                                                        <li class="list-inline-item d-flex gap-2 align-items-center">
+                                                            <i class="ti ti-calendar ti-lg"></i><span class="fw-medium">
+                                                                Joined April 2021</span>
+                                                        </li> {% endcomment %}
+                                                    </ul>
+                                                </div>
+                                                {% comment %} <a href="javascript:void(0)" class="btn btn-primary mb-1">
+                                                    <i class="ti ti-user-check ti-xs me-2"></i>Connected
+                                                </a> {% endcomment %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/ Header -->
+
+                        <!-- Navbar pills -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="nav-align-top">
+                                    <ul class="nav nav-pills flex-column flex-sm-row mb-6 gap-2 gap-lg-0">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="#" id="profile-tab"><i
+                                                    class="ti-sm ti ti-user-check me-1_5"></i> Profile</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#" id="jobs-tab"><i
+                                                    class="ti ti-briefcase ti-sm me-1_5"></i> Posted Jobs</a>
+                                        </li>
+                                        {% comment %} <li class="nav-item">
+                                            <a class="nav-link" href="#" id="applied-tab"><i
+                                                    class="ti ti-users ti-sm me-1_5"></i> Applied</a>
+                                        </li> {% endcomment %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/ Navbar pills -->
+
+                        <!-- User Profile Content -->
+                        <div class="row" id="your_profile">
+                            <div class="col-xl-6 col-lg-6 col-md-6">
+                                <div class="card mb-6">
+                                    <div class="card-body">
+                                        <small class="card-text text-uppercase text-muted small">About</small>
+                                        <ul class="list-unstyled my-3 py-1">
+                                            <li class="d-flex align-items-center mb-4">
+                                                <i class="ti ti-user ti-lg"></i><span class="fw-medium mx-2">First Name:</span>
+                                                <span class="fw-bold">{{recruiter_user_info.FIRST_NAME}}</span>
+                                            </li>
+                                            <li class="d-flex align-items-center mb-4">
+                                                <i class="ti ti-user ti-lg"></i><span class="fw-medium mx-2">Last Name:</span>
+                                                <span class="fw-bold">{{recruiter_user_info.LAST_NAME}}</span>
+                                            </li>
+                                            <li class="d-flex align-items-center mb-4">
+                                                <i class="ti ti-home ti-lg"></i><span
+                                                    class="fw-medium mx-2">City:</span>
+                                                <span class="fw-bold">{{recruiter_user_info.CITY}}</span>
+                                            </li>
+                                            <li class="d-flex align-items-center mb-4">
+                                                <i class="ti ti-flag ti-lg"></i><span
+                                                    class="fw-medium mx-2">Country:</span> <span class="fw-bold">{{recruiter_user_info.COUNTRY}}</span>
+                                            </li>
+                                            <li class="d-flex align-items-center mb-4">
+                                                <i class="ti ti-check ti-lg"></i><span
+                                                    class="fw-medium mx-2">Status:</span>
+                                                <span class="fw-bold">Active</span>
+                                            </li>
+                                        </ul>
+                                        <small class="card-text text-uppercase text-muted small">Contacts</small>
+                                        <ul class="list-unstyled my-3 py-1">
+                                            <li class="d-flex align-items-center mb-4">
+                                                <i class="ti ti-phone-call ti-lg"></i><span
+                                                    class="fw-medium mx-2">Contact:</span>
+                                                <span class="fw-bold">{{recruiter_user_info.PHONE_NUMBER}}</span>
+                                            </li>
+                                            <li class="d-flex align-items-center mb-4">
+                                                <i class="ti ti-mail ti-lg"></i><span
+                                                    class="fw-medium mx-2">Email:</span>
+                                                <span class="fw-bold">{{recruiter_user_info.EMAIL}}</span>
+                                            </li>
+                                        </ul>
+                                        {% comment %} <small class="card-text text-uppercase text-muted small">Teams</small>
+                                        <ul class="list-unstyled mb-0 mt-3 pt-1">
+                                            <li class="d-flex flex-wrap mb-4">
+                                                <span class="fw-medium me-2">Backend Developer</span><span>(126
+                                                    Members)</span>
+                                            </li>
+                                            <li class="d-flex flex-wrap">
+                                                <span class="fw-medium me-2">React Developer</span><span>(98
+                                                    Members)</span>
+                                            </li>
+                                        </ul> {% endcomment %}
+                                    </div>
+                                </div>
+                                {% comment %} <div class="card mb-6">
+                                    <div class="card-body">
+                                        <small class="card-text text-uppercase text-muted small">Overview</small>
+                                        <ul class="list-unstyled mb-0 mt-3 pt-1">
+                                            <li class="d-flex align-items-end mb-4">
+                                                <i class="ti ti-check ti-lg"></i><span class="fw-medium mx-2">Task
+                                                    Compiled:</span>
+                                                <span>13.5k</span>
+                                            </li>
+                                            <li class="d-flex align-items-end mb-4">
+                                                <i class="ti ti-layout-grid ti-lg"></i><span
+                                                    class="fw-medium mx-2">Projects Compiled:</span>
+                                                <span>146</span>
+                                            </li>
+                                            <li class="d-flex align-items-end">
+                                                <i class="ti ti-users ti-lg"></i><span
+                                                    class="fw-medium mx-2">Connections:</span>
+                                                <span>897</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div> {% endcomment %}
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6">
+                                <div class="card mb-6">
+                                    <div class="card-body">
+                                        <small class="card-text text-uppercase text-muted small">Company Details</small>
+                                        <ul class="list-unstyled my-3 py-1">
+                                            <li class="d-flex align-items-center mb-4">
+                                                <i class="ti ti-building ti-lg"></i><span class="fw-medium mx-2">Company Name:</span>
+                                                <span class="fw-bold">{{recruiter_info.COMPANY_NAME}}</span>
+                                            </li>
+                                            <li class="d-flex align-items-center mb-4">
+                                                <i class="ti ti-world-www ti-lg"></i><span
+                                                    class="fw-medium mx-2">Company Website:</span>
+                                                <span class="fw-bold"><a href="{{ recruiter_info.COMPANY_WEBSITE }}">{{recruiter_info.COMPANY_WEBSITE}}</a></span>
+                                            </li>
+                                            <li class="d-flex align-items-center mb-4">
+                                                <i class="ti ti-trademark ti-lg"></i><span
+                                                    class="fw-medium mx-2">Industry:</span>
+                                                <span class="fw-bold">{{recruiter_info.INDUSTRY}}</span>
+                                            </li>
+                                            <li class="d-flex align-items-center mb-4">
+                                                <i class="ti ti-users-group ti-lg"></i><span
+                                                    class="fw-medium mx-2">Company Size:</span> <span class="fw-bold">{{recruiter_info.COMPANY_SIZE}} employees</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                {% comment %} <div class="card mb-6">
+                                    <div class="card-body">
+                                        <small class="card-text text-uppercase text-muted small">Overview</small>
+                                        <ul class="list-unstyled mb-0 mt-3 pt-1">
+                                            <li class="d-flex align-items-end mb-4">
+                                                <i class="ti ti-check ti-lg"></i><span class="fw-medium mx-2">Task
+                                                    Compiled:</span>
+                                                <span>13.5k</span>
+                                            </li>
+                                            <li class="d-flex align-items-end mb-4">
+                                                <i class="ti ti-layout-grid ti-lg"></i><span
+                                                    class="fw-medium mx-2">Projects Compiled:</span>
+                                                <span>146</span>
+                                            </li>
+                                            <li class="d-flex align-items-end">
+                                                <i class="ti ti-users ti-lg"></i><span
+                                                    class="fw-medium mx-2">Connections:</span>
+                                                <span>897</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div> {% endcomment %}
+                            </div>
+                        </div>
+                        <!--/ User Profile Content -->
+
+                        <!-- Your Jobs Content -->
+                        <div class="row d-none" id="your_jobs">
+                            {% for job in job_postings %}
+                                    <div class="card joblist-card mb-6">
+                                    <div class="card-body">
+                                        <div class="d-flex mb-4">
+                                        <div class="avatar-md">
+                                            <div
+                                            class="align-items-center text-white d-flex fw-normal justify-content-center w-100 h-100 bg-light rounded">
+                                            <img src="../../../static/assets/img/companies/hx.png" alt="" class="avatar-xs">
+                                            </div>
+                                        </div>
+                                        <div class="ms-3 flex-grow-1">
+                                            <a href="#!">
+                                            <h5 class="mb-0 job-title">{{ job.job_title }}</h5>
+                                            </a>
+                                            <p class="company-name text-muted mb-0">{{ job.job_position }} | {{job.company_name}}</p>
+                                        </div>
+                                        </div>
+                                        <p class="text-muted job-description">{{ job.job_description }}.</p>
+
+                                        <h6 class="mb-0 job-skill">Required Skills</h6>
+                                        <div class="d-flex flex-row flex-nowrap overflow-auto py-2">
+                                        {% for skill in job.required_skills %}
+                                        <span class="badge bg-primary-subtle text-primary me-1">{{ skill }}</span>
+                                        {% endfor %}
+                                        </div>
+
+
+                                        <h6 class="mb-0 personality-traits">Personality Traits</h6>
+                                        <div class="d-flex flex-row flex-wrap overflow-auto py-2">
+                                        {% for trait in job.personality_traits %}
+                                        <span class="badge bg-primary-subtle text-primary me-1 mb-1">{{ trait }}</span>
+                                        {% endfor %}
+                                        </div>
+
+                                        <div class="d-flex flex-row flex-nowrap overflow-auto py-2">
+                                        <div>
+                                            <h6 class="mb-0 cog-weight">Cognitive Weightage</h6>
+                                            <h4 class="mb-0 cog-weight">{{job.cog_weight}}</h4>
+                                        </div>
+                                        <div class=" px-10">
+                                            <h6 class="mb-0 tech-weight">Technical Weightage</h6>
+                                            <h4 class="mb-0 tech-weight">{{job.tech_weight}}</h4>
+                                        </div>
+                                        <div class=" px-10">
+                                            <h6 class="mb-0 tech-weight">Technical Assessment Level</h6>
+                                            <div class="d-flex flex-row flex-nowrap overflow-auto py-2">
+                                            {% for level in job.tech_assessment_level %}
+                                            <span class="badge bg-info-subtle text-info me-1">{{ level }}</span>
+                                            {% endfor %}
+                                            </div>
+                                        </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="card-footer border-top-dashed">
+                                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                                        <div>
+                                            <i class="ti ti-briefcase align-bottom me-1"></i>
+                                            <span class="job-type">{{ job.job_type }}</span>
+                                        </div>
+                                        <div>
+                                            <i class="ti ti-stars align-bottom me-1"></i>
+                                            <span class="job-experience">{{job.experience_requirements}} Experience</span>
+                                        </div>
+                                        <div>
+                                            <i class="ti ti-map-pin align-bottom me-1"></i>
+                                            <span class="job-location">{{ job.city }}, {{ job.country }}</span>
+                                        </div>
+                                        <div>
+                                            <i class="ti ti-certificate align-bottom me-1"></i>
+                                            {{job.required_qualifications}}
+                                        </div>
+                                        <div>
+                                        </div>
+                                        {% comment %} <div>
+                                            <i class="ti ti-clock align-bottom me-1"></i>
+                                            <span class="job-postdate">15 Sep, 2022</span>
+                                        </div> {% endcomment %}
+                                        {% comment %} <div>
+                                            <button type="button"
+                                            class="btn btn-primary viewjob-list"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#hirexcel_quizzes_modal"
+                                            data-job-title="{{ job.job_title }}"
+                                            data-company-name="{{ job.company_name }}"
+                                            data-job-description="{{ job.job_description }}"
+                                            data-job-position="{{ job.job_position }}"
+                                            data-job-post-id="{{ job.job_post_id }}"
+                                            data-user-id="{{ recruiter_user_info.USER_ID }}">
+                                            Start Quiz
+                                            <i class="ti ti-arrow-narrow-right align-bottom ms-1"></i>
+                                            </button>
+                                        </div> {% endcomment %}
+                                        </div>
+                                    </div>
+                                    </div>
+                            {% endfor %}
+                        </div>
+                        <!--/ Your Jobs Content -->
+
+
+                    </div>
+                    <!--/ Content -->
+
+                    <!-- Footer -->
+                    <footer class="content-footer footer bg-footer-theme">
+                        <div class="container-xxl">
+                        <div
+                            class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
+                            <div class="text-body">
+                            ©
+                            <script>
+                                document.write(new Date().getFullYear());
+                            </script>
+                            , HIREXCEL. All rights reserved.
+                            </div>
+                            <div class="d-none d-lg-inline-block">
+                            <a href="#" class="footer-link me-4"
+                                target="_blank">License</a>
+                            {% comment %} <a href="#" target="_blank" class="footer-link me-4">More
+                                Themes</a> {% endcomment %}
+
+                            {% comment %} <a href="#" target="_blank"
+                                class="footer-link me-4">Documentation</a> {% endcomment %}
+
+                            <a href="#" target="_blank"
+                                class="footer-link d-none d-sm-inline-block">Support</a>
+                            </div>
+                        </div>
+                        </div>
+                    </footer>
+                    <!-- / Footer -->
+
+                    <div class="content-backdrop fade"></div>
+                </div>
+                <!--/ Content wrapper -->
+            </div>
+
+            <!--/ Layout container -->
+        </div>
+    </div>
+
+
+    <!-- Overlay -->
+    <div class="layout-overlay layout-menu-toggle"></div>
+
+    <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+    <div class="drag-target"></div>
+
+    <!--/ Layout wrapper -->
+
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+
+    <script src="../../../../static/assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="../../../../static/assets/vendor/libs/popper/popper.js"></script>
+    <script src="../../../../static/assets/vendor/js/bootstrap.js"></script>
+    <script src="../../../../static/assets/vendor/libs/node-waves/node-waves.js"></script>
+    <script src="../../../../static/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="../../../../static/assets/vendor/libs/hammer/hammer.js"></script>
+    <script src="../../../../static/assets/vendor/libs/i18n/i18n.js"></script>
+    <script src="../../../../static/assets/vendor/libs/typeahead-js/typeahead.js"></script>
+    <script src="../../../../static/assets/vendor/js/menu.js"></script>
+    <script src="../../../../static/assets/vendor/js/recruiter_view_profile_report.js"></script>
+
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+    <script src="../../../../static/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+
+    <!-- Main JS -->
+    <script src="../../../../static/assets/js/main.js"></script>
+
+    <!-- Page JS -->
+    <script src="../../../../static/assets/js/pages-profile.js"></script>
+
+    <script>
+        const profileTab = document.getElementById('profile-tab');
+        const jobsTab = document.getElementById('jobs-tab');
+        const yourProfileSection = document.getElementById('your_profile');
+        const yourJobsSection = document.getElementById('your_jobs');
+
+
+        profileTab.addEventListener('click', function (e) {
+            e.preventDefault();
+            profileTab.classList.add('active');
+            jobsTab.classList.remove('active');
+            yourProfileSection.classList.remove('d-none');
+            yourJobsSection.classList.add('d-none');
+        });
+
+        jobsTab.addEventListener('click', function (e) {
+            e.preventDefault();
+            jobsTab.classList.add('active');
+            profileTab.classList.remove('active');
+            yourJobsSection.classList.remove('d-none');
+            yourProfileSection.classList.add('d-none');
+        });
+
+
+    </script>
+
+</body>
+
+</html>
