@@ -73,6 +73,18 @@ urlpatterns = [
     path('recruiter_success/', views.recruiter_success_page, name='recruiter_success_page'),
     # -----------------------------------------------------------------------------------------------------------------------------------
 
+    # -------------------------------------------------- [ RECRUITER VIEW PROFILE] ---------------------------------------
+    path('recruiter_view_profile/', views.recruiter_view_profile, name='recruiter_view_profile'),
+    path('jobseeker_profile/<int:job_seeker_id>/', views.view_jobseeker_profile_by_recruiter, name='view_jobseeker_profile_by_recruiter'),
+    path('get_report_data/', views.get_report_data, name='get_report_data'),
+    # --------------------------------------------------------------------------------------------------------------------
+
+    # -------------------------------------------------- [ JOBSEEKER VIEW PROFILE] ---------------------------------------
+    path('jobseeker_view_profile/', views.jobseeker_view_profile, name='jobseeker_view_profile'),
+    # path('recruiter_profile/', views.view_recruiter_profile_by_jobseeker, name='recruiter_profile'),
+    path('recruiter_profile/<int:recruiter_id>/', views.view_recruiter_profile_by_jobseeker, name='view_recruiter_profile_by_jobseeker'),
+    # --------------------------------------------------------------------------------------------------------------------
+
     # -------------------------------------------------- [ QUIZ START] ------------------------------------------------------------------
     path('quiz_start_screen', views.quiz_start_screen, name='quiz_start_screen'),
     # ----------------------------[ DISC QUIZ ]--------------------------------------------------
