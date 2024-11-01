@@ -213,11 +213,12 @@ def format_job_posting_data(job_posting):
     return formatted_data
 
 def post_job(request):
+    user_id = request.session.get('user_id')
+    user_info = User_Information.objects.get(USER_ID=user_id)
     if request.method == 'POST':
         try:
             print(request.POST)
             # Fetch recruiter and form fields as usual
-            user_id = request.session.get('user_id')
             recruiter = Recruiter.objects.get(USER_ID__USER_ID=user_id)
             job_title = request.POST['jobTitle']
             city = request.POST['city']
@@ -286,7 +287,7 @@ def post_job(request):
             return HttpResponse("Job Position Criteria not found", status=404)
 
     job_positions = Job_Position_Criteria.objects.values_list('JOB_POSITION', flat=True).distinct()
-    return render(request, './post_job/post_job.html', {'job_positions': job_positions})
+    return render(request, './post_job/post_job.html', { 'user_info': user_info, 'job_positions': job_positions})
 
 @csrf_exempt
 def get_personality_traits(request):
@@ -1507,6 +1508,8 @@ def non_verbal_completion(request):
 
     # If the total time is zero, prevent further processing
     if vi_completion_time == 0 or nvi_completion_time == 0:
+        del request.session['selected_technical_questions']
+        print("Deleting selected_tech questions")
         # Render a message or simply redirect to prevent duplicate entry
         return render(request, 'non_verbal_quiz/non_verbal_completion.html', {
             'message': "Assessment already completed."
@@ -1613,11 +1616,57 @@ def technical_quiz_start_redirect(request):
     return redirect('jobseeker_home')
 
 
+# def technical_quiz_start(request):
+#     if 'selected_technical_questions' not in request.session:
+#         question_ids = list(Technical_Questions_Dataset.objects.values_list('TECH_ID', flat=True))
+#         selected_questions = random.sample(question_ids, 15) if len(question_ids) >= 15 else question_ids
+#         request.session['selected_technical_questions'] = selected_questions
+#     return redirect('technical_quiz', question_index=0)
+
 def technical_quiz_start(request):
+    # Assuming 'job_post_id' is passed in session or request, depending on your setup
+    job_post_id = request.session.get('JOB_POST_ID')  # or request.GET.get('job_post_id') if passed as GET parameter
+
+    if not job_post_id:
+        print("No job_post_id found in session.")
+        return redirect('jobseeker_home')  # Redirect to an error page if job_post_id is missing
+
+    # Fetch the Job Position and Technical Assessment Level from the Job Posting
+    try:
+        job_post = Job_Posting.objects.get(JOB_POST_ID=job_post_id)
+        job_position = job_post.JOB_POSITION.strip()  # Ensure no trailing whitespace
+        assessment_level = [level.strip() for level in job_post.TECHNICAL_ASSESSMENT_LEVEL.split(',')]
+        print(f"Job Position from Job Posting: {job_position}")
+        print(f"Technical Assessment Levels from Job Posting: {assessment_level}")
+    except Job_Posting.DoesNotExist:
+        print(f"Job Posting with ID {job_post_id} does not exist.")
+        return redirect('jobseeker_home')  # Redirect to an error page if job_post_id is invalid
+
+    # If 'selected_technical_questions' not in session, filter and select random questions
     if 'selected_technical_questions' not in request.session:
-        question_ids = list(Technical_Questions_Dataset.objects.values_list('TECH_ID', flat=True))
-        selected_questions = random.sample(question_ids, 15) if len(question_ids) >= 15 else question_ids
-        request.session['selected_technical_questions'] = selected_questions
+        print("Entering question selection block.")
+        
+        # Filter questions by Job Position and Test Level
+        filtered_questions = Technical_Questions_Dataset.objects.filter(
+            JOB_POSITION=job_position,
+            TEST_LEVEL__in=assessment_level  # Corrected to use __in lookup for list filtering
+        ).values_list('TECH_ID', flat=True)
+
+        # Debug information for filtered questions
+        print(f"Filtered Questions for Job Position '{job_position}' and Assessment Levels '{assessment_level}': {list(filtered_questions)}")
+
+        # Get 15 random questions if available, otherwise select all
+        question_ids = list(filtered_questions)
+        if question_ids:
+            selected_questions = random.sample(question_ids, 15) if len(question_ids) >= 15 else question_ids
+            print(f"Selected Question IDs: {selected_questions}")
+
+            # Store selected questions in session
+            request.session['selected_technical_questions'] = selected_questions
+        else:
+            print("No questions found for the specified Job Position and Assessment Levels.")
+            return redirect('jobseeker_home')  # Redirect if no questions match the criteria
+
     return redirect('technical_quiz', question_index=0)
 
 
