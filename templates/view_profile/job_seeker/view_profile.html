@@ -70,7 +70,7 @@
             <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
               <div class="container-xxl">
                 <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
-                  <a href="jobseeker_home" class="app-brand-link">
+                  <a href="{% url 'jobseeker_home' %}" class="app-brand-link">
                     <span class="app-brand-logo demo">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 353.78 487.47">
                         <g style="isolation: isolate;">
@@ -118,7 +118,7 @@
                   <div class="container-xxl d-flex h-100">
                     <ul class="menu-inner pb-2 pb-xl-0">
                       <li class="menu-item bg-primary-subtle rounded active">
-                        <a href="jobseeker_home" class="menu-link">
+                        <a href="{% url 'jobseeker_home' %}" class="menu-link">
                           <div data-i18n="Home">Home</div>
                         </a>
                       </li>
@@ -160,7 +160,6 @@
                     </li> {% endcomment %}
                     <!-- /Search -->
       
-      
                     <!-- Style Switcher -->
                     <li class="nav-item dropdown-style-switcher dropdown">
                       <a class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow"
@@ -197,7 +196,7 @@
                       </a>
                       <ul class="dropdown-menu dropdown-menu-end">
                         <li>
-                          <a class="dropdown-item mt-0" href="#">
+                          <a class="dropdown-item mt-0" href="javascript:void(0);">
                             <div class="d-flex align-items-center">
                               <div class="flex-shrink-0 me-2">
                                 <div class="avatar avatar-online">
@@ -215,15 +214,15 @@
                           <div class="dropdown-divider my-1 mx-n2"></div>
                         </li>
                         <li>
-                          <a class="dropdown-item" href="#">
+                          <a class="dropdown-item" href="{% url 'jobseeker_view_profile' %}">
                             <i class="ti ti-user me-3 ti-md"></i><span class="align-middle">My Profile</span>
                           </a>
                         </li>
-                        <li>
+                        {% comment %} <li>
                           <a class="dropdown-item" href="#">
                             <i class="ti ti-settings me-3 ti-md"></i><span class="align-middle">Settings</span>
                           </a>
-                        </li>
+                        </li> {% endcomment %}
                         {% comment %} <li>
                           <a class="dropdown-item" href="pages-account-settings-billing.html">
                             <span class="d-flex align-items-center align-middle">

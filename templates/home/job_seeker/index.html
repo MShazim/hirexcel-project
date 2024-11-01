@@ -72,7 +72,7 @@
       <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
         <div class="container-xxl">
           <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
-            <a href="jobseeker_home" class="app-brand-link">
+            <a href="{% url 'jobseeker_home' %}" class="app-brand-link">
               <span class="app-brand-logo demo">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 353.78 487.47">
                   <g style="isolation: isolate;">
@@ -120,7 +120,7 @@
             <div class="container-xxl d-flex h-100">
               <ul class="menu-inner pb-2 pb-xl-0">
                 <li class="menu-item bg-primary-subtle rounded active">
-                  <a href="jobseeker_home" class="menu-link">
+                  <a href="{% url 'jobseeker_home' %}" class="menu-link">
                     <div data-i18n="Home">Home</div>
                   </a>
                 </li>
@@ -198,7 +198,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li>
-                    <a class="dropdown-item mt-0" href="#">
+                    <a class="dropdown-item mt-0" href="javascript:void(0);">
                       <div class="d-flex align-items-center">
                         <div class="flex-shrink-0 me-2">
                           <div class="avatar avatar-online">
@@ -216,15 +216,15 @@
                     <div class="dropdown-divider my-1 mx-n2"></div>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="jobseeker_view_profile">
+                    <a class="dropdown-item" href="{% url 'jobseeker_view_profile' %}">
                       <i class="ti ti-user me-3 ti-md"></i><span class="align-middle">My Profile</span>
                     </a>
                   </li>
-                  <li>
+                  {% comment %} <li>
                     <a class="dropdown-item" href="#">
                       <i class="ti ti-settings me-3 ti-md"></i><span class="align-middle">Settings</span>
                     </a>
-                  </li>
+                  </li> {% endcomment %}
                   {% comment %} <li>
                     <a class="dropdown-item" href="pages-account-settings-billing.html">
                       <span class="d-flex align-items-center align-middle">
@@ -304,17 +304,17 @@
 
           <div class="container-xxl container-p-y user_activity">
             <div class="row mt-10">
-              <div class="col-lg-3 mb-6">
+              <div class="col-lg-6 mb-6">
                 <div class="card h-100">
                   <div class="card-body p-8">
                     <div class="card-subtitle">
-                      <p class="mb-0 text-black">We’ve found jobs for</p>
+                      <p class="mb-0 text-black">Stand out with <strong>HIREXCEL</strong></p>
                     </div>
-                    <h1 class="total_hired_number">100+</h1>
+                    <h1 class="total_hired_number">Showcase Your Potential</h1>
                     <div class="card-subtitle">
-                      <p class="mb-0 text-black">developers from Pakistan<img
-                          src="../../../static/assets/svg/icons/pakistan.ffd6654c.svg" class="flag" alt=""> so far and
-                        you could be the next one!</p>
+                      <p class="mb-0 text-black">HIREXCEL helps you highlight your unique personality traits and skills, 
+                        connecting you with roles that align with your strengths. Let companies see 
+                        the real you and find the perfect fit for your career growth.</p>
                     </div>
                   </div>
                 </div>
@@ -420,23 +420,31 @@
 
                       <div class="col-lg-7">
                         <div class="d-flex align-items-center">
-                          <h3 class="fw-medium mb-0 card-title user_name">{{ user_info.FIRST_NAME }} {{ user_info.LAST_NAME }}</h3>
-                          {% comment %} <button class="btn btn-primary ms-4 p-2 px-3 mt-sm-0"><span
-                              class="rounded-circle d-flex align-items-center me-2 p-50 edit_icon_bg"><i
-                                class="ti ti-pencil ti-sm"></i></span><a href=""
-                              class="btn-link text-white">Edit</a></button> {% endcomment %}
+                            <h4 class="text-light fw-medium mb-0 card-title user_name display-5">Jobseeker</h4>
                         </div>
-                        <p class="card-subtitle">{{ user_info.CITY }} ,{{ user_info.COUNTRY }}</p>
-                        <hr class="my-10">
+                        <div class="d-flex align-items-center">
+                            <h3 class="fw-medium mb-2 card-title user_name">{{ user_info.FIRST_NAME }} {{ user_info.LAST_NAME }}</h3>
+                            {% comment %} <button class="btn btn-primary ms-4 p-2 px-3 mt-sm-0"><span
+                                class="rounded-circle d-flex align-items-center me-2 p-50 edit_icon_bg"><i
+                                class="ti ti-pencil ti-sm"></i></span><a href=""
+                                class="btn-link text-white">Edit</a></button> {% endcomment %}
+                        </div>
+                        <div>
+                          <i class="ti ti-map-pin align-bottom me-2 my-1 "></i>
+                          <span class="card-subtitle">{{ user_info.CITY }} ,{{ user_info.COUNTRY }}</span>
+                        </div>
+                        <hr class="my-12">
                         <ul class="list-unstyled my-3 py-1">
-                          <li class="d-flex align-items-center mb-4">
-                            <span class="fw-medium mx-2">Email:</span>
-                            <span>{{user_info.EMAIL}}</span>
-                          </li>
-                          <li class="d-flex align-items-center mb-4">
-                            <span class="fw-medium mx-2">Contact:</span>
-                            <span>{{user_info.PHONE_NUMBER}}</span>
-                          </li>
+                            <li class="d-flex align-items-center mb-4">
+                              <i class="ti ti-mail align-bottom me-2 "></i>
+                              <span class="fw-medium mx-2">Email:</span>
+                              <span>{{user_info.EMAIL}}</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-4">
+                              <i class="ti ti-phone align-bottom me-2 "></i>
+                              <span class="fw-medium mx-2">Contact:</span>
+                              <span>{{user_info.PHONE_NUMBER}}</span>
+                            </li>
                         </ul>
                       </div>
 
@@ -444,7 +452,7 @@
                         <div class="d-flex align-items-center justify-content-center">
                           {% comment %} <img src="../../../static/assets/img/avatars/1.png" alt="user-avatar"
                             class="d-block w-px-200 h-px-200 rounded-circle" id="uploadedAvatar"> {% endcomment %}
-                            <img src="../../../static/assets/img/illustrations/card-advance-sale.png" height="250" alt="view sales">
+                            <img src="../../../static/assets/img/illustrations/dashboard-user.png" height="250" alt="view sales">
 
 
                         </div>
