@@ -330,7 +330,7 @@ def get_personality_traits(request):
         print("No job position provided")
         return JsonResponse({'personality_traits': [], 'cognitive_weightage': "N/A", 'technical_weightage': "N/A"})
 
-def apply_for_job(request, job_post_id):
+#def apply_for_job(request, job_post_id):
     if request.method == 'POST':
         # Hardcoded assessment categories
         assessment_categories = ["Cognitive_nvi", "Technical"]
@@ -338,7 +338,7 @@ def apply_for_job(request, job_post_id):
 
         # Create a single assessment record with combined categories
         assessment = Assessment.objects.create(
-            ASSESSMENT_CATEGORY=assessment_category_str
+           ASSESSMENT_CATEGORY=assessment_category_str
         )
 
         # Store assessment_id and job_post_id in the session
@@ -350,6 +350,32 @@ def apply_for_job(request, job_post_id):
     else:
         # If not a POST request, redirect back to jobseeker home
         return redirect('jobseeker_home')
+
+#--------------------------------- NEW VIEW ADDED DURING TESTING---------------------------------
+def apply_for_job(request, job_post_id):
+    if request.method == 'POST':
+        # Hardcoded assessment categories
+        assessment_categories = ["Cognitive_nvi", "Technical"]
+        assessment_category_str = ', '.join(assessment_categories)
+
+        # Create an assessment without `ASSESSMENT_CATEGORY`
+        assessment = Assessment.objects.create(
+            JOB_POST_ID= Job_Posting.objects.get(JOB_POST_ID=job_post_id),
+            COGNITIVE_WEIGHTAGE='40',
+            TECHNICAL_WEIGHTAGE='60',
+            TECHNICAL_ASSESSMENT_LEVEL='Basic'
+        )
+
+        # Store assessment_id and job_post_id in the session
+        request.session['assessment_id'] = str(assessment.ASSESSMENT_ID)
+        request.session['job_post_id'] = job_post_id
+
+        # Redirect directly to disc quiz start
+        return redirect('disc_quiz_start')
+    else:
+        # If not a POST request, redirect back to jobseeker home
+        return redirect('jobseeker_home')
+
 
 # ----------------------------[ CREATE ACCOUNT JS ]------------------------------------------
 def job_seeker_create_account(request, step=1):
@@ -772,6 +798,81 @@ def quiz_start_screen(request):
 #* ------------------------------------------------------------------------------------------
 #* ----------------------------[ DISC QUIZ INTEGRATED ]--------------------------------------
 #* ------------------------------------------------------------------------------------------
+def disc_quiz_start_redirect(request):
+    if request.method == 'POST':
+        job_post_id = request.POST.get('job_post_id')
+        user_id = request.POST.get('user_id')
+
+        # Fetch the job posting details
+        job_posting = Job_Posting.objects.get(JOB_POST_ID=job_post_id)
+        cognitive_weightage = job_posting.COGNITIVE_WEIGHTAGE
+        technical_weightage = job_posting.TECHNICAL_WEIGHTAGE
+        technical_assessment_level = job_posting.TECHNICAL_ASSESSMENT_LEVEL
+
+        # Step 3: Create an Assessment record
+        assessment = Assessment.objects.create(
+            JOB_POST_ID=job_posting,
+            COGNITIVE_WEIGHTAGE=cognitive_weightage,
+            TECHNICAL_WEIGHTAGE=technical_weightage,
+            TECHNICAL_ASSESSMENT_LEVEL=technical_assessment_level,
+        )
+
+        # Save JOB_POST_ID in session
+        request.session['JOB_POST_ID'] = job_post_id
+        # Save ASSESSMENT_ID in session
+        request.session['ASSESSMENT_ID'] = assessment.ASSESSMENT_ID
+
+        # Fetch the job_seeker using user_id
+        job_seeker = Job_Seeker.objects.get(USER_ID=user_id)
+        job_seeker_id = job_seeker.JOB_SEEKER_ID
+
+        # Save JOB_SEEKER_ID in session
+        request.session['JOB_SEEKER_ID'] = job_seeker_id
+
+        # Fetch user's first name
+        user_info = User_Information.objects.get(USER_ID=user_id)
+        first_name = user_info.FIRST_NAME
+
+        # Calculate completion time
+        # completion_time = now() + timedelta(seconds=2040)
+
+        # Debugging: Print the completion_time to ensure it's a valid datetime
+        # print(f"Calculated Completion Time: {completion_time} (type: {type(completion_time)})")
+
+        # Step 4: Create a Job_Seeker_Assessment record
+        job_seeker_assessment = Job_Seeker_Assessment.objects.create(
+            JOB_SEEKER_ID=job_seeker,
+            JOB_POST_ID=job_posting,
+            ASSESSMENT_ID=assessment,
+            NAME=first_name,
+            ASSESSMENT_TYPE="Personality Assessment",
+            TOTAL_COMPLETION_TIME_REQUIRED="2040",  # Ensure this is a datetime object
+        )
+
+        # Step 5: Create a Personality_Assessment record
+        personality_assessment = Personality_Assessment.objects.create(
+            JOB_SEEKER_ASSESSMENT_ID=job_seeker_assessment
+        )
+
+        # Step 6: Create a DISC_Assessment record
+        disc_assessment = DISC_Assessment.objects.create(
+            PERSONALITY_ASSESSMENT_ID=personality_assessment,
+            DISC_COMPLETION_TIME_REQUIRED="720"
+        )
+
+        # Save JOB_SEEKER_ASSESSMENT_ID in session
+        request.session['JOB_SEEKER_ASSESSMENT_ID'] = job_seeker_assessment.JOB_SEEKER_ASSESSMENT_ID
+        # Save PERSONALITY_ASSESSMENT_ID in session
+        request.session['PERSONALITY_ASSESSMENT_ID'] = personality_assessment.PERSONALITY_ASSESSMENT_ID
+        # Save DISC_ASSESSMENT_ID in session
+        request.session['DISC_ASSESSMENT_ID'] = disc_assessment.DISC_ASSESSMENT_ID
+
+        # Step 7: Redirect to DISC Quiz start
+        return redirect('disc_quiz_start')
+
+    # Fallback if not a POST request
+    return redirect('jobseeker_home')
+
 def disc_quiz_start_redirect(request):
     if request.method == 'POST':
         job_post_id = request.POST.get('job_post_id')
@@ -1788,7 +1889,7 @@ def technical_quiz_completion(request):
 #* -------------------------------[ ENDS ]---------------------------------------------------
 #* ------------------------------------------------------------------------------------------
 
-# ----------------------------[ PHASE COMPLETETIONS Unchanged ]-----------------------------------------
+# # ----------------------------[ PHASE COMPLETETIONS Unchanged ]-----------------------------------------
 def phase_one_completed(request):
     # Assuming job_seeker_id is stored in session when the user logs in
     job_seeker_id = request.session.get('job_seeker_id')
@@ -1827,7 +1928,6 @@ def phase_one_completed(request):
     request.session['cognitive_assessment_id'] = str(cognitive_assessment.COGNITIVE_ASSESSMENT_ID)
 
     return render(request, './test_complete/phase_one_completed.html')
-
 
 def phase_two_completed(request):
     # Fetch job_seeker_assessment_id from the session
@@ -1869,7 +1969,6 @@ def phase_two_completed(request):
 
     return render(request, './test_complete/phase_two_completed.html', {'score_display': score_display})
 
-
 def phase_three_completed(request):
     # Fetch technical_assessment_id from the session
     technical_assessment_id = request.session.get('technical_assessment_id')
@@ -1886,8 +1985,8 @@ def phase_three_completed(request):
     score_display = f"{score} / {total_questions}"
 
     return render(request, './test_complete/phase_three_completed.html', {'score_display': score_display})
-# ------------------------------------[ ENDS ]-----------------------------------------------
 
+# # ------------------------------------[ ENDS ]-----------------------------------------------
 
 # ---------------------------------[ for generating the evaluation summary using ChatGPT ]-----------------------------------------
 def process_assessment_and_generate_summary(request):

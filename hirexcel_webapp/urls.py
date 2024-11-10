@@ -3,6 +3,8 @@ from django.urls import path , include
 from hirexcel_webapp import views
 from django.shortcuts import redirect
 
+ 
+
 urlpatterns = [
     # -------------------------------------------------- [ START SCREEN ] ---------------------------------------------------------------
     path('', views.start_screen, name='start_screen'),
