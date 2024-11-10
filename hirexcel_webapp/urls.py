@@ -2,9 +2,8 @@ from django.contrib import admin
 from django.urls import path , include
 from hirexcel_webapp import views
 from django.shortcuts import redirect
-#from . import views
 
-app_name = 'hirexcel_webapp' 
+ 
 
 urlpatterns = [
     # -------------------------------------------------- [ START SCREEN ] ---------------------------------------------------------------
