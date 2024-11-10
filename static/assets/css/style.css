@@ -55,10 +55,10 @@
 }
 
 .total_hired_number {
-  /* font-size: 10px; */
+  font-size: 75px !important;
   font-weight: 500;
   font-family: "Poppins", sans-serif;
-  line-height: 50%;
+  line-height: 100% !important;
   letter-spacing: -1.5px;
   background: linear-gradient(90deg, #66cc80 0%, #a1dc65 100%);
   -webkit-text-fill-color: transparent;
