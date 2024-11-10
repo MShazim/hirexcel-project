@@ -316,6 +316,10 @@ def get_personality_traits(request):
                 cognitive_weightage = criterion.COGNITIVE_WEIGHTAGE
                 technical_weightage = criterion.TECHNICAL_WEIGHTAGE
 
+                print("Received Personality Traits:", list(personality_traits_set))
+                print("Received Cognitive Weightage:", cognitive_weightage)
+                print("Received Technical Weightage:", technical_weightage)
+
             # Return the combined personality traits and weightages in the response
             return JsonResponse({
                 'personality_traits': list(personality_traits_set),  # Convert set to list for JSON serialization
@@ -331,25 +335,25 @@ def get_personality_traits(request):
         return JsonResponse({'personality_traits': [], 'cognitive_weightage': "N/A", 'technical_weightage': "N/A"})
 
 #def apply_for_job(request, job_post_id):
-    if request.method == 'POST':
-        # Hardcoded assessment categories
-        assessment_categories = ["Cognitive_nvi", "Technical"]
-        assessment_category_str = ', '.join(assessment_categories)
+    # if request.method == 'POST':
+    #     # Hardcoded assessment categories
+    #     assessment_categories = ["Cognitive_nvi", "Technical"]
+    #     assessment_category_str = ', '.join(assessment_categories)
 
-        # Create a single assessment record with combined categories
-        assessment = Assessment.objects.create(
-           ASSESSMENT_CATEGORY=assessment_category_str
-        )
+    #     # Create a single assessment record with combined categories
+    #     assessment = Assessment.objects.create(
+    #        ASSESSMENT_CATEGORY=assessment_category_str
+    #     )
 
-        # Store assessment_id and job_post_id in the session
-        request.session['assessment_id'] = str(assessment.ASSESSMENT_ID)
-        request.session['job_post_id'] = job_post_id
+    #     # Store assessment_id and job_post_id in the session
+    #     request.session['assessment_id'] = str(assessment.ASSESSMENT_ID)
+    #     request.session['job_post_id'] = job_post_id
 
-        # Redirect directly to disc quiz start
-        return redirect('disc_quiz_start')
-    else:
-        # If not a POST request, redirect back to jobseeker home
-        return redirect('jobseeker_home')
+    #     # Redirect directly to disc quiz start
+    #     return redirect('disc_quiz_start')
+    # else:
+    #     # If not a POST request, redirect back to jobseeker home
+    #     return redirect('jobseeker_home')
 
 #--------------------------------- NEW VIEW ADDED DURING TESTING---------------------------------
 def apply_for_job(request, job_post_id):
@@ -387,9 +391,21 @@ def job_seeker_create_account(request, step=1):
         if step == 1:
             form = UserInformationForm(request.POST)
             if form.is_valid():
-                user = form.save()  # Save user info to DB
-                request.session['user_id'] = str(user.USER_ID)  # Store USER_ID in session
-                return redirect(reverse('job_seeker_create_account', args=[2]))  # Move to Step 2
+                # Check if email already exists
+                email = request.POST.get('EMAIL')
+                existing_user = User_Information.objects.filter(EMAIL=email).first()
+                if existing_user:
+                    # Check if the existing user's ID is in the Job_Seeker table
+                    if Recruiter.objects.filter(USER_ID=existing_user.USER_ID).exists():
+                        messages.error(request, "This email exists in the Recruiter records. Please try a different email.")
+                    else:
+                        messages.error(request, "This email is already registered. Please try a different email.")
+                    
+                    context['form'] = form  # Re-render form with error
+                else:
+                    user = form.save()  # Save user info to DB
+                    request.session['user_id'] = str(user.USER_ID)  # Store USER_ID in session
+                    return redirect(reverse('job_seeker_create_account', args=[2]))  # Move to Step 2
             else:
                 context['form'] = form
 
@@ -489,12 +505,32 @@ def recruiter_create_account(request, step=1):
         if step == 1:
             form = UserInformationForm(request.POST)
             if form.is_valid():
-                user = form.save()  # Save recruiter personal info to DB
-                request.session['user_id'] = str(user.USER_ID)  # Store recruiter ID in session
-                return redirect('recruiter_create_account', step=2)  # Move to step 2 (company info)
+                # # Check if email already exists
+                email = request.POST.get('EMAIL')
+                # if User_Information.objects.filter(EMAIL=email).exists():
+                #     messages.error(request, "This email is already registered. Please try a different email.")
+                #     context['form'] = form  # Re-render form with error
+                # else:
+                #     user = form.save()  # Save recruiter personal info to DB
+                #     request.session['user_id'] = str(user.USER_ID)  # Store recruiter ID in session
+                #     return redirect('recruiter_create_account', step=2)  # Move to step 2 (company info)
+                # Check if email already exists
+                existing_user = User_Information.objects.filter(EMAIL=email).first()
+                if existing_user:
+                    # Check if the existing user's ID is in the Job_Seeker table
+                    if Job_Seeker.objects.filter(USER_ID=existing_user.USER_ID).exists():
+                        messages.error(request, "This email exists in the Job Seeker records. Please try a different email.")
+                    else:
+                        messages.error(request, "This email is already registered. Please try a different email.")
+                    
+                    context['form'] = form  # Re-render form with error
+                else:
+                    user = form.save()  # Save recruiter personal info to DB
+                    request.session['user_id'] = str(user.USER_ID)  # Store recruiter ID in session
+                    return redirect('recruiter_create_account', step=2)  # Move to step 2 (company info)
             else:
                 context['form'] = form
-        
+
         # Step 2: Handle Company Info
         elif step == 2:
             form = RecruiterForm(request.POST)
@@ -798,80 +834,80 @@ def quiz_start_screen(request):
 #* ------------------------------------------------------------------------------------------
 #* ----------------------------[ DISC QUIZ INTEGRATED ]--------------------------------------
 #* ------------------------------------------------------------------------------------------
-def disc_quiz_start_redirect(request):
-    if request.method == 'POST':
-        job_post_id = request.POST.get('job_post_id')
-        user_id = request.POST.get('user_id')
+# def disc_quiz_start_redirect(request):
+#     if request.method == 'POST':
+#         job_post_id = request.POST.get('job_post_id')
+#         user_id = request.POST.get('user_id')
 
-        # Fetch the job posting details
-        job_posting = Job_Posting.objects.get(JOB_POST_ID=job_post_id)
-        cognitive_weightage = job_posting.COGNITIVE_WEIGHTAGE
-        technical_weightage = job_posting.TECHNICAL_WEIGHTAGE
-        technical_assessment_level = job_posting.TECHNICAL_ASSESSMENT_LEVEL
+#         # Fetch the job posting details
+#         job_posting = Job_Posting.objects.get(JOB_POST_ID=job_post_id)
+#         cognitive_weightage = job_posting.COGNITIVE_WEIGHTAGE
+#         technical_weightage = job_posting.TECHNICAL_WEIGHTAGE
+#         technical_assessment_level = job_posting.TECHNICAL_ASSESSMENT_LEVEL
 
-        # Step 3: Create an Assessment record
-        assessment = Assessment.objects.create(
-            JOB_POST_ID=job_posting,
-            COGNITIVE_WEIGHTAGE=cognitive_weightage,
-            TECHNICAL_WEIGHTAGE=technical_weightage,
-            TECHNICAL_ASSESSMENT_LEVEL=technical_assessment_level,
-        )
+#         # Step 3: Create an Assessment record
+#         assessment = Assessment.objects.create(
+#             JOB_POST_ID=job_posting,
+#             COGNITIVE_WEIGHTAGE=cognitive_weightage,
+#             TECHNICAL_WEIGHTAGE=technical_weightage,
+#             TECHNICAL_ASSESSMENT_LEVEL=technical_assessment_level,
+#         )
 
-        # Save JOB_POST_ID in session
-        request.session['JOB_POST_ID'] = job_post_id
-        # Save ASSESSMENT_ID in session
-        request.session['ASSESSMENT_ID'] = assessment.ASSESSMENT_ID
+#         # Save JOB_POST_ID in session
+#         request.session['JOB_POST_ID'] = job_post_id
+#         # Save ASSESSMENT_ID in session
+#         request.session['ASSESSMENT_ID'] = assessment.ASSESSMENT_ID
 
-        # Fetch the job_seeker using user_id
-        job_seeker = Job_Seeker.objects.get(USER_ID=user_id)
-        job_seeker_id = job_seeker.JOB_SEEKER_ID
+#         # Fetch the job_seeker using user_id
+#         job_seeker = Job_Seeker.objects.get(USER_ID=user_id)
+#         job_seeker_id = job_seeker.JOB_SEEKER_ID
 
-        # Save JOB_SEEKER_ID in session
-        request.session['JOB_SEEKER_ID'] = job_seeker_id
+#         # Save JOB_SEEKER_ID in session
+#         request.session['JOB_SEEKER_ID'] = job_seeker_id
 
-        # Fetch user's first name
-        user_info = User_Information.objects.get(USER_ID=user_id)
-        first_name = user_info.FIRST_NAME
+#         # Fetch user's first name
+#         user_info = User_Information.objects.get(USER_ID=user_id)
+#         first_name = user_info.FIRST_NAME
 
-        # Calculate completion time
-        # completion_time = now() + timedelta(seconds=2040)
+#         # Calculate completion time
+#         # completion_time = now() + timedelta(seconds=2040)
 
-        # Debugging: Print the completion_time to ensure it's a valid datetime
-        # print(f"Calculated Completion Time: {completion_time} (type: {type(completion_time)})")
+#         # Debugging: Print the completion_time to ensure it's a valid datetime
+#         # print(f"Calculated Completion Time: {completion_time} (type: {type(completion_time)})")
 
-        # Step 4: Create a Job_Seeker_Assessment record
-        job_seeker_assessment = Job_Seeker_Assessment.objects.create(
-            JOB_SEEKER_ID=job_seeker,
-            JOB_POST_ID=job_posting,
-            ASSESSMENT_ID=assessment,
-            NAME=first_name,
-            ASSESSMENT_TYPE="Personality Assessment",
-            TOTAL_COMPLETION_TIME_REQUIRED="2040",  # Ensure this is a datetime object
-        )
+#         # Step 4: Create a Job_Seeker_Assessment record
+#         job_seeker_assessment = Job_Seeker_Assessment.objects.create(
+#             JOB_SEEKER_ID=job_seeker,
+#             JOB_POST_ID=job_posting,
+#             ASSESSMENT_ID=assessment,
+#             NAME=first_name,
+#             ASSESSMENT_TYPE="Personality Assessment",
+#             TOTAL_COMPLETION_TIME_REQUIRED="2040",  # Ensure this is a datetime object
+#         )
 
-        # Step 5: Create a Personality_Assessment record
-        personality_assessment = Personality_Assessment.objects.create(
-            JOB_SEEKER_ASSESSMENT_ID=job_seeker_assessment
-        )
+#         # Step 5: Create a Personality_Assessment record
+#         personality_assessment = Personality_Assessment.objects.create(
+#             JOB_SEEKER_ASSESSMENT_ID=job_seeker_assessment
+#         )
 
-        # Step 6: Create a DISC_Assessment record
-        disc_assessment = DISC_Assessment.objects.create(
-            PERSONALITY_ASSESSMENT_ID=personality_assessment,
-            DISC_COMPLETION_TIME_REQUIRED="720"
-        )
+#         # Step 6: Create a DISC_Assessment record
+#         disc_assessment = DISC_Assessment.objects.create(
+#             PERSONALITY_ASSESSMENT_ID=personality_assessment,
+#             DISC_COMPLETION_TIME_REQUIRED="720"
+#         )
 
-        # Save JOB_SEEKER_ASSESSMENT_ID in session
-        request.session['JOB_SEEKER_ASSESSMENT_ID'] = job_seeker_assessment.JOB_SEEKER_ASSESSMENT_ID
-        # Save PERSONALITY_ASSESSMENT_ID in session
-        request.session['PERSONALITY_ASSESSMENT_ID'] = personality_assessment.PERSONALITY_ASSESSMENT_ID
-        # Save DISC_ASSESSMENT_ID in session
-        request.session['DISC_ASSESSMENT_ID'] = disc_assessment.DISC_ASSESSMENT_ID
+#         # Save JOB_SEEKER_ASSESSMENT_ID in session
+#         request.session['JOB_SEEKER_ASSESSMENT_ID'] = job_seeker_assessment.JOB_SEEKER_ASSESSMENT_ID
+#         # Save PERSONALITY_ASSESSMENT_ID in session
+#         request.session['PERSONALITY_ASSESSMENT_ID'] = personality_assessment.PERSONALITY_ASSESSMENT_ID
+#         # Save DISC_ASSESSMENT_ID in session
+#         request.session['DISC_ASSESSMENT_ID'] = disc_assessment.DISC_ASSESSMENT_ID
 
-        # Step 7: Redirect to DISC Quiz start
-        return redirect('disc_quiz_start')
+#         # Step 7: Redirect to DISC Quiz start
+#         return redirect('disc_quiz_start')
 
-    # Fallback if not a POST request
-    return redirect('jobseeker_home')
+#     # Fallback if not a POST request
+#     return redirect('jobseeker_home')
 
 def disc_quiz_start_redirect(request):
     if request.method == 'POST':
@@ -1828,11 +1864,11 @@ def technical_quiz_completion(request):
     total_technical_completion_time = request.session.get('tech_time')
     
     # If the total time is zero, prevent further processing
-    # if total_technical_completion_time == 0:
-    #     # Render a message or simply redirect to prevent duplicate entry
-    #     return render(request, 'technical_quiz/technical_completion.html', {
-    #         'message': "Assessment already completed."
-    #     })
+    if total_technical_completion_time == 0:
+        # Render a message or simply redirect to prevent duplicate entry
+        return render(request, 'technical_quiz/technical_completion.html', {
+            'message': "Assessment already completed."
+        })
 
     # Calculate the total correct answers (Total Tech Score)
     total_correct_answers = Technical_Answers_Dataset.objects.filter(

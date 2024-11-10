@@ -87,21 +87,6 @@
                                             <div class="mb-xl-0 mb-6 text-heading">
                                                 <div class="d-flex svg-illustration mb-6 gap-2 align-items-center">
                                                     <div class="app-brand-logo demo">
-                                                        {% comment %} <svg width="32" height="22" viewBox="0 0 32 22" fill="none"
-                                                            xmlns="http://www.w3.org/2000/svg">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M0.00172773 0V6.85398C0.00172773 6.85398 -0.133178 9.01207 1.98092 10.8388L13.6912 21.9964L19.7809 21.9181L18.8042 9.88248L16.4951 7.17289L9.23799 0H0.00172773Z"
-                                                                fill="#7367F0" />
-                                                            <path opacity="0.06" fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M7.69824 16.4364L12.5199 3.23696L16.5541 7.25596L7.69824 16.4364Z"
-                                                                fill="#161616" />
-                                                            <path opacity="0.06" fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M8.07751 15.9175L13.9419 4.63989L16.5849 7.28475L8.07751 15.9175Z"
-                                                                fill="#161616" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z"
-                                                                fill="#7367F0" />
-                                                        </svg> {% endcomment %}
                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 182.16 251">
                                                             <g style="isolation: isolate;">
                                                               <g id="Layer_2" data-name="Layer 2">
@@ -226,7 +211,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td class=""><p class="fw-bold mb-0">Candidate Status</p></td>
-                                                    <td colspan="1" rowspan="1">
+                                                    <td colspan="2" rowspan="1">
                                                         {% if  candidate_status == "Not Recommended"%}
                                                         <span class='badge bg-danger-subtle text-danger me-1 mt-2'>{{ evaluation_summary.CANDIDATE_STATUS }}</span>
                                                         {% else %}
@@ -239,11 +224,18 @@
                                                             </div>
                                                         </small> {% endcomment %}
                                                     </td>
-                                                    <td colspan="2" rowspan="1">
+                                                    <td colspan="1" rowspan="1">
                                                         <small>
-                                                            <div class="alert alert-warning d-flex align-items-center mt-2 mb-0">
+                                                            <div class="alert alert-warning d-flex align-items-start mt-2 mb-0">
                                                                 <i class="ti ti-info-circle me-2"></i>
-                                                                Here the note will be placed.
+                                                                {% if  candidate_status == "Not Recommended"%}
+                                                                Thank you for completing the assessment. While your strengths may align with different areas,
+                                                                we believe that with further skill development, you have great potential. We encourage you to continue honing your capabilities,
+                                                                and we’d be happy to see you apply for future opportunities that better match your evolving skill set.
+                                                                {% else %}
+                                                                Thank you for completing the assessment. Your results indicate a strong alignment between your skills and the requirements,
+                                                                positioning you as a standout candidate. We’re pleased with this positive outcome and wish you continued success as you advance in your career journey.
+                                                                {% endif %}
                                                             </div>
                                                         </small>
                                                     </td>
@@ -255,7 +247,7 @@
                                                 <tr>
                                                     <td class=""><p class="fw-bold mb-0">Optimal Job Matches</p></td>
                                                     {% comment %} <td>{{ evaluation_summary.OPTIMAL_JOB_MATCHES }} (this job matches are AI generated)</td> {% endcomment %}
-                                                    <td colspan="1" rowspan="1">
+                                                    <td colspan="2" rowspan="1">
                                                         <ol class="mb-0">
                                                             {% for match in optimal_job_matches_list %}
                                                                 <li>{{ match }}</li>
@@ -266,11 +258,11 @@
                                                             These job matches are AI generated.
                                                         </div> {% endcomment %}
                                                     </td>
-                                                    <td colspan="2" rowspan="1">
+                                                    <td colspan="1" rowspan="1">
                                                         <small>
-                                                            <div class="alert alert-warning d-flex align-items-center mt-2 mb-0">
+                                                            <div class="alert alert-warning d-flex align-items-start mt-2 mb-0">
                                                                 <i class="ti ti-info-circle me-2"></i>
-                                                                Here the note will be placed.
+                                                                Based on your test characteristics, you may also excel in other roles that align with your skill set. 
                                                             </div>
                                                         </small>
                                                     </td>
@@ -329,9 +321,23 @@
                                                 </tr>
                                                 <tr>
                                                     <td colspan="3" rowspan="1">
-                                                        <div class="alert alert-warning d-flex align-items-center m-0">
+                                                        <div class="alert alert-warning d-flex align-items-start m-0">
                                                             <i class="ti ti-info-circle me-2"></i>
-                                                            Here the note will be placed.
+                                                            {% if cognitive_result == "Passed" and technical_result == "Passed" %}
+                                                            Your strong performance in both cognitive and technical areas demonstrates a well-rounded skill set and highlights your capabilities.
+                                                            Congratulations on this excellent achievement, and best wishes for your career ahead.
+                                                            {% elif cognitive_result == "Failed" and technical_result == "Failed" %}
+                                                            The results indicate that further growth in both technical and cognitive skills could
+                                                            better align with our requirements. Strengthening these areas can help unlock future opportunities suited to your potential.
+                                                            {% elif cognitive_result == "Passed" and technical_result == "Failed" %}
+                                                            Your cognitive skills indicate excellent problem-solving and adaptability.
+                                                            Expanding your technical knowledge could complement these abilities effectively.
+                                                            {% elif cognitive_result == "Failed" and technical_result == "Passed" %}
+                                                            Your results reflect strong technical expertise. Strengthening cognitive skills
+                                                            could further enhance your overall performance and adaptability. Keep building on your strengths!
+                                                            {% else %}
+                                                            No comments
+                                                            {% endif %}
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -720,7 +726,7 @@
                 }
     
                 // Save the PDF
-                pdf.save('invoice.pdf');
+                pdf.save('hirexcel_report.pdf');
             });
         });
     </script>

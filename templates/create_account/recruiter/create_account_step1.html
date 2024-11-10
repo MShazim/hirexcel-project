@@ -62,7 +62,7 @@
     <!-- Content -->
     <div class="authentication-wrapper authentication-cover authentication-bg">
          <!-- Logo -->
-         <a href="index.html" class="app-brand auth-cover-brand">
+         <a href="{% url 'recruiter_login' %}"  class="app-brand auth-cover-brand">
             <span class="app-brand-logo demo">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 353.78 487.47">
                     <g style="isolation: isolate;">
@@ -172,15 +172,22 @@
                                     <div class="row g-6">
                                         <div class="col-sm-6">
                                             <label for="first_name">First Name</label>
-                                            <input type="text" id="first_name" name="FIRST_NAME" class="form-control" placeholder="First Name" required>
+                                            <input type="text" id="first_name" name="FIRST_NAME" class="form-control" placeholder="First Name" value="{{ request.POST.FIRST_NAME|default:'' }}" required>
                                         </div>
                                         <div class="col-sm-6">
                                             <label for="last_name">Last Name</label>
-                                            <input type="text" id="last_name" name="LAST_NAME" class="form-control" placeholder="Last Name" required>
+                                            <input type="text" id="last_name" name="LAST_NAME" class="form-control" placeholder="Last Name" value="{{ request.POST.LAST_NAME|default:'' }}" required>
                                         </div>
                                         <div class="col-sm-12">
                                             <label for="email">Email</label>
-                                            <input type="email" id="email" name="EMAIL" class="form-control" placeholder="your@email.com"  required>
+                                            <input type="email" id="email" name="EMAIL" class="form-control" placeholder="your@email.com" value="{{ request.POST.EMAIL|default:'' }}" required >
+                                            {% if messages %}
+                                                {% for message in messages %}
+                                                    <div class="alert alert-danger mt-2" role="alert">
+                                                        {{ message }}
+                                                    </div>
+                                                {% endfor %}
+                                            {% endif %}
                                         </div>
                                         <div class="col-sm-6">
                                             <label for="password">Password</label>
@@ -198,7 +205,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <label for="city">City</label>
-                                            <input type="text" id="city" name="CITY" class="form-control" placeholder="City" required>
+                                            <input type="text" id="city" name="CITY" class="form-control" placeholder="City" value="{{ request.POST.CITY|default:'' }}" required>
                                         </div>
                                         <div class="col-sm-6">
                                             <label for="country">Country</label>
@@ -217,7 +224,7 @@
                                         </div>
                                         <div class="col-sm-12">
                                             <label for="phone_number">Mobile</label>
-                                            <input type="text" id="phone_number" name="PHONE_NUMBER" class="form-control" placeholder="92 333 1234567" required>
+                                            <input type="text" id="phone_number" name="PHONE_NUMBER" class="form-control" placeholder="92 333 1234567" value="{{ request.POST.PHONE_NUMBER|default:'' }}" required>
                                         </div>
                                         <div class="col-12 d-flex justify-content-end">
                                             <button type="submit" class="btn btn-primary btn-next">
