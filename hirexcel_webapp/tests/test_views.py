@@ -51,12 +51,15 @@ class TestloginLogoutViews(TestCase):
         self.client.session.save()         
             
     def test_jobseeker_login_GET(self):
+        print("Running: test_jobseeker_login_GET")
         # Test if GET request to login page loads successfully with status 200
         response = self.client.get(self.jobseeker_login_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, './login/job_seeker/jobseeker_login.html')
 
     def test_jobseeker_login_valid_POST(self):
+        print("Running: test_jobseeker_login_valid_POST")
+   
         # Test if POST request with valid credentials redirects to jobseeker home page
         response = self.client.post(self.jobseeker_login_url, {
             'email-username': 'test@example.com',
@@ -72,6 +75,8 @@ class TestloginLogoutViews(TestCase):
         self.assertEqual(self.client.session['job_seeker_id'], str(self.job_seeker.JOB_SEEKER_ID))
 
     def test_jobseeker_login_invalid_POST(self):
+        print("Running: test_jobseeker_login_invalid_POST")
+    
         # Test if POST request with invalid credentials returns the login page with an error
         response = self.client.post(self.jobseeker_login_url, {
             'email-username': 'invalid@example.com',
@@ -87,6 +92,8 @@ class TestloginLogoutViews(TestCase):
         self.assertTrue(any("Invalid email or password" in str(message) for message in messages))
 
     def test_recruiter_login_GET(self):
+        print("Running: test_recruiter_login_GET")
+    
         # Test if GET request to login page loads successfully with status 200
         response = self.client.get(self.recruiter_login_url)
         self.assertEqual(response.status_code, 200)
@@ -94,6 +101,7 @@ class TestloginLogoutViews(TestCase):
         self.assertTemplateUsed(response, './login/recruiter/recruiter_login.html')
 
     def test_recruiter_login_valid_POST(self):
+        print("Running: test_recruiter_login_valid_POST")
         # Test if POST request with valid credentials redirects to recruiter home page
         response = self.client.post(self.recruiter_login_url, {
             'email-username': 'recruiter@example.com',
@@ -109,6 +117,8 @@ class TestloginLogoutViews(TestCase):
         self.assertEqual(self.client.session['recruiter_id'], str(self.recruiter.RECRUITER_ID))
 
     def test_recruiter_login_invalid_POST(self):
+        print("Running: test_recruiter_login_invalid_POST")
+
         # Test if POST request with invalid credentials returns the login page with an error
         response = self.client.post(self.recruiter_login_url, {
             'email-username': 'invalid@example.com',
@@ -124,6 +134,7 @@ class TestloginLogoutViews(TestCase):
         self.assertTrue(any("Invalid email or password" in str(message) for message in messages))
 
     def test_recruiter_login_no_recruiter_account_POST(self):
+        print("Running: test_recruiter_login_no_recruiter_account_POST")
         # Delete the recruiter instance to simulate no recruiter account
         self.recruiter.delete()
 
@@ -142,6 +153,8 @@ class TestloginLogoutViews(TestCase):
         self.assertTrue(any("Couldn't find email, Please Sign Up" in str(message) for message in messages))
         
     def test_jobseeker_logout(self):
+        print("Running: test_jobseeker_logout")
+
         # Test if jobseeker logout clears session data and redirects to login page
         response = self.client.get(self.jobseeker_logout_url)
 
@@ -154,6 +167,8 @@ class TestloginLogoutViews(TestCase):
         self.assertRedirects(response, self.jobseeker_login_url)
 
     def test_recruiter_logout(self):
+        print("Running: test_recruiter_logout")
+
         # Test if recruiter logout clears session data and redirects to login page
         response = self.client.get(self.recruiter_logout_url)
 
@@ -168,8 +183,6 @@ class TestloginLogoutViews(TestCase):
 # --------------------------------------[ ENDS ]---------------------------------------------
 
 # ----------------------------[ CREATE ACCOUNT JS ]------------------------------------------
-
-
 class TestJobSeekerCreateAccountView(TestCase):
     
     def setUp(self):
@@ -206,13 +219,15 @@ class TestJobSeekerCreateAccountView(TestCase):
             'GITHUB_PROFILE_URL': 'https://github.com/testuser'
         }
         
-        self.resume_file = SimpleUploadedFile(
-            'resume.pdf', 
-            b'resume content', 
-            content_type='application/pdf'
-        )
+        self.resume_file = ' '
+        # SimpleUploadedFile(
+        #     'resume.pdf', 
+        #     b'resume content', 
+        #     content_type='application/pdf'
+        # )
 
     def test_step1_personal_info_POST(self):
+        print("Running: test_step1_personal_info_POST")
         # Test if POST request with valid personal info redirects to step 2
         response = self.client.post(reverse('job_seeker_create_account', args=[1]), self.step1_user_data)
 
@@ -225,6 +240,7 @@ class TestJobSeekerCreateAccountView(TestCase):
         self.assertIn('user_id', self.client.session)
 
     def test_step2_education_info_POST(self):
+        print("Running: test_step2_education_info_POST")
         # Simulate previous step by adding 'user_id' to session for Step 2
         step2_user = models.User_Information.objects.create(**self.step1_user_data)
         self.client.session['user_id'] = str(step2_user.USER_ID)
@@ -241,6 +257,7 @@ class TestJobSeekerCreateAccountView(TestCase):
         self.assertIn('education_data', self.client.session)
 
     def test_step3_work_experience_POST(self):
+        print("Running: test_step3_work_experience_POST")
         # Simulate previous steps by adding 'user_id' and 'education_data' to session for Step 3
         step3_user = models.User_Information.objects.create(**self.step1_user_data)
         self.client.session['user_id'] = str(step3_user.USER_ID)
@@ -257,86 +274,43 @@ class TestJobSeekerCreateAccountView(TestCase):
         # Verify that work experience data is stored in session
         self.assertIn('work_experience_data', self.client.session)
 
-    # # #<---------------------------------------BELOW TEST FAILS. REASON : UNKNOWN--------------->
-    # # def test_step4_job_seeker_info_POST(self):
-    # #     # Simulate previous steps by adding 'user_id', 'education_data', and 'work_experience_data' to session for Step 4
-    # #     step4_user = models.User_Information.objects.create(**self.step1_user_data)
-    # #     self.client.session['user_id'] = str(step4_user.USER_ID)
-    # #     self.client.session['education_data'] = self.step2_education_data
-    # #     self.client.session['work_experience_data'] = self.step3_work_experience_data
-    # #     self.client.session.save()
+    #<---------------------------------------BELOW TEST FAILS. REASON : REQUIRED FIELD RESUME IE EMPTY--------------->
+    def add_session_data(self):
+        step4_user = models.User_Information.objects.create(**self.step1_user_data)
+        session = self.client.session
+        session['user_id'] = str(step4_user.USER_ID)
+        session['education_data'] = self.step2_education_data
+        session['work_experience_data'] = self.step3_work_experience_data
+        session.save()
+        return step4_user
 
-    # #     # Send POST request with data split between POST and FILES
-    # #     response = self.client.post(
-    # #         reverse('job_seeker_create_account', args=[4]), 
-    # #         data=self.step4_post_data, 
-    # #         files=self.step4_files_data
-    # #     )
+    def test_step4_job_seeker_info_POST_PDF_Missing(self):
+        step4_user = self.add_session_data()
 
-    # #     # If response status is 200, print form errors to debug
-    # #     if response.status_code == 200:
-    # #         form = response.context.get('form')
-    # #         if form:
-    # #             print(form.errors)
+        # Submit step 4 data with resume file
+        response = self.client.post(
+            self.step4_url,
+            data=self.step4_job_seeker_data,
+            #files={'RESUME_UPLOAD': self.resume_file}
+        )
 
-    # #     # Check that the response status is a redirect (302) to success page
-    # #     self.assertEqual(response.status_code, 302)
-    # #     self.assertRedirects(response, reverse('success_page'))
+        # Debug output to identify any issues with session, file, or form
+        #print("Session data:", dict(self.client.session))
+        print("Submitted data:", self.step4_job_seeker_data)
+        print("Submitted files:", {'RESUME_UPLOAD': self.resume_file})
 
-    # #     # Verify that session is flushed
-    # #     self.assertNotIn('user_id', self.client.session)
-    # #     self.assertNotIn('education_data', self.client.session)
-    # #     self.assertNotIn('work_experience_data', self.client.session)
-
-    # #     # Confirm database entries
-    # #     job_seeker = models.Job_Seeker.objects.get(USER_ID=step4_user)
-    # #     self.assertEqual(job_seeker.LINKEDIN_PROFILE_URL, self.step4_post_data['LINKEDIN_PROFILE_URL'])
-    # #     self.assertEqual(job_seeker.GITHUB_PROFILE_URL, self.step4_post_data['GITHUB_PROFILE_URL'])
-
-    # #     education = models.JobSeekerEducation.objects.get(JOB_SEEKER_ID=job_seeker)
-    # #     self.assertEqual(education.DEGREE, self.step2_education_data['DEGREE'])
-    # #     self.assertEqual(education.INSTITUTE, self.step2_education_data['INSTITUTION_NAME'])
-
-    # #     work_experience = models.JobSeekerWorkExperience.objects.get(JOB_SEEKER_ID=job_seeker)
-    # #     self.assertEqual(work_experience.JOB_TITLE, self.step3_work_experience_data['DESIGNATION'])
-    # #     self.assertEqual(work_experience.COMPANY_NAME, self.step3_work_experience_data['COMPANY_NAME'])
-
-    # def add_session_data(self):
-    #     step4_user = models.User_Information.objects.create(**self.step1_user_data)
-    #     session = self.client.session
-    #     session['user_id'] = str(step4_user.USER_ID)
-    #     session['education_data'] = self.step2_education_data
-    #     session['work_experience_data'] = self.step3_work_experience_data
-    #     session.save()
-    #     return step4_user
-
-    # def test_step4_job_seeker_info_POST(self):
-    #     step4_user = self.add_session_data()
-
-    #     # Submit step 4 data with resume file
-    #     response = self.client.post(
-    #         self.step4_url,
-    #         data=self.step4_job_seeker_data,
-    #         files={'RESUME_UPLOAD': self.resume_file}
-    #     )
-
-    #     # Debug output to identify any issues with session, file, or form
-    #     print("Session data:", dict(self.client.session))
-    #     print("Submitted data:", self.step4_job_seeker_data)
-    #     print("Submitted files:", {'RESUME_UPLOAD': self.resume_file})
-
-    #     # Check if job_seeker was created and has the resume file
-    #     job_seeker = models.Job_Seeker.objects.filter(USER_ID=step4_user).first()
+        # Check if job_seeker was created and has the resume file
+        job_seeker = models.Job_Seeker.objects.filter(USER_ID=step4_user).first()
         
-    #     # Confirm that the job seeker and resume file were saved correctly
-    #     self.assertIsNotNone(job_seeker, "Job Seeker was not created.")
-    #     self.assertTrue(job_seeker.RESUME_UPLOAD, "Resume file was not saved.")
-    #     self.assertTrue(job_seeker.RESUME_UPLOAD.name.endswith('resume.pdf'), "Resume file name is incorrect.")
-    #     self.assertEqual(job_seeker.RESUME_UPLOAD.read(), b'resume content', "Resume file content is incorrect.")
+        # Confirm that the job seeker and resume file were saved correctly
+        self.assertIsNotNone(job_seeker, "Job Seeker was not created.")
+        self.assertTrue(job_seeker.RESUME_UPLOAD, "Resume file was not saved.")
+        self.assertTrue(job_seeker.RESUME_UPLOAD.name.endswith('resume.pdf'), "Resume file name is incorrect.")
+        self.assertEqual(job_seeker.RESUME_UPLOAD.read(), b'resume content', "Resume file content is incorrect.")
         
-    #     # Verify successful redirection to the success page
-    #     self.assertEqual(response.status_code, 302)
-    #     self.assertRedirects(response, reverse('success_page'))
+        # Verify successful redirection to the success page
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('success_page'))
 
 # --------------------------------------[ ENDS ]---------------------------------------------
 
@@ -369,6 +343,8 @@ class TestRecruiterCreateAccountView(TestCase):
         }
 
     def test_step1_personal_info_POST(self):
+        print("Running: test_step1_personal_info_POST")
+
         # Test if POST request with valid personal info redirects to step 2
         response = self.client.post(self.step1_url, self.step1_user_data)
 
@@ -379,7 +355,7 @@ class TestRecruiterCreateAccountView(TestCase):
         # Verify 'user_id' is stored in session
         self.assertIn('user_id', self.client.session)
 
-    # #<---------------------------------------BELOW TEST FAILS. REASON : UNKNOWN--------------->
+    #<---------------------------------------BELOW TEST FAILS. REASON : UNKNOWN--------------->
     # def test_step2_company_info_POST(self):
     #     # Simulate Step 1 by adding 'user_id' to session for Step 2
     #     step2_user = models.User_Information.objects.create(**self.step1_user_data)
@@ -442,6 +418,8 @@ class TestRecruiterCreateAccountView(TestCase):
     #     self.assertEqual(recruiter.COMPANY_SIZE, self.step2_company_data['COMPANY_SIZE'])
 
     def test_step1_invalid_data_POST(self):
+        print("Running: test_step1_invalid_data_POST")
+
         # Test POST with missing required fields for Step 1, expecting form re-render with errors
         invalid_data = self.step1_user_data.copy()
         invalid_data.pop('EMAIL')  # Remove required field
@@ -457,6 +435,8 @@ class TestRecruiterCreateAccountView(TestCase):
         self.assertIn('EMAIL', form.errors)
 
     def test_step2_invalid_data_POST(self):
+        print("Running: test_step2_invalid_data_POST")
+
         # Simulate Step 1 completion by setting 'user_id' in session for Step 2
         step2_user = models.User_Information.objects.create(**self.step1_user_data)
         self.client.session['user_id'] = str(step2_user.USER_ID)
@@ -527,6 +507,8 @@ class TestPostJobView(TestCase):
         self.url = reverse('post_job')
 
     def test_post_job_valid_data(self):
+        print("Running: test_post_job_valid_data")
+
         # Prepare mock POST data
         data = {
             'jobTitle': 'Junior Software Engineer',
@@ -629,6 +611,7 @@ class TestApplyForJobView(TestCase):
         self.job_post_id = self.job_posting.JOB_POST_ID
 
     def test_apply_for_job_POST(self):
+        print("Running: test_apply_for_job_POST")
         # URL for applying to a job with the provided job_post_id
         url = reverse('apply_for_job', args=[self.job_post_id])
 
@@ -902,6 +885,7 @@ class TestGetReportDataView(TestCase):
         )
 
     def test_get_report_data_success(self):
+        print("Running: test_get_report_data_success")
         """Test that report data is returned successfully with valid assessment_id."""
         url = reverse('get_report_data') + f'?assessment_id={self.assessment.ASSESSMENT_ID}'
         response = self.client.get(url)
@@ -920,6 +904,7 @@ class TestGetReportDataView(TestCase):
         self.assertIn('Creative', response_data['bigf_openness_personality_list'])
 
     def test_get_report_data_missing_assessment_id(self):
+        print("Running: test_get_report_data_missing_assessment_id")
         """Test that a missing assessment_id returns an error."""
         url = reverse('get_report_data')
         response = self.client.get(url)
@@ -929,6 +914,8 @@ class TestGetReportDataView(TestCase):
         self.assertEqual(response_data['error'], 'Assessment ID is required')
 
     def test_get_report_data_invalid_assessment_id(self):
+        print("Running: test_get_report_data_invalid_assessment_id")
+
         """Test that an invalid assessment_id returns a 404 error."""
         url = reverse('get_report_data') + '?assessment_id=invalid_id'
         response = self.client.get(url)
@@ -939,10 +926,170 @@ class TestGetReportDataView(TestCase):
 
 # --------------------------------------[ ENDS ]------------------------------------------------
 
+# --------------------------------------[ FAILED TEST CASES]------------------------------------------------
 
+class TestDuplicateJobApplicationAttempt(TestCase):
 
+    def setUp(self):
+        # Set up user and recruiter
+        self.user_info = models.User_Information.objects.create(
+            USER_ID="123456789", FIRST_NAME="Jane", LAST_NAME="Doe", EMAIL="jane@example.com", PASSWORD="password123"
+        )
+        self.recruiter = models.Recruiter.objects.create(
+            RECRUITER_ID="222222222", USER_ID=self.user_info, COMPANY_NAME="Tech Corp", COMPANY_WEBSITE="https://techcorp.com"
+        )
 
+        # Set up job seeker
+        self.job_seeker = models.Job_Seeker.objects.create(
+            JOB_SEEKER_ID="987654321", USER_ID=self.user_info
+        )
 
+        # Set up job posting with correct recruiter assignment
+        self.job_posting = models.Job_Posting.objects.create(
+            JOB_POST_ID="111111111", TITLE="Data Analyst", COGNITIVE_WEIGHTAGE="50", TECHNICAL_WEIGHTAGE="50",
+            TECHNICAL_ASSESSMENT_LEVEL="Intermediate", RECRUITER_ID=self.recruiter, CITY="City", COUNTRY="Country", 
+            JOB_TYPE="Full-Time", JOB_POSITION="Analyst", PERSONALITY_TRAITS="Analytical", REQUIRED_SKILLS="Data Analysis", 
+            REQUIRED_QUALIFICATIONS="Bachelor's Degree", EXPERIENCE_REQUIREMENTS="2 Years", REQUIRED_ASSESSMENTS="DISC, BigFive"
+        )
+
+        # Simulate that the user has already taken the test
+        self.job_seeker_assessment = models.Job_Seeker_Assessment.objects.create(
+            JOB_SEEKER_ASSESSMENT_ID="333333333", JOB_SEEKER_ID=self.job_seeker, JOB_POST_ID=self.job_posting,
+            ASSESSMENT_ID=models.Assessment.objects.create(
+                ASSESSMENT_ID="444444444", JOB_POST_ID=self.job_posting,
+                COGNITIVE_WEIGHTAGE="50", TECHNICAL_WEIGHTAGE="50", TECHNICAL_ASSESSMENT_LEVEL="Intermediate"
+            ), NAME="Assessment 1", ASSESSMENT_TYPE="Personality Assessment", TOTAL_COMPLETION_TIME_REQUIRED="60 minutes"
+        )
+
+        # Set up session
+        self.client.login(email="jane@example.com", password="password123")
+        session = self.client.session
+        session['user_id'] = self.user_info.USER_ID
+        session.save()
+
+    def test_duplicate_test_attempt(self):
+        """
+        Scenario: User attempts to take the same test again.
+        This test expects the system to allow the attempt (although it actually restricts it).
+        Demonstrating a mismatch in expected vs actual behavior.
+        """
+
+        # Attempt to apply for the same test again, expecting it to succeed (even though it should fail)
+        response = self.client.post(reverse('disc_quiz_start_redirect'), {
+            'job_post_id': self.job_posting.JOB_POST_ID,
+            'user_id': self.user_info.USER_ID
+        })
+
+        # Assert that the response status code is 200, indicating success (this expectation is incorrect)
+        self.assertEqual(response.status_code, 200, "Failed: System correctly restricted duplicate attempt, but test expected success.")
+
+class TestRecruiterDuplicateEmailRestriction(TestCase):
+    
+    def setUp(self):
+        # Create an initial recruiter user
+        self.existing_user = models.User_Information.objects.create(
+            USER_ID="123456789",
+            FIRST_NAME="John",
+            LAST_NAME="Doe",
+            EMAIL="recruiter@example.com",
+            PASSWORD="password123",
+            PHONE_NUMBER="1234567890"
+        )
+        self.recruiter = models.Recruiter.objects.create(
+            RECRUITER_ID="987654321",
+            USER_ID=self.existing_user,
+            COMPANY_NAME="Existing Recruiter Inc.",
+            COMPANY_WEBSITE="https://existingrecruiter.com"
+        )
+
+        # URL for the job seeker account creation view
+        self.url = reverse('job_seeker_create_account', args=[1])
+
+    def test_recruiter_registration_with_duplicate_email(self):
+        """
+        Scenario: Attempt to create a new job seeker account with an existing recruiter email.
+        This test case expects success but should fail due to email restriction.
+        
+        Test Expectation: The test was written to expect a 302 status code, which would indicate 
+                          that the system allowed the job seeker registration with a recruiter’s 
+                          email and redirected to the next step.
+
+        Actual Outcome: The response status code is 200, indicating that the system did not proceed 
+                        with the registration. Instead, it displayed the same form again (usually due 
+                        to an error message being set, like duplicate email detection), which is the 
+                        expected behavior according to system logic.
+        """
+        
+        # Prepare form data with duplicate recruiter email
+        form_data = {
+            'FIRST_NAME': "New",
+            'LAST_NAME': "Applicant",
+            'EMAIL': "recruiter@example.com",  # Duplicate email from existing recruiter
+            'PASSWORD': "newpassword123",
+            'CITY': "New City",
+            'COUNTRY': "New Country",
+            'PHONE_NUMBER': "0987654321"
+        }
+        
+        # Send POST request to simulate job seeker registration with duplicate email
+        response = self.client.post(self.url, form_data)
+
+        # Expected: Success message or redirect, but should fail due to restriction
+        self.assertEqual(response.status_code, 302, "Expected to allow registration, but it failed due to duplicate email restriction.")
+        self.assertRedirects(response, reverse('job_seeker_create_account', args=[2]), "Failed: Expected to proceed to Step 2.")
+
+class TestJobSeekerDuplicateEmailRestriction(TestCase):
+
+    def setUp(self):
+        """
+        Set up a user who is already registered as a job seeker to simulate 
+        a duplicate email restriction scenario during job seeker registration.
+        """
+        self.existing_user = models.User_Information.objects.create(
+            USER_ID="123456789",
+            FIRST_NAME="Existing",
+            LAST_NAME="User",
+            EMAIL="existing_jobseeker@example.com",
+            PASSWORD="password123",
+            CITY="City",
+            COUNTRY="Country",
+            PHONE_NUMBER="1234567890"
+        )
+        # Create a job seeker with the existing user information
+        self.existing_job_seeker = models.Job_Seeker.objects.create(
+            JOB_SEEKER_ID="987654321",
+            USER_ID=self.existing_user,
+            LINKEDIN_PROFILE_URL="https://www.linkedin.com/in/existing",
+            GITHUB_PROFILE_URL="https://github.com/existing"
+        )
+        # Define the URL for job seeker registration step 1
+        self.job_seeker_create_account_url = reverse('job_seeker_create_account', args=[1])
+
+    def test_job_seeker_registration_with_duplicate_email(self):
+        """
+        Scenario: Attempt to create a new job seeker account with an email that
+        is already registered to another job seeker. The test case expects success,
+        but it should fail because the system restricts duplicate email usage.
+        """
+        # Attempt to register with the same email as the existing job seeker
+        response = self.client.post(self.job_seeker_create_account_url, {
+            'FIRST_NAME': 'New',
+            'LAST_NAME': 'Applicant',
+            'EMAIL': 'existing_jobseeker@example.com',  # Duplicate email
+            'PASSWORD': 'newpassword',
+            'CITY': 'New City',
+            'COUNTRY': 'New Country',
+            'PHONE_NUMBER': '0987654321'
+        })
+
+        # The system should prevent duplicate registration, so the status should be 200 (form reloaded)
+        # But we assert 302 (expecting it to succeed and redirect to step 2), which will make it fail
+        self.assertEqual(response.status_code, 302, "Expected registration to succeed, but it failed due to duplicate email restriction.")
+        
+        # Check if the error message is set
+        messages = list(get_messages(response.wsgi_request))
+        self.assertTrue(any("This email is already registered" in str(message) for message in messages),
+                        "Expected error message about duplicate email not found.")
 
 
 
