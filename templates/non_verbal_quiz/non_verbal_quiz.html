@@ -91,8 +91,18 @@
                                     <strong>NON VERBAL ASSESSMENT</strong>
                                 </span>
                                 <span class="d-block text-black-50">
-                                    <strong>Question{{ current_question_number }} of {{ total_questions }}</strong>
+                                    <strong>Question {{ current_question_number }} of {{ total_questions }}</strong>
                                 </span>
+                                <div class="mt-2 progress">
+                                    <div
+                                        class="progress-bar"
+                                        role="progressbar"
+                                        style="width: {{ progress_percentage }}%;"
+                                        aria-valuenow="{{ current_question_number }}"
+                                        aria-valuemin="0"
+                                        aria-valuemax="{{ total_questions }}">
+                                    </div>
+                                </div>
                             </div>
                             <div class="mt-5 ms-md-12 me-md-12">
                                 <!-- <img src="../../static/assets/img/quiz/code.png" alt="" class="img-fluid"> -->
@@ -172,7 +182,7 @@
                                             for="option{{ forloop.counter }}">
                                             <div class="w-100">
                                                 <div class="d-flex">
-                                                    <div class="me-auto" id="pre-container{{ forloop.counter }}">{{ option }}</div>
+                                                    <div class="me-auto" id="pre-container{{ forloop.counter }}"> option </div>
                                                 </div>
                                             </div>
                                             <span class="display-6 text-muted option-label" id="option{{ forloop.counter }}Label">{{ option }}</span>

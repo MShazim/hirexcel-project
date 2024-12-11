@@ -600,6 +600,13 @@ def recruiter_view_profile(request):
             job_seeker = Job_Seeker.objects.get(JOB_SEEKER_ID=assessment.JOB_SEEKER_ID)
             user_info = User_Information.objects.get(USER_ID=job_seeker.USER_ID)
 
+            # Fetch the candidate status from the Evaluation_Summary table
+            try:
+                evaluation_summary = Evaluation_Summary.objects.get(ASSESSMENT_ID=assessment.ASSESSMENT_ID)
+                candidate_status = evaluation_summary.CANDIDATE_STATUS
+            except Evaluation_Summary.DoesNotExist:
+                candidate_status = "Status Not Available"
+
             # Add the information to the list
             applied_job_seekers.append({
                 'job_seeker_name': user_info.FIRST_NAME + ' ' + user_info.LAST_NAME,
@@ -609,7 +616,8 @@ def recruiter_view_profile(request):
                 'job_position': job_post.JOB_POSITION,
                 'job_type': job_post.JOB_TYPE,
                 'assessment_id': assessment.ASSESSMENT_ID,
-                'jobseeker_id': assessment.JOB_SEEKER_ID
+                'jobseeker_id': assessment.JOB_SEEKER_ID,
+                'candidate_status': candidate_status
             })
 
     # Pass the data to the template context
@@ -1052,11 +1060,15 @@ def disc_quiz(request, question_id):
     total_questions = len(all_questions)
     current_question_number = all_questions.index(question) + 1
 
+    # Calculate progress percentage
+    progress_percentage = (current_question_number / total_questions) * 100
+
     context = {
         'question': question,
         'next_question_id': None if current_question_number == total_questions else all_questions[current_question_number].DISC_PROFILE_ID,
         'total_questions': total_questions,
         'current_question_number': current_question_number,
+        'progress_percentage': progress_percentage
     }
 
     return render(request, 'disc_quiz/disc_quiz.html', context)
@@ -1165,6 +1177,9 @@ def big_five_quiz(request, question_id):
     total_questions = len(sorted_questions)
     current_question_number = sorted_questions.index(question) + 1
 
+    # Calculate progress percentage
+    progress_percentage = (current_question_number / total_questions) * 100
+
     # Get the next question ID
     next_question_id = None
     try:
@@ -1205,6 +1220,7 @@ def big_five_quiz(request, question_id):
         'next_question_id': next_question_id,
         'total_questions': total_questions,
         'current_question_number': current_question_number,
+        'progress_percentage': progress_percentage
     }
     return render(request, 'big_five_quiz/big_five_quiz.html', context)
 
@@ -1519,12 +1535,19 @@ def verbal_quiz(request, question_index=0):
     # Filter out any empty, "nan", or "none" options
     options = [option for option in options if option and option.lower() not in ["none", "nan"]]
 
+    current_question_number = question_index + 1
+    total_questions = len(selected_questions)
+    
+    # Calculate progress percentage
+    progress_percentage = (current_question_number / total_questions) * 100
+
     context = {
         'question': question,
         'next_question_index': next_question_index,
-        'total_questions': len(selected_questions),
-        'current_question_number': question_index + 1,
+        'total_questions': total_questions,
+        'current_question_number': current_question_number,
         'options': options,
+        'progress_percentage': progress_percentage
     }
 
     return render(request, 'verbal_quiz/verbal_quiz.html', context)
@@ -1621,12 +1644,19 @@ def non_verbal_quiz(request, question_index=0):
     # Filter out options that are "nan"
     options = [option for option in options if option and option.lower() != "nan"]
 
+    current_question_number = question_index + 1
+    total_questions = len(selected_questions)
+    
+    # Calculate progress percentage
+    progress_percentage = (current_question_number / total_questions) * 100
+
     context = {
         'question': question,
         'next_question_index': next_question_index,
-        'total_questions': len(selected_questions),
-        'current_question_number': question_index + 1,
+        'total_questions': total_questions,
+        'current_question_number': current_question_number,
         'options': options,
+        'progress_percentage': progress_percentage
     }
 
     return render(request, 'non_verbal_quiz/non_verbal_quiz.html', context)
@@ -1847,12 +1877,19 @@ def technical_quiz(request, question_index=0):
         question.C.strip(), question.D.strip()
     ]
 
+    current_question_number = question_index + 1
+    total_questions = len(selected_questions)
+    
+    # Calculate progress percentage
+    progress_percentage = (current_question_number / total_questions) * 100
+
     context = {
         'question': question,
         'next_question_index': next_question_index,
-        'total_questions': len(selected_questions),
-        'current_question_number': question_index + 1,
+        'total_questions': total_questions,
+        'current_question_number': current_question_number,
         'options': options,
+        'progress_percentage': progress_percentage
     }
 
     return render(request, 'technical_quiz/technical_quiz.html', context)

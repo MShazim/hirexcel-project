@@ -94,6 +94,16 @@
                                 <span class="d-block text-black-50">
                                     <strong>Question {{ current_question_number }} of {{ total_questions }}</strong>
                                 </span>
+                                <div class="mt-2 progress">
+                                    <div
+                                        class="progress-bar"
+                                        role="progressbar"
+                                        style="width: {{ progress_percentage }}%;"
+                                        aria-valuenow="{{ current_question_number }}"
+                                        aria-valuemin="0"
+                                        aria-valuemax="{{ total_questions }}">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -136,7 +146,7 @@
             <div class="mt-12 ms-md-12 me-md-12">
                 <div class="row mt-12 ms-md-12 me-md-12">
                     <div class="col-12">
-                        <p class="fw-bold">{{ question.QUESTION }}</p>
+                        <p class="fw-bold fs-4">{{ question.QUESTION }}</p>
                     </div>
                 </div>
                 {% comment %} <div class="container mt-4">
@@ -182,6 +192,20 @@
                         <div class="circle-rating-item d-flex flex-column align-items-center cursor-pointer mx-md-12 mx-3" data-rating="{{ i }}">
                             <span class="mb-4 fs-6 text-black">{{ i }}</span>
                             <div class="circle w-px-30 h-px-30 rounded-circle"></div>
+                            <!-- Labels for the rating scale -->
+                            {% if i == "0" %}
+                                <span class="mt-2 fs-6 text-muted">Never</span>
+                            {% elif i == "1" %}
+                                <span class="mt-2 fs-6 text-muted">Rarely</span>
+                            {% elif i == "2" %}
+                                <span class="mt-2 fs-6 text-muted">Slightly</span>
+                            {% elif i == "3" %}
+                                <span class="mt-2 fs-6 text-muted">Sometimes</span>
+                            {% elif i == "4" %}
+                                <span class="mt-2 fs-6 text-muted">Often</span>
+                            {% elif i == "5" %}
+                                <span class="mt-2 fs-6 text-muted">Always</span>
+                            {% endif %}
                         </div>
                         {% endfor %}
                     </div>

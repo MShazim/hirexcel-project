@@ -595,7 +595,7 @@
                                                         class="avatar-lg">
                                                 </div>
                                             </div>
-                                            <div class="ms-8">
+                                            <div class="ms-4">
                                                 <ul class="list-unstyled my-3">
                                                     <li class="d-flex align-items-center mb-4">
                                                         <i class="ti ti-user ti-lg"></i><span
@@ -615,7 +615,7 @@
                                                 </ul>
                                             </div>
                                         </div>
-                                        <div class="mx-12">
+                                        <div class="mx-8">
                                             <div class="ms-8">
                                                 <ul class="list-unstyled my-3">
                                                     <li class="d-flex align-items-center mb-4">
@@ -636,11 +636,24 @@
                                                 </ul>
                                             </div>
                                         </div>
+                                        <div class="mx-2">
+                                            <div class="ms-8">
+                                                <ul class="list-unstyled my-3">
+                                                    <li class="d-flex align-items-center mb-4">
+                                                        {% if  applicant.candidate_status == "Not Recommended"%}
+                                                        <span class='badge bg-danger-subtle text-danger me-1 mt-2'>{{ applicant.candidate_status }}</span>
+                                                        {% else %}
+                                                        <span class='badge bg-success-subtle text-success me-1 mt-5'>{{ applicant.candidate_status }}</span>
+                                                        {% endif %}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                         <div class="mx-12">
                                             <div class="mb-2">
                                                 <button class="btn btn-primary w-full" type="button" onclick="window.location.href='{% url 'view_jobseeker_profile_by_recruiter' applicant.jobseeker_id %}'"><i
-                                                        class="ti-sm ti ti-user me-1_5"></i>View
-                                                    Profile</button>
+                                                        class="ti-sm ti ti-user me-1_5"></i>View Profile
+                                                </button>
                                             </div>
                                             <div class="mt-4">
                                                 <button class="btn btn-outline-success w-full" type="button"
