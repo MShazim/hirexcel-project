@@ -93,11 +93,21 @@
                                 <span class="d-block text-black-50">
                                     <strong>Question {{ current_question_number }} of {{ total_questions }}</strong>
                                 </span>
+                                <div class="mt-2 progress">
+                                    <div
+                                        class="progress-bar"
+                                        role="progressbar"
+                                        style="width: {{ progress_percentage }}%;"
+                                        aria-valuenow="{{ current_question_number }}"
+                                        aria-valuemin="0"
+                                        aria-valuemax="{{ total_questions }}">
+                                    </div>
+                                </div>
                             </div>
                             <div class="mt-5 ms-md-12 me-md-12">
                                 <div class="row mt-4">
                                     <div class="col-12">
-                                        <p class="fw-bold">Question: {{ question.QUESTION }}</p>
+                                        <p class="fw-bold fs-3">Question: {{ question.QUESTION }}</p>
                                     </div>
                                 </div>
                             </div>
