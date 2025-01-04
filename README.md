@@ -92,15 +92,6 @@ HIREXCEL includes a suite of tests to verify functionality. To run the tests, us
 python manage.py test
 ```
 
-## **Project Status**
-
-- **Branch Name:** `<!-- BRANCH_NAME -->`
-- **Total Commits:** <!-- TOTAL_COMMITS -->
-- **Last 3 Commits:**
-  1. <!-- COMMIT_1 -->
-  2. <!-- COMMIT_2 -->
-  3. <!-- COMMIT_3 -->
-
 ## Contributing
 We welcome contributions to improve HIREXCEL! Please follow these steps:
 1. Fork the repository
