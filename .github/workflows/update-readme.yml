@@ -1,0 +1,40 @@
+name: Update README
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Runs every hour
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Extract Git Details
+        run: |
+          echo "Fetching Git details..."
+          BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+          TOTAL_COMMITS=$(git rev-list --count HEAD)
+          COMMITS=$(git log -3 --pretty=format:"- \`%h\` - %s (by %an on %ad)" --date=short)
+
+          # Prepare README placeholders
+          sed -i "s|<!-- BRANCH_NAME -->|$BRANCH_NAME|g" README.md
+
+          COMMIT_LINES=($COMMITS)
+          sed -i "s|<!-- COMMIT_1 -->|${COMMIT_LINES[0]}|g" README.md
+          sed -i "s|<!-- COMMIT_2 -->|${COMMIT_LINES[1]}|g" README.md
+          sed -i "s|<!-- COMMIT_3 -->|${COMMIT_LINES[2]}|g" README.md
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          git add README.md
+          git commit -m "Update README with dynamic Git details" || echo "No changes to commit"
+          git push
