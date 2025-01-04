@@ -25,6 +25,7 @@ jobs:
 
           # Prepare README placeholders
           sed -i "s|<!-- BRANCH_NAME -->|$BRANCH_NAME|g" README.md
+          sed -i "s|<!-- TOTAL_COMMITS -->|$TOTAL_COMMITS|g" README.md
 
           COMMIT_LINES=($COMMITS)
           sed -i "s|<!-- COMMIT_1 -->|${COMMIT_LINES[0]}|g" README.md
